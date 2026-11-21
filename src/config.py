@@ -42,9 +42,9 @@ BANDERA_OK = REPORTS / ".pipeline_ok"
 # MongoDB (credenciales desde variables de entorno / archivo .env)
 # --------------------------------------------------------------------------------------------------
 MONGO_USER = os.environ.get("MONGO_USER", "admin")
-MONGO_PASSWORD = os.environ.get("MONGO_PASSWORD", "cambiar_esta_clave")
+MONGO_PASSWORD = os.environ.get("MONGO_PASSWORD", "cambie_esta_clave")
 MONGO_HOST = os.environ.get("MONGO_HOST", "localhost")
-MONGO_PORT = int(os.environ.get("MONGO_PORT", "27017"))
+MONGO_PORT = int(os.environ.get("MONGO_PORT", "27018"))
 MONGO_DB = os.environ.get("MONGO_DB", "futbol_apuestas")
 MONGO_COLECCION = "analisis"
 MONGO_URI = os.environ.get(
@@ -85,6 +85,21 @@ FUENTES = {
         "url": f"{URL_TRANSFERMARKT}/competitions.csv.gz",
         "fuente": "Transfermarkt (competiciones) vía dcaribou/transfermarkt-datasets",
         "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+    },
+    "appearances.csv.gz": {
+        "url": f"{URL_TRANSFERMARKT}/appearances.csv.gz",
+        "fuente": "Transfermarkt (minutos de cada jugador en cada partido, todas las competiciones) vía dcaribou/transfermarkt-datasets",
+        "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+    },
+    "players.csv.gz": {
+        "url": f"{URL_TRANSFERMARKT}/players.csv.gz",
+        "fuente": "Transfermarkt (jugadores: nacionalidad e internacionalidades) vía dcaribou/transfermarkt-datasets",
+        "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+    },
+    "selecciones_results.csv": {
+        "url": "https://raw.githubusercontent.com/martj42/international_results/master/results.csv",
+        "fuente": "Resultados de selecciones nacionales (eliminatorias, Nations League, amistosos) vía martj42/international_results",
+        "pagina": "https://github.com/martj42/international_results",
     },
     "player_valuations.csv.gz": {
         "url": f"{URL_TRANSFERMARKT}/player_valuations.csv.gz",
@@ -136,6 +151,19 @@ LIGAS = {
     "USA": ("Estados Unidos", 1, "América", "MLS", "MLS1", True),
     "JAP": ("Japón", 1, "Asia", "J1 League", "JAP1", True),
     "CHN": ("China", 1, "Asia", "Super League (CHN)", None, True),
+}
+
+# Confederación de cada país de liga (para saber si un convocado cruzó de continente en el parón)
+CONFEDERACION_PAIS = {"Argentina": "CONMEBOL", "Brasil": "CONMEBOL", "México": "CONCACAF", "Estados Unidos": "CONCACAF",
+                      "Japón": "AFC", "China": "AFC"}          # el resto de países de liga son UEFA
+
+# Nacionalidad de Transfermarkt → nombre de la selección en martj42/international_results
+ALIAS_SELECCION = {
+    "Türkiye": "Turkey", "Korea, South": "South Korea", "Korea, North": "North Korea",
+    "Bosnia-Herzegovina": "Bosnia and Herzegovina", "Cote d'Ivoire": "Ivory Coast", "Ireland": "Republic of Ireland",
+    "Chinese Taipei": "Taiwan", "The Gambia": "Gambia", "Brunei Darussalam": "Brunei", "Curacao": "Curaçao",
+    "Hongkong": "Hong Kong", "Southern Sudan": "South Sudan", "Sao Tome and Principe": "São Tomé and Príncipe",
+    "St. Vincent & Grenadinen": "Saint Vincent and the Grenadines", "St. Lucia": "Saint Lucia",
 }
 
 RESULTADOS = {"H": "Local", "D": "Empate", "A": "Visitante"}

@@ -35,6 +35,18 @@
       "log_ratio_valor",
       "valor_plantilla_local",
       "valor_plantilla_visitante",
+      "descanso_real_local",
+      "descanso_real_visitante",
+      "dif_descanso_real",
+      "carga_min14_local",
+      "carga_min14_visitante",
+      "dif_carga_min14",
+      "post_paron",
+      "convocados_local",
+      "convocados_visitante",
+      "viajeros_local",
+      "viajeros_visitante",
+      "dif_viajeros",
       "nivel",
       "mes",
       "liga_codigo"
@@ -61,6 +73,18 @@
       "log_ratio_valor",
       "valor_plantilla_local",
       "valor_plantilla_visitante",
+      "descanso_real_local",
+      "descanso_real_visitante",
+      "dif_descanso_real",
+      "carga_min14_local",
+      "carga_min14_visitante",
+      "dif_carga_min14",
+      "post_paron",
+      "convocados_local",
+      "convocados_visitante",
+      "viajeros_local",
+      "viajeros_visitante",
+      "dif_viajeros",
       "nivel",
       "mes",
       "prob_casa_local",
@@ -263,329 +287,329 @@
     "sin_cuotas": {
       "Regresión logística": {
         "validacion": {
-          "accuracy": 0.498054159234636,
-          "balanced_accuracy": 0.42475785093596025,
-          "f1_macro": 0.3660530333975116,
-          "log_loss": 1.0129070006928869,
-          "brier": 0.605979190390353,
-          "roc_auc_ovr": 0.6367906312598896,
+          "accuracy": 0.49870277282309067,
+          "balanced_accuracy": 0.4258267129779601,
+          "f1_macro": 0.36713206419423444,
+          "log_loss": 1.0127968124598912,
+          "brier": 0.6058598815614998,
+          "roc_auc_ovr": 0.6368824050291509,
           "por_clase": {
             "Local": {
-              "precision": 0.509247702258028,
-              "recall": 0.8221285949807657,
-              "f1": 0.6289237668161435,
+              "precision": 0.5104903078677309,
+              "recall": 0.8201135739146364,
+              "f1": 0.6292782345913276,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.43902439024390244,
-              "recall": 0.005609224057338735,
-              "f1": 0.011076923076923076,
+              "precision": 0.4634146341463415,
+              "recall": 0.005920847616079776,
+              "f1": 0.011692307692307693,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.4704022988505747,
-              "recall": 0.44653573376977634,
-              "f1": 0.45815841029946824,
+              "precision": 0.46977008231620776,
+              "recall": 0.4514457174031642,
+              "f1": 0.460425650299068,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4488,
-              15,
-              956
+              4477,
+              13,
+              969
             ],
             [
-              2304,
-              18,
-              887
+              2291,
+              19,
+              899
             ],
             [
-              2021,
-              8,
-              1637
+              2002,
+              9,
+              1655
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.4880781089414183,
-          "balanced_accuracy": 0.4196850594832071,
-          "f1_macro": 0.35948439947114724,
-          "log_loss": 1.0206110281163814,
-          "brier": 0.611885363901755,
-          "roc_auc_ovr": 0.6266445480754944,
+          "accuracy": 0.48828365878725594,
+          "balanced_accuracy": 0.42018820632224196,
+          "f1_macro": 0.3600339066041835,
+          "log_loss": 1.0206255056711417,
+          "brier": 0.6118490941391179,
+          "roc_auc_ovr": 0.6269441193502477,
           "por_clase": {
             "Local": {
-              "precision": 0.49956563706563706,
-              "recall": 0.8163893051502484,
-              "f1": 0.6198389173328542,
+              "precision": 0.5006058843487955,
+              "recall": 0.8145752819622999,
+              "f1": 0.6201140798558992,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.34615384615384615,
-              "recall": 0.004676539360872954,
-              "f1": 0.009228402973596514,
+              "precision": 0.3584905660377358,
+              "recall": 0.004936347103143674,
+              "f1": 0.009738595592004101,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.461391345923978,
-              "recall": 0.4379893339384999,
-              "f1": 0.4493858781069911,
+              "precision": 0.45983674435111793,
+              "recall": 0.4410529899012822,
+              "f1": 0.4502490443646473,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10351,
-              37,
-              2291
+              10328,
+              34,
+              2317
             ],
             [
-              5447,
-              36,
-              2215
+              5411,
+              38,
+              2249
             ],
             [
-              4922,
-              31,
-              3860
+              4892,
+              34,
+              3887
             ]
           ]
         },
-        "segundos": 26.5
+        "segundos": 22.5
       },
       "Random Forest": {
         "validacion": {
-          "accuracy": 0.4961893951678288,
-          "balanced_accuracy": 0.41786423157222113,
-          "f1_macro": 0.3564435380741993,
-          "log_loss": 1.0138306332684368,
-          "brier": 0.6068864677424715,
-          "roc_auc_ovr": 0.6346210011629428,
+          "accuracy": 0.49691908545484026,
+          "balanced_accuracy": 0.4187851042097626,
+          "f1_macro": 0.3575192427628911,
+          "log_loss": 1.013929948372358,
+          "brier": 0.6069185937321644,
+          "roc_auc_ovr": 0.6347706552855635,
           "por_clase": {
             "Local": {
-              "precision": 0.5015670593321085,
-              "recall": 0.8501557061732918,
-              "f1": 0.6309135399673735,
+              "precision": 0.5020023812100877,
+              "recall": 0.8496061549734384,
+              "f1": 0.6311062729623078,
               "soporte": 5459
+            },
+            "Empate": {
+              "precision": 1.0,
+              "recall": 0.0003116235587410408,
+              "f1": 0.0006230529595015577,
+              "soporte": 3209
+            },
+            "Visitante": {
+              "precision": 0.48157724628312865,
+              "recall": 0.4064375340971086,
+              "f1": 0.4408284023668639,
+              "soporte": 3666
+            }
+          },
+          "matriz_confusion": [
+            [
+              4638,
+              0,
+              821
+            ],
+            [
+              2425,
+              1,
+              783
+            ],
+            [
+              2176,
+              0,
+              1490
+            ]
+          ]
+        },
+        "prueba": {
+          "accuracy": 0.48900308324768754,
+          "balanced_accuracy": 0.4164264729713492,
+          "f1_macro": 0.35335459926781576,
+          "log_loss": 1.0191827645666889,
+          "brier": 0.6110048648738999,
+          "roc_auc_ovr": 0.6282866426796133,
+          "por_clase": {
+            "Local": {
+              "precision": 0.49473149089564655,
+              "recall": 0.8443094881299787,
+              "f1": 0.6238890345892706,
+              "soporte": 12679
             },
             "Empate": {
               "precision": 0.0,
               "recall": 0.0,
               "f1": 0.0,
-              "soporte": 3209
-            },
-            "Visitante": {
-              "precision": 0.4800389483933788,
-              "recall": 0.4034369885433715,
-              "f1": 0.4384170742552245,
-              "soporte": 3666
-            }
-          },
-          "matriz_confusion": [
-            [
-              4641,
-              0,
-              818
-            ],
-            [
-              2425,
-              0,
-              784
-            ],
-            [
-              2187,
-              0,
-              1479
-            ]
-          ]
-        },
-        "prueba": {
-          "accuracy": 0.4889003083247688,
-          "balanced_accuracy": 0.4163300153312357,
-          "f1_macro": 0.35338640811345917,
-          "log_loss": 1.0189831285590032,
-          "brier": 0.610912104264803,
-          "roc_auc_ovr": 0.6285898323353872,
-          "por_clase": {
-            "Local": {
-              "precision": 0.4943425853230499,
-              "recall": 0.8442306175565897,
-              "f1": 0.623558196434813,
-              "soporte": 12679
-            },
-            "Empate": {
-              "precision": 0.2,
-              "recall": 0.00012990387113535984,
-              "f1": 0.0002596391016487083,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.47344662772172064,
-              "recall": 0.40462952456598206,
-              "f1": 0.4363413888039156,
+              "precision": 0.4725900423728814,
+              "recall": 0.404969930784069,
+              "f1": 0.4361747632141766,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10704,
-              2,
-              1973
+              10705,
+              0,
+              1974
             ],
             [
-              5704,
-              1,
-              1993
+              5689,
+              0,
+              2009
             ],
             [
-              5245,
-              2,
-              3566
+              5244,
+              0,
+              3569
             ]
           ]
         },
-        "segundos": 69.1
+        "segundos": 67.7
       },
       "LightGBM": {
         "validacion": {
-          "accuracy": 0.4972433922490676,
-          "balanced_accuracy": 0.4222060538948756,
-          "f1_macro": 0.36367631074711254,
-          "log_loss": 1.0115689871551257,
-          "brier": 0.6052562972965486,
-          "roc_auc_ovr": 0.6368814706152721,
+          "accuracy": 0.4981352359331928,
+          "balanced_accuracy": 0.4237009812823915,
+          "f1_macro": 0.365058517790245,
+          "log_loss": 1.0113943325898542,
+          "brier": 0.6051357684004873,
+          "roc_auc_ovr": 0.6368072652988351,
           "por_clase": {
             "Local": {
-              "precision": 0.5053954833685615,
-              "recall": 0.8322037003114123,
-              "f1": 0.6288759689922481,
+              "precision": 0.5069444444444444,
+              "recall": 0.8290895768455762,
+              "f1": 0.6291791200389241,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.43902439024390244,
-              "recall": 0.005609224057338735,
-              "f1": 0.011076923076923076,
+              "precision": 0.3953488372093023,
+              "recall": 0.005297600498597694,
+              "f1": 0.010455104551045511,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.47578692493946734,
-              "recall": 0.4288052373158756,
-              "f1": 0.4510760401721664,
+              "precision": 0.4760630389533155,
+              "recall": 0.43671576650300054,
+              "f1": 0.4555413287807654,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4543,
-              14,
-              902
+              4526,
+              17,
+              916
             ],
             [
-              2361,
-              18,
-              830
+              2346,
+              17,
+              846
             ],
             [
-              2085,
+              2056,
               9,
-              1572
+              1601
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.49006509078451527,
-          "balanced_accuracy": 0.4196754625764399,
-          "f1_macro": 0.3593896407883477,
-          "log_loss": 1.0185712060997458,
-          "brier": 0.6106266108033541,
-          "roc_auc_ovr": 0.6292571140995867,
+          "accuracy": 0.4904076738609113,
+          "balanced_accuracy": 0.42069722026924516,
+          "f1_macro": 0.36095450526546174,
+          "log_loss": 1.0184525598230376,
+          "brier": 0.6105490282714506,
+          "roc_auc_ovr": 0.6294656039489265,
           "por_clase": {
             "Local": {
-              "precision": 0.498699210065749,
-              "recall": 0.8315324552409497,
-              "f1": 0.6234772324068598,
+              "precision": 0.4998094330633635,
+              "recall": 0.827431185424718,
+              "f1": 0.6231845317651252,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.3064516129032258,
-              "recall": 0.004936347103143674,
-              "f1": 0.009716185118895423,
+              "precision": 0.31724137931034485,
+              "recall": 0.0059755780722265525,
+              "f1": 0.011730205278592375,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.46990536277602524,
-              "recall": 0.42255758538522636,
-              "f1": 0.4449755048392878,
+              "precision": 0.46902545003103663,
+              "recall": 0.4286848973107909,
+              "f1": 0.44794877875266775,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10543,
-              38,
-              2098
+              10491,
+              49,
+              2139
             ],
             [
-              5557,
-              38,
-              2103
+              5514,
+              46,
+              2138
             ],
             [
-              5041,
-              48,
-              3724
+              4985,
+              50,
+              3778
             ]
           ]
         },
-        "segundos": 29.0,
-        "arboles": 137
+        "segundos": 32.6,
+        "arboles": 156
       },
       "_mejor": {
         "modelo": "LightGBM",
-        "umbral_empate": 0.28,
+        "umbral_empate": 0.285,
         "prueba_con_umbral": {
-          "accuracy": 0.4564576909900651,
-          "balanced_accuracy": 0.43220002214584025,
-          "f1_macro": 0.4326454825466408,
-          "log_loss": 1.0185712060997458,
-          "brier": 0.6106266108033541,
-          "roc_auc_ovr": 0.6292571140995867,
+          "accuracy": 0.46128811236724904,
+          "balanced_accuracy": 0.4305380219272956,
+          "f1_macro": 0.43111057613105563,
+          "log_loss": 1.0184525598230376,
+          "brier": 0.6105490282714506,
+          "roc_auc_ovr": 0.6294656039489265,
           "por_clase": {
             "Local": {
-              "precision": 0.542621776504298,
-              "recall": 0.5974445934221941,
-              "f1": 0.5687150418559255,
+              "precision": 0.5344908493664946,
+              "recall": 0.6288350816310435,
+              "f1": 0.5778373677344543,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.30363423212192264,
-              "recall": 0.37009612886464016,
-              "f1": 0.3335870265206955,
+              "precision": 0.30196717203357976,
+              "recall": 0.3130683294362172,
+              "f1": 0.30741756489572036,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.49598084487771504,
-              "recall": 0.3290593441506865,
-              "f1": 0.3956343792633015,
+              "precision": 0.4898283534647171,
+              "recall": 0.34971065471462615,
+              "f1": 0.4080767957629924,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              7575,
-              3639,
-              1465
+              7973,
+              3117,
+              1589
             ],
             [
-              3367,
-              2849,
-              1482
+              3667,
+              2410,
+              1621
             ],
             [
-              3018,
-              2895,
-              2900
+              3277,
+              2454,
+              3082
             ]
           ]
         }
@@ -594,329 +618,329 @@
     "con_cuotas": {
       "Regresión logística": {
         "validacion": {
-          "accuracy": 0.5087562834441381,
-          "balanced_accuracy": 0.43978554766519773,
-          "f1_macro": 0.3847379757886367,
-          "log_loss": 0.9961542609904873,
-          "brier": 0.5950104334487059,
-          "roc_auc_ovr": 0.6532503256417027,
+          "accuracy": 0.5084319766499108,
+          "balanced_accuracy": 0.43967370909787434,
+          "f1_macro": 0.38477162275377136,
+          "log_loss": 0.9961827996504233,
+          "brier": 0.5949615596298407,
+          "roc_auc_ovr": 0.6534651622175928,
           "por_clase": {
             "Local": {
-              "precision": 0.5256808408982322,
-              "recall": 0.8061916101850156,
-              "f1": 0.6363965006145615,
+              "precision": 0.5259188315575243,
+              "recall": 0.8047261403187397,
+              "f1": 0.6361135244714741,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.34459459459459457,
-              "recall": 0.015892801495793082,
-              "f1": 0.03038427167113494,
+              "precision": 0.34210526315789475,
+              "recall": 0.016204425054534122,
+              "f1": 0.030943171675096696,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.477975878342947,
-              "recall": 0.4972722313147845,
-              "f1": 0.4874331550802139,
+              "precision": 0.4768869156437712,
+              "recall": 0.4980905619203492,
+              "f1": 0.48725817211474315,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4401,
-              54,
-              1004
+              4393,
+              57,
+              1009
             ],
             [
-              2171,
-              51,
-              987
+              2163,
+              52,
+              994
             ],
             [
-              1800,
+              1797,
               43,
-              1823
+              1826
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.5029119561493662,
-          "balanced_accuracy": 0.43674023966704817,
-          "f1_macro": 0.379193224314533,
-          "log_loss": 1.0028246116709358,
-          "brier": 0.5999236080107989,
-          "roc_auc_ovr": 0.6481567124845141,
+          "accuracy": 0.5022267899965742,
+          "balanced_accuracy": 0.436419720970391,
+          "f1_macro": 0.3795179388328127,
+          "log_loss": 1.003163844160058,
+          "brier": 0.6001382950251545,
+          "roc_auc_ovr": 0.6477948370502643,
           "por_clase": {
             "Local": {
-              "precision": 0.5173364064535525,
-              "recall": 0.8143386702421327,
-              "f1": 0.6327174679045255,
+              "precision": 0.5176298978924602,
+              "recall": 0.8116570707469043,
+              "f1": 0.6321253071253071,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.3710247349823322,
-              "recall": 0.013639906469212782,
-              "f1": 0.02631249216890114,
+              "precision": 0.3487654320987654,
+              "recall": 0.014679137438295662,
+              "f1": 0.028172525554724506,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.47491339814504413,
-              "recall": 0.48224214228979917,
-              "f1": 0.4785497128701723,
+              "precision": 0.4736783528102393,
+              "recall": 0.482922954725973,
+              "f1": 0.47825598381840656,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10325,
-              85,
-              2269
+              10291,
+              103,
+              2285
             ],
             [
-              5163,
-              105,
-              2430
+              5141,
+              113,
+              2444
             ],
             [
-              4470,
-              93,
-              4250
+              4449,
+              108,
+              4256
             ]
           ]
         },
-        "segundos": 38.6
+        "segundos": 24.2
       },
       "Random Forest": {
         "validacion": {
-          "accuracy": 0.5072969028701151,
-          "balanced_accuracy": 0.4380701439316877,
-          "f1_macro": 0.38137935986082677,
-          "log_loss": 0.9969092764499978,
-          "brier": 0.5954561633276015,
-          "roc_auc_ovr": 0.6532033336956037,
+          "accuracy": 0.5068915193773309,
+          "balanced_accuracy": 0.4371316208940712,
+          "f1_macro": 0.3787480511378474,
+          "log_loss": 0.9970657959753148,
+          "brier": 0.5955712193244325,
+          "roc_auc_ovr": 0.6528736407618726,
           "por_clase": {
             "Local": {
-              "precision": 0.5244455044121155,
-              "recall": 0.8056420589851622,
-              "f1": 0.6353196099674973,
+              "precision": 0.5243815413891532,
+              "recall": 0.8076570800512914,
+              "f1": 0.6358981755246268,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.31666666666666665,
-              "recall": 0.011841695232159551,
-              "f1": 0.022829678582156804,
+              "precision": 0.27956989247311825,
+              "recall": 0.008102212527267061,
+              "f1": 0.015748031496062992,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.475705329153605,
-              "recall": 0.4967266775777414,
-              "f1": 0.4859887910328263,
+              "precision": 0.47404122097573703,
+              "recall": 0.4956355701036552,
+              "f1": 0.48459794639285236,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4398,
-              41,
-              1020
+              4409,
+              33,
+              1017
             ],
             [
               2184,
-              38,
-              987
+              26,
+              999
             ],
             [
-              1804,
-              41,
-              1821
+              1815,
+              34,
+              1817
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.502672147995889,
-          "balanced_accuracy": 0.4364013671609975,
-          "f1_macro": 0.3764971662734791,
-          "log_loss": 1.0018184267096366,
-          "brier": 0.599300349514765,
-          "roc_auc_ovr": 0.6494753468111948,
+          "accuracy": 0.5025351147653306,
+          "balanced_accuracy": 0.4357708848921705,
+          "f1_macro": 0.3745868799848471,
+          "log_loss": 1.0022297352925347,
+          "brier": 0.5995191595994112,
+          "roc_auc_ovr": 0.6487142446939141,
           "por_clase": {
             "Local": {
-              "precision": 0.5176464681961946,
-              "recall": 0.8132344822146857,
-              "f1": 0.6326154978833057,
+              "precision": 0.5162449468483306,
+              "recall": 0.815837211136525,
+              "f1": 0.6323511431715368,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.29245283018867924,
-              "recall": 0.00805404001039231,
-              "f1": 0.015676359039190898,
+              "precision": 0.32592592592592595,
+              "recall": 0.005715770329955833,
+              "f1": 0.011234520617898635,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.47466607793354676,
-              "recall": 0.48791557925791446,
-              "f1": 0.4811996418979409,
+              "precision": 0.47471723220226214,
+              "recall": 0.48575967321003066,
+              "f1": 0.48017497616510574,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10311,
-              73,
-              2295
+              10344,
+              47,
+              2288
             ],
             [
-              5172,
-              62,
-              2464
+              5205,
+              44,
+              2449
             ],
             [
-              4436,
-              77,
-              4300
+              4488,
+              44,
+              4281
             ]
           ]
         },
-        "segundos": 93.9
+        "segundos": 69.0
       },
       "LightGBM": {
         "validacion": {
-          "accuracy": 0.5097292038268202,
-          "balanced_accuracy": 0.4406697027742809,
-          "f1_macro": 0.3874938410821857,
-          "log_loss": 0.9965750394571813,
-          "brier": 0.5952538504584457,
-          "roc_auc_ovr": 0.6531794752853373,
+          "accuracy": 0.508837360142695,
+          "balanced_accuracy": 0.44045101048863095,
+          "f1_macro": 0.38804322718830503,
+          "log_loss": 0.9963159008897379,
+          "brier": 0.5951195109433689,
+          "roc_auc_ovr": 0.6534118804691074,
           "por_clase": {
             "Local": {
-              "precision": 0.526981852913085,
-              "recall": 0.8085729987177138,
-              "f1": 0.6380917961691362,
+              "precision": 0.527707657170333,
+              "recall": 0.8041765891188862,
+              "f1": 0.637247786326027,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.35135135135135137,
-              "recall": 0.020255531318167652,
-              "f1": 0.03830288744843842,
+              "precision": 0.33980582524271846,
+              "recall": 0.02181364911187286,
+              "f1": 0.040995607613469986,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.47919427511264245,
-              "recall": 0.49318057828696127,
-              "f1": 0.4860868396289824,
+              "precision": 0.4767655552638488,
+              "recall": 0.49536279323513366,
+              "f1": 0.4858862876254181,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4414,
-              66,
-              979
+              4390,
+              77,
+              992
             ],
             [
-              2158,
-              65,
-              986
+              2138,
+              70,
+              1001
             ],
             [
-              1804,
-              54,
-              1808
+              1791,
+              59,
+              1816
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.5034258307639603,
-          "balanced_accuracy": 0.43727530244026624,
-          "f1_macro": 0.3818094130508976,
-          "log_loss": 1.002149436490481,
-          "brier": 0.5994923139850457,
-          "roc_auc_ovr": 0.6489527635441368,
+          "accuracy": 0.5029462144570058,
+          "balanced_accuracy": 0.43779325015783715,
+          "f1_macro": 0.38407015316681364,
+          "log_loss": 1.0021166011026008,
+          "brier": 0.5994971622356777,
+          "roc_auc_ovr": 0.6488239571133502,
           "por_clase": {
             "Local": {
-              "precision": 0.5163496580300534,
-              "recall": 0.8157583405631359,
-              "f1": 0.6324059920513604,
+              "precision": 0.5180680327041486,
+              "recall": 0.8096064358387886,
+              "f1": 0.6318283938078971,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.36436170212765956,
-              "recall": 0.017796830345544298,
-              "f1": 0.0339360911567996,
+              "precision": 0.33954451345755693,
+              "recall": 0.021304234866199014,
+              "f1": 0.04009289817870676,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.47990436069680065,
-              "recall": 0.4782707364121185,
-              "f1": 0.47908615594453285,
+              "precision": 0.47812886539975263,
+              "recall": 0.48246907976852377,
+              "f1": 0.4802891675138371,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10343,
-              123,
-              2213
+              10265,
+              161,
+              2253
             ],
             [
-              5206,
-              137,
-              2355
+              5146,
+              164,
+              2388
             ],
             [
-              4482,
-              116,
-              4215
+              4403,
+              158,
+              4252
             ]
           ]
         },
-        "segundos": 31.7,
-        "arboles": 124
+        "segundos": 38.2,
+        "arboles": 155
       },
       "_mejor": {
         "modelo": "Regresión logística",
         "umbral_empate": 0.295,
         "prueba_con_umbral": {
-          "accuracy": 0.4852004110996917,
-          "balanced_accuracy": 0.44624770282763854,
-          "f1_macro": 0.4437653637471361,
-          "log_loss": 1.0028246116709358,
-          "brier": 0.5999236080107989,
-          "roc_auc_ovr": 0.6481567124845141,
+          "accuracy": 0.4852689277149709,
+          "balanced_accuracy": 0.4478465653391083,
+          "f1_macro": 0.4461981727472359,
+          "log_loss": 1.003163844160058,
+          "brier": 0.6001382950251545,
+          "roc_auc_ovr": 0.6477948370502643,
           "por_clase": {
             "Local": {
-              "precision": 0.5414765268487841,
-              "recall": 0.6831769066961116,
-              "f1": 0.6041288882689357,
+              "precision": 0.545165596592715,
+              "recall": 0.6763940373846518,
+              "f1": 0.6037310806054206,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.32094821788836586,
-              "recall": 0.24798648999740192,
-              "f1": 0.2797889491426059,
+              "precision": 0.3212169735788631,
+              "recall": 0.2605871654975318,
+              "f1": 0.2877429534533458,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.4957902001380262,
-              "recall": 0.407579711789402,
-              "f1": 0.44737825382986673,
+              "precision": 0.49667313556972553,
+              "recall": 0.40655849313514125,
+              "f1": 0.4471204841829413,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              8662,
-              2240,
-              1777
+              8576,
+              2349,
+              1754
             ],
             [
-              3913,
-              1909,
-              1876
+              3815,
+              2006,
+              1877
             ],
             [
-              3422,
-              1799,
-              3592
+              3340,
+              1890,
+              3583
             ]
           ]
         }
@@ -928,334 +952,478 @@
       {
         "variable": "diferencia_elo",
         "etiqueta": "Diferencia de Elo (local − visitante)",
-        "importancia": 0.06632674843546482,
-        "desviacion": 0.0006175695172770844
+        "importancia": 0.06637543698442865,
+        "desviacion": 0.0006479225071298887
       },
       {
         "variable": "liga_codigo",
         "etiqueta": "Liga",
-        "importancia": 0.004600274947416032,
-        "desviacion": 0.0007381695042903385
+        "importancia": 0.004975634280770451,
+        "desviacion": 0.0008837799284832377
       },
       {
         "variable": "valor_plantilla_visitante",
         "etiqueta": "Valor plantilla visitante (M€)",
-        "importancia": 0.0018651369362150394,
-        "desviacion": 0.000554708220663085
+        "importancia": 0.0019059997402683198,
+        "desviacion": 0.0006601787927348883
       },
       {
         "variable": "log_ratio_valor",
         "etiqueta": "Ratio de valor de plantilla (log)",
-        "importancia": 0.0013140706856349382,
-        "desviacion": 0.0002241596501213992
+        "importancia": 0.0014607978378800752,
+        "desviacion": 0.00018427244920923936
       },
       {
         "variable": "valor_plantilla_local",
         "etiqueta": "Valor plantilla local (M€)",
-        "importancia": 0.0010887808360191542,
-        "desviacion": 0.00040728867248031775
+        "importancia": 0.0012287741404529335,
+        "desviacion": 0.0005016288871287713
       },
       {
         "variable": "dif_ppg_temporada",
         "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.0006682172121710295,
-        "desviacion": 0.00047539702637473103
+        "importancia": 0.0006334505530895355,
+        "desviacion": 0.00048281970868159886
       },
       {
         "variable": "partidos_temporada_local",
         "etiqueta": "Jornada (partidos jugados)",
-        "importancia": 0.0005669751798510111,
-        "desviacion": 0.000122075943895143
-      },
-      {
-        "variable": "elo_propio_local",
-        "etiqueta": "Elo del local",
-        "importancia": 0.0004502134936472668,
-        "desviacion": 0.00017881108647739138
+        "importancia": 0.0006276393173272332,
+        "desviacion": 0.00013346773155023455
       },
       {
         "variable": "ppg_temporada_visitante",
         "etiqueta": "Puntos por partido en la temporada (visitante)",
-        "importancia": 0.0004382396444426728,
-        "desviacion": 0.00012110574071564189
-      },
-      {
-        "variable": "elo_propio_visitante",
-        "etiqueta": "Elo del visitante",
-        "importancia": 0.0003750576101118064,
-        "desviacion": 0.0001279165462375246
+        "importancia": 0.0004748230626145193,
+        "desviacion": 0.00010092095257174077
       },
       {
         "variable": "gc_prom5_local",
         "etiqueta": "Goles en contra prom. 5 (local)",
-        "importancia": 0.00029372231743248395,
-        "desviacion": 0.0001056245944592026
+        "importancia": 0.00033064435995222574,
+        "desviacion": 0.00012119567120457259
+      },
+      {
+        "variable": "elo_propio_local",
+        "etiqueta": "Elo del local",
+        "importancia": 0.0003023497216387098,
+        "desviacion": 0.0002621352459566654
+      },
+      {
+        "variable": "elo_propio_visitante",
+        "etiqueta": "Elo del visitante",
+        "importancia": 0.00028839133668682554,
+        "desviacion": 0.0001914848802425637
       },
       {
         "variable": "ppg_temporada_local",
         "etiqueta": "Puntos por partido en la temporada (local)",
-        "importancia": 0.00010006747616072194,
-        "desviacion": 0.00019420072166629167
+        "importancia": 0.0001598095480782232,
+        "desviacion": 0.0002378352240954563
       },
       {
         "variable": "record_condicion_local",
         "etiqueta": "Puntos en últimos 5 como local",
-        "importancia": 8.736003163223316e-05,
-        "desviacion": 3.805672162206975e-06
+        "importancia": 0.00012126059368526103,
+        "desviacion": 2.9453472904218427e-05
       },
       {
-        "variable": "gc_prom5_visitante",
-        "etiqueta": "Goles en contra prom. 5 (visitante)",
-        "importancia": 8.59240570562451e-05,
-        "desviacion": 9.891047365604149e-05
+        "variable": "carga_min14_visitante",
+        "etiqueta": "Minutos jugados últimos 14 días (visitante)",
+        "importancia": 9.047584479267752e-05,
+        "desviacion": 9.072371394374313e-05
       },
       {
-        "variable": "puntos_prom5_local",
-        "etiqueta": "Puntos prom. últimos 5 (local)",
-        "importancia": 4.0836881843050087e-05,
-        "desviacion": 1.60488671099691e-05
-      },
-      {
-        "variable": "puntos_prom5_visitante",
-        "etiqueta": "Puntos prom. últimos 5 (visitante)",
-        "importancia": 3.838556946574497e-05,
-        "desviacion": 6.095550934619761e-06
-      },
-      {
-        "variable": "dias_descanso_visitante",
-        "etiqueta": "Días de descanso (visitante)",
-        "importancia": 2.4408767629472788e-05,
-        "desviacion": 5.5958720010779444e-06
-      },
-      {
-        "variable": "dias_descanso_local",
-        "etiqueta": "Días de descanso (local)",
-        "importancia": 2.1620665713687853e-05,
-        "desviacion": 2.0782734350372322e-05
-      },
-      {
-        "variable": "mes",
-        "etiqueta": "Mes del partido",
-        "importancia": 7.098407426816185e-06,
-        "desviacion": 1.64726572401936e-05
-      },
-      {
-        "variable": "nivel",
-        "etiqueta": "Nivel de la liga",
-        "importancia": -1.2838648593138657e-06,
-        "desviacion": 4.342563355585553e-06
-      },
-      {
-        "variable": "gf_prom5_visitante",
-        "etiqueta": "Goles a favor prom. 5 (visitante)",
-        "importancia": -2.0296195063496114e-05,
-        "desviacion": 2.338855072559534e-05
-      },
-      {
-        "variable": "record_condicion_visitante",
-        "etiqueta": "Puntos en últimos 5 como visitante",
-        "importancia": -5.035976075877061e-05,
-        "desviacion": 2.2535851929819543e-05
+        "variable": "descanso_real_local",
+        "etiqueta": "Descanso real del local (todas las competiciones)",
+        "importancia": 8.59074599942981e-05,
+        "desviacion": 4.550986446398539e-05
       },
       {
         "variable": "dif_puntos_prom5",
         "etiqueta": "Diferencia de forma (5 partidos)",
-        "importancia": -8.288250801643156e-05,
-        "desviacion": 3.8171508251829916e-05
+        "importancia": 7.14214614033389e-05,
+        "desviacion": 2.964456134045738e-05
+      },
+      {
+        "variable": "convocados_local",
+        "etiqueta": "Convocados al parón (local)",
+        "importancia": 6.377549223183603e-05,
+        "desviacion": 1.8114676374288178e-05
+      },
+      {
+        "variable": "puntos_prom5_visitante",
+        "etiqueta": "Puntos prom. últimos 5 (visitante)",
+        "importancia": 3.312849155837997e-05,
+        "desviacion": 3.747331068582133e-05
+      },
+      {
+        "variable": "dif_descanso_real",
+        "etiqueta": "Diferencia de descanso real",
+        "importancia": 3.1877921375341366e-05,
+        "desviacion": 6.766904468084539e-05
+      },
+      {
+        "variable": "dias_descanso_visitante",
+        "etiqueta": "Días de descanso (visitante)",
+        "importancia": 3.054094887167125e-05,
+        "desviacion": 2.0282721506775264e-05
+      },
+      {
+        "variable": "carga_min14_local",
+        "etiqueta": "Minutos jugados últimos 14 días (local)",
+        "importancia": 2.3301838334507014e-05,
+        "desviacion": 2.3988956339695933e-05
+      },
+      {
+        "variable": "nivel",
+        "etiqueta": "Nivel de la liga",
+        "importancia": 2.2275048360128242e-05,
+        "desviacion": 4.48367192968782e-06
+      },
+      {
+        "variable": "gc_prom5_visitante",
+        "etiqueta": "Goles en contra prom. 5 (visitante)",
+        "importancia": 1.857823189273707e-05,
+        "desviacion": 9.93543060753141e-05
+      },
+      {
+        "variable": "dias_descanso_local",
+        "etiqueta": "Días de descanso (local)",
+        "importancia": 1.3999612187213609e-05,
+        "desviacion": 4.31571791405692e-05
+      },
+      {
+        "variable": "dif_carga_min14",
+        "etiqueta": "Diferencia de carga de minutos",
+        "importancia": 7.131905697936129e-06,
+        "desviacion": 3.060084775795463e-05
+      },
+      {
+        "variable": "record_condicion_visitante",
+        "etiqueta": "Puntos en últimos 5 como visitante",
+        "importancia": 4.7552678048568e-06,
+        "desviacion": 2.8506797450582152e-05
+      },
+      {
+        "variable": "dif_viajeros",
+        "etiqueta": "Diferencia de viajeros",
+        "importancia": 4.614691014500257e-06,
+        "desviacion": 2.7904758826817835e-07
+      },
+      {
+        "variable": "descanso_real_visitante",
+        "etiqueta": "Descanso real del visitante",
+        "importancia": 4.44505630081693e-06,
+        "desviacion": 5.447977799113692e-05
+      },
+      {
+        "variable": "viajeros_local",
+        "etiqueta": "Convocados con viaje intercontinental (local)",
+        "importancia": 1.4272755614423243e-06,
+        "desviacion": 2.6561238522456006e-07
+      },
+      {
+        "variable": "post_paron",
+        "etiqueta": "Primer partido tras parón de selecciones",
+        "importancia": -7.976825981970137e-07,
+        "desviacion": 7.542271435757859e-06
+      },
+      {
+        "variable": "viajeros_visitante",
+        "etiqueta": "Convocados con viaje intercontinental (visitante)",
+        "importancia": -1.76521003947272e-06,
+        "desviacion": 2.671511192889496e-06
+      },
+      {
+        "variable": "convocados_visitante",
+        "etiqueta": "Convocados al parón (visitante)",
+        "importancia": -1.1028980113403364e-05,
+        "desviacion": 9.485486224911379e-06
+      },
+      {
+        "variable": "puntos_prom5_local",
+        "etiqueta": "Puntos prom. últimos 5 (local)",
+        "importancia": -3.294558535293923e-05,
+        "desviacion": 2.226275471657619e-05
+      },
+      {
+        "variable": "mes",
+        "etiqueta": "Mes del partido",
+        "importancia": -6.478967866171044e-05,
+        "desviacion": 3.874415589016013e-05
       },
       {
         "variable": "gf_prom5_local",
         "etiqueta": "Goles a favor prom. 5 (local)",
-        "importancia": -9.769764706835105e-05,
-        "desviacion": 7.030546816739279e-05
+        "importancia": -7.314824721664041e-05,
+        "desviacion": 0.00014630830098494034
+      },
+      {
+        "variable": "gf_prom5_visitante",
+        "etiqueta": "Goles a favor prom. 5 (visitante)",
+        "importancia": -9.394861877876082e-05,
+        "desviacion": 4.697462625862454e-06
       }
     ],
     "con_cuotas": [
       {
         "variable": "logit_casa",
         "etiqueta": "Log-odds casa (local vs. visitante)",
-        "importancia": 0.16732134965273895,
-        "desviacion": 0.0012254687228066175
+        "importancia": 0.1796172216371182,
+        "desviacion": 0.0012871876395320306
+      },
+      {
+        "variable": "viajeros_visitante",
+        "etiqueta": "Convocados con viaje intercontinental (visitante)",
+        "importancia": 0.004985425390495883,
+        "desviacion": 0.00040553760256538515
       },
       {
         "variable": "dif_ppg_temporada",
         "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.004370409886225539,
-        "desviacion": 0.00018144408216806113
+        "importancia": 0.003990552083477687,
+        "desviacion": 0.00016300544704229064
+      },
+      {
+        "variable": "viajeros_local",
+        "etiqueta": "Convocados con viaje intercontinental (local)",
+        "importancia": 0.0038529435842249438,
+        "desviacion": 0.00042227387278795896
+      },
+      {
+        "variable": "dif_carga_min14",
+        "etiqueta": "Diferencia de carga de minutos",
+        "importancia": 0.003227568764142689,
+        "desviacion": 0.0007279545749753355
       },
       {
         "variable": "prob_casa_empate",
         "etiqueta": "Prob. implícita casa: empate",
-        "importancia": 0.002905524440303046,
-        "desviacion": 0.00022756807544097192
+        "importancia": 0.0029298329998862136,
+        "desviacion": 0.00022761923813934302
+      },
+      {
+        "variable": "dif_viajeros",
+        "etiqueta": "Diferencia de viajeros",
+        "importancia": 0.0019511000370258842,
+        "desviacion": 0.0003309187937150131
+      },
+      {
+        "variable": "dif_descanso_real",
+        "etiqueta": "Diferencia de descanso real",
+        "importancia": 0.0016763298331836651,
+        "desviacion": 0.0003602980127567968
       },
       {
         "variable": "ppg_temporada_visitante",
         "etiqueta": "Puntos por partido en la temporada (visitante)",
-        "importancia": 0.0019416460260267925,
-        "desviacion": 0.0004340906966245165
+        "importancia": 0.0016697724751918812,
+        "desviacion": 0.0003931602414094588
       },
       {
-        "variable": "ppg_temporada_local",
-        "etiqueta": "Puntos por partido en la temporada (local)",
-        "importancia": 0.0013049146247801069,
-        "desviacion": 0.000525144399772892
+        "variable": "descanso_real_visitante",
+        "etiqueta": "Descanso real del visitante",
+        "importancia": 0.0014103579582538384,
+        "desviacion": 0.00026893816701144556
+      },
+      {
+        "variable": "convocados_local",
+        "etiqueta": "Convocados al parón (local)",
+        "importancia": 0.0013470926883517957,
+        "desviacion": 0.00047657256006722847
+      },
+      {
+        "variable": "carga_min14_visitante",
+        "etiqueta": "Minutos jugados últimos 14 días (visitante)",
+        "importancia": 0.0013054314041452593,
+        "desviacion": 0.0007003295592956215
       },
       {
         "variable": "valor_plantilla_visitante",
         "etiqueta": "Valor plantilla visitante (M€)",
-        "importancia": 0.0012965479357719782,
-        "desviacion": 0.00030594277295469674
+        "importancia": 0.0012033637442929734,
+        "desviacion": 0.0003081644318542694
+      },
+      {
+        "variable": "ppg_temporada_local",
+        "etiqueta": "Puntos por partido en la temporada (local)",
+        "importancia": 0.0011792256452199574,
+        "desviacion": 0.0004798405764456221
       },
       {
         "variable": "valor_plantilla_local",
         "etiqueta": "Valor plantilla local (M€)",
-        "importancia": 0.0006478012176391879,
-        "desviacion": 0.00012069539092050008
+        "importancia": 0.0009147496578147211,
+        "desviacion": 0.00017145700788073905
       },
       {
-        "variable": "dif_puntos_prom5",
-        "etiqueta": "Diferencia de forma (5 partidos)",
-        "importancia": 0.0006456163133089129,
-        "desviacion": 0.0001757385482367036
-      },
-      {
-        "variable": "gc_prom5_local",
-        "etiqueta": "Goles en contra prom. 5 (local)",
-        "importancia": 0.0005836881761900337,
-        "desviacion": 0.0001274961461341594
+        "variable": "carga_min14_local",
+        "etiqueta": "Minutos jugados últimos 14 días (local)",
+        "importancia": 0.0008713601965155693,
+        "desviacion": 0.00014154958056358032
       },
       {
         "variable": "log_ratio_valor",
         "etiqueta": "Ratio de valor de plantilla (log)",
-        "importancia": 0.0005777422694535073,
-        "desviacion": 0.0001337141616335732
+        "importancia": 0.0007606234221861167,
+        "desviacion": 0.0001759492763934137
       },
       {
-        "variable": "prob_casa_mas25",
-        "etiqueta": "Prob. implícita casa: más de 2,5 goles",
-        "importancia": 0.0004761703952351019,
-        "desviacion": 0.00014851443245775763
+        "variable": "dif_puntos_prom5",
+        "etiqueta": "Diferencia de forma (5 partidos)",
+        "importancia": 0.0007349589393467563,
+        "desviacion": 0.00018263298392929113
+      },
+      {
+        "variable": "descanso_real_local",
+        "etiqueta": "Descanso real del local (todas las competiciones)",
+        "importancia": 0.000610867595442007,
+        "desviacion": 0.00019358965371727807
+      },
+      {
+        "variable": "gc_prom5_local",
+        "etiqueta": "Goles en contra prom. 5 (local)",
+        "importancia": 0.0005736110265778619,
+        "desviacion": 0.00012715144684676243
       },
       {
         "variable": "liga_codigo",
         "etiqueta": "Liga",
-        "importancia": 0.00043209349963476323,
-        "desviacion": 9.755628365241694e-05
+        "importancia": 0.0005413086644419085,
+        "desviacion": 0.00012866256834320096
+      },
+      {
+        "variable": "prob_casa_mas25",
+        "etiqueta": "Prob. implícita casa: más de 2,5 goles",
+        "importancia": 0.0005285818403249672,
+        "desviacion": 0.0001477042111280677
       },
       {
         "variable": "nivel",
         "etiqueta": "Nivel de la liga",
-        "importancia": 0.0004033674975952491,
-        "desviacion": 0.00010347834548135643
+        "importancia": 0.0003950377456088579,
+        "desviacion": 0.00010867601313760671
       },
       {
         "variable": "puntos_prom5_local",
         "etiqueta": "Puntos prom. últimos 5 (local)",
-        "importancia": 0.00029292185907829155,
-        "desviacion": 0.00022199823422574473
-      },
-      {
-        "variable": "puntos_prom5_visitante",
-        "etiqueta": "Puntos prom. últimos 5 (visitante)",
-        "importancia": 0.00022576931195124791,
-        "desviacion": 0.00012425842764791036
+        "importancia": 0.00035376264161398235,
+        "desviacion": 0.0002448112808788602
       },
       {
         "variable": "prob_casa_visitante",
         "etiqueta": "Prob. implícita casa: visitante",
-        "importancia": 0.00020255643634496204,
-        "desviacion": 0.000146025263092854
+        "importancia": 0.00028800292896965135,
+        "desviacion": 0.00015186802324109014
+      },
+      {
+        "variable": "puntos_prom5_visitante",
+        "etiqueta": "Puntos prom. últimos 5 (visitante)",
+        "importancia": 0.0002753312830701127,
+        "desviacion": 0.00013054950534731495
       },
       {
         "variable": "gf_prom5_local",
         "etiqueta": "Goles a favor prom. 5 (local)",
-        "importancia": 0.00016935729539476382,
-        "desviacion": 0.0001665217946682148
-      },
-      {
-        "variable": "dias_descanso_local",
-        "etiqueta": "Días de descanso (local)",
-        "importancia": 0.00010961787498701507,
-        "desviacion": 2.1184050234472803e-05
-      },
-      {
-        "variable": "partidos_temporada_local",
-        "etiqueta": "Jornada (partidos jugados)",
-        "importancia": 0.00010476230933294713,
-        "desviacion": 7.23917956249234e-05
+        "importancia": 0.00016110335647330962,
+        "desviacion": 0.00016200503511522448
       },
       {
         "variable": "gc_prom5_visitante",
         "etiqueta": "Goles en contra prom. 5 (visitante)",
-        "importancia": 9.408112033463627e-05,
-        "desviacion": 0.00014605677499423926
+        "importancia": 0.00010248648045766788,
+        "desviacion": 0.00015143970108510166
+      },
+      {
+        "variable": "partidos_temporada_local",
+        "etiqueta": "Jornada (partidos jugados)",
+        "importancia": 9.067337292090194e-05,
+        "desviacion": 7.129905544192205e-05
       },
       {
         "variable": "elo_propio_local",
         "etiqueta": "Elo del local",
-        "importancia": 6.183309424182919e-05,
-        "desviacion": 0.0001551242973842391
+        "importancia": 7.885755214213457e-05,
+        "desviacion": 0.0001730607961944923
       },
       {
         "variable": "gf_prom5_visitante",
         "etiqueta": "Goles a favor prom. 5 (visitante)",
-        "importancia": 3.8469702145308794e-05,
-        "desviacion": 3.2511689635869164e-05
-      },
-      {
-        "variable": "margen_casa",
-        "etiqueta": "Margen de la casa",
-        "importancia": 3.156968523028899e-05,
-        "desviacion": 2.3505678586786585e-05
+        "importancia": 3.849178849183824e-05,
+        "desviacion": 3.479404566869782e-05
       },
       {
         "variable": "record_condicion_local",
         "etiqueta": "Puntos en últimos 5 como local",
-        "importancia": 3.1270100738112205e-05,
-        "desviacion": 7.681269182569948e-05
+        "importancia": 3.2379980445732905e-05,
+        "desviacion": 7.785172980672513e-05
+      },
+      {
+        "variable": "dias_descanso_local",
+        "etiqueta": "Días de descanso (local)",
+        "importancia": 3.1040895910328103e-05,
+        "desviacion": 1.700382623677236e-05
+      },
+      {
+        "variable": "margen_casa",
+        "etiqueta": "Margen de la casa",
+        "importancia": 2.412650778553053e-05,
+        "desviacion": 1.9885373928954688e-05
       },
       {
         "variable": "elo_propio_visitante",
         "etiqueta": "Elo del visitante",
-        "importancia": -1.5867258862008644e-05,
-        "desviacion": 0.00022225454508300124
-      },
-      {
-        "variable": "record_condicion_visitante",
-        "etiqueta": "Puntos en últimos 5 como visitante",
-        "importancia": -1.922921696510353e-05,
-        "desviacion": 3.965210748613806e-05
-      },
-      {
-        "variable": "diferencia_elo",
-        "etiqueta": "Diferencia de Elo (local − visitante)",
-        "importancia": -2.6805069297604806e-05,
-        "desviacion": 3.620753673899157e-05
+        "importancia": 1.8324808430595734e-05,
+        "desviacion": 0.00024267472440434308
       },
       {
         "variable": "dias_descanso_visitante",
         "etiqueta": "Días de descanso (visitante)",
-        "importancia": -2.9376348468890257e-05,
-        "desviacion": 3.683721593893597e-05
+        "importancia": -1.8411247285558357e-05,
+        "desviacion": 3.90879115896784e-05
+      },
+      {
+        "variable": "record_condicion_visitante",
+        "etiqueta": "Puntos en últimos 5 como visitante",
+        "importancia": -2.1713564408128622e-05,
+        "desviacion": 4.2267172835272204e-05
       },
       {
         "variable": "mes",
         "etiqueta": "Mes del partido",
-        "importancia": -3.432061522830784e-05,
-        "desviacion": 3.3342309605194794e-05
+        "importancia": -2.6846258010119566e-05,
+        "desviacion": 3.4095402056944376e-05
       },
       {
-        "variable": "handicap",
-        "etiqueta": "Hándicap asiático",
-        "importancia": -4.931420454960348e-05,
-        "desviacion": 6.190993582696359e-05
+        "variable": "convocados_visitante",
+        "etiqueta": "Convocados al parón (visitante)",
+        "importancia": -2.7512299406969493e-05,
+        "desviacion": 5.567729879451669e-05
       },
       {
         "variable": "prob_casa_local",
         "etiqueta": "Prob. implícita casa: local",
-        "importancia": -0.00010293582124113836,
-        "desviacion": 5.786973462382828e-05
+        "importancia": -3.207173761499149e-05,
+        "desviacion": 8.110730548634212e-05
+      },
+      {
+        "variable": "diferencia_elo",
+        "etiqueta": "Diferencia de Elo (local − visitante)",
+        "importancia": -3.2202746097720336e-05,
+        "desviacion": 3.6647428857082025e-05
+      },
+      {
+        "variable": "handicap",
+        "etiqueta": "Hándicap asiático",
+        "importancia": -3.2508489676619234e-05,
+        "desviacion": 4.4646108949690096e-05
+      },
+      {
+        "variable": "post_paron",
+        "etiqueta": "Primer partido tras parón de selecciones",
+        "importancia": -6.30901281021649e-05,
+        "desviacion": 5.487753452294115e-05
       }
     ]
   },
@@ -1263,160 +1431,160 @@
     "sin_cuotas": {
       "Local": {
         "prob_media": [
-          0.1939,
-          0.2951,
-          0.346,
-          0.3868,
-          0.42,
-          0.4531,
-          0.4909,
-          0.5349,
-          0.5929,
-          0.7373
+          0.1913,
+          0.2939,
+          0.344,
+          0.3848,
+          0.4187,
+          0.4515,
+          0.4887,
+          0.533,
+          0.5916,
+          0.7384
         ],
         "frecuencia_real": [
-          0.186,
-          0.2922,
-          0.3374,
-          0.3964,
-          0.4042,
-          0.4419,
-          0.4546,
-          0.5238,
-          0.5831,
-          0.7239
+          0.1826,
+          0.2915,
+          0.3453,
+          0.3974,
+          0.4015,
+          0.4341,
+          0.4608,
+          0.5262,
+          0.581,
+          0.7232
         ]
       },
       "Empate": {
         "prob_media": [
-          0.1527,
-          0.2162,
-          0.237,
-          0.2508,
-          0.261,
-          0.2695,
-          0.2776,
-          0.2864,
-          0.298,
-          0.3231
+          0.1518,
+          0.216,
+          0.2371,
+          0.2512,
+          0.2615,
+          0.2704,
+          0.2785,
+          0.2874,
+          0.2994,
+          0.3253
         ],
         "frecuencia_real": [
-          0.1668,
-          0.2453,
-          0.2491,
-          0.2587,
-          0.2638,
-          0.2696,
-          0.2734,
-          0.295,
-          0.3004,
-          0.3152
+          0.1638,
+          0.247,
+          0.2429,
+          0.2597,
+          0.2631,
+          0.2741,
+          0.2727,
+          0.3025,
+          0.2936,
+          0.3179
         ]
       },
       "Visitante": {
         "prob_media": [
-          0.0986,
-          0.1701,
-          0.2043,
-          0.2339,
-          0.2628,
-          0.2927,
-          0.3264,
-          0.3706,
-          0.4337,
-          0.5836
+          0.0977,
+          0.1705,
+          0.2049,
+          0.2346,
+          0.2634,
+          0.2937,
+          0.3278,
+          0.3721,
+          0.4345,
+          0.5865
         ],
         "frecuencia_real": [
-          0.1004,
-          0.1727,
-          0.2271,
-          0.2443,
-          0.2734,
-          0.3018,
-          0.3255,
-          0.3782,
-          0.421,
-          0.5749
+          0.0976,
+          0.173,
+          0.2282,
+          0.2463,
+          0.2754,
+          0.3063,
+          0.3169,
+          0.3772,
+          0.4193,
+          0.579
         ]
       }
     },
     "con_cuotas": {
       "Local": {
         "prob_media": [
-          0.1815,
-          0.275,
-          0.3273,
-          0.3693,
-          0.4086,
-          0.447,
-          0.4906,
-          0.5417,
-          0.6081,
-          0.747
+          0.1814,
+          0.2744,
+          0.3263,
+          0.3681,
+          0.4073,
+          0.4456,
+          0.4892,
+          0.5404,
+          0.6068,
+          0.7467
         ],
         "frecuencia_real": [
           0.1576,
-          0.2792,
-          0.3186,
-          0.3535,
-          0.4169,
-          0.455,
-          0.4786,
-          0.5255,
-          0.6077,
-          0.7509
+          0.2816,
+          0.3165,
+          0.3522,
+          0.4162,
+          0.4563,
+          0.4776,
+          0.5289,
+          0.6026,
+          0.754
         ]
       },
       "Empate": {
         "prob_media": [
-          0.1435,
-          0.2062,
+          0.1434,
+          0.2061,
           0.2321,
-          0.2478,
-          0.2595,
-          0.2694,
-          0.279,
-          0.2895,
-          0.3037,
-          0.3316
+          0.2477,
+          0.2596,
+          0.2699,
+          0.2799,
+          0.2906,
+          0.3053,
+          0.3338
         ],
         "frecuencia_real": [
           0.1607,
-          0.2182,
-          0.2494,
-          0.2576,
-          0.2652,
-          0.2795,
-          0.2837,
-          0.2823,
-          0.3121,
-          0.3285
+          0.2199,
+          0.2487,
+          0.2539,
+          0.2761,
+          0.272,
+          0.2789,
+          0.2826,
+          0.3141,
+          0.3303
         ]
       },
       "Visitante": {
         "prob_media": [
-          0.0951,
-          0.1612,
-          0.2005,
-          0.2343,
-          0.2672,
-          0.3007,
-          0.3379,
-          0.3845,
-          0.4521,
-          0.6084
+          0.0949,
+          0.1613,
+          0.2009,
+          0.2348,
+          0.2677,
+          0.3013,
+          0.3385,
+          0.3849,
+          0.4525,
+          0.6087
         ],
         "frecuencia_real": [
-          0.0761,
-          0.1709,
-          0.1949,
-          0.2261,
-          0.272,
-          0.3059,
-          0.3416,
-          0.3868,
-          0.4361,
-          0.6088
+          0.0771,
+          0.172,
+          0.1918,
+          0.2258,
+          0.2775,
+          0.3015,
+          0.3436,
+          0.3854,
+          0.4385,
+          0.606
         ]
       }
     },
@@ -1506,190 +1674,190 @@
       "umbral_5pct": {
         "umbral_valor": 0.05,
         "partidos_evaluados": 29190,
-        "apuestas": 22519,
-        "aciertos": 7099,
-        "tasa_acierto": 0.315244904303033,
-        "cuota_media": 3.6711536918674694,
-        "beneficio_unidades": -843.3200129270554,
-        "roi": -0.037449265639107214,
-        "max_caida": 975.1100120544434
+        "apuestas": 22577,
+        "aciertos": 7133,
+        "tasa_acierto": 0.3159410019045932,
+        "cuota_media": 3.672689019205425,
+        "beneficio_unidades": -741.7700146436691,
+        "roi": -0.03285511868909373,
+        "max_caida": 888.3600133657455
       },
       "curva": [
         {
           "umbral_valor": 0.0,
           "partidos_evaluados": 29190,
-          "apuestas": 27866,
-          "aciertos": 9191,
-          "tasa_acierto": 0.3298284647958085,
-          "cuota_media": 3.5410252627112846,
-          "beneficio_unidades": -1055.3600199222565,
-          "roi": -0.037872677094748314,
-          "max_caida": 1175.5500184297562
+          "apuestas": 27897,
+          "aciertos": 9217,
+          "tasa_acierto": 0.3303939491701617,
+          "cuota_media": 3.5394153483995856,
+          "beneficio_unidades": -993.2000169754028,
+          "roi": -0.03560239513121134,
+          "max_caida": 1090.3500154018402
         },
         {
           "umbral_valor": 0.02,
           "partidos_evaluados": 29190,
-          "apuestas": 26077,
-          "aciertos": 8473,
-          "tasa_acierto": 0.3249223453618131,
-          "cuota_media": 3.582993058113844,
-          "beneficio_unidades": -967.5900180339813,
-          "roi": -0.03710511247589759,
-          "max_caida": 1100.3400169610977
+          "apuestas": 26118,
+          "aciertos": 8515,
+          "tasa_acierto": 0.32602036909411136,
+          "cuota_media": 3.583414885682656,
+          "beneficio_unidades": -861.2300118207932,
+          "roi": -0.03297457737272353,
+          "max_caida": 964.5900105237961
         },
         {
           "umbral_valor": 0.04,
           "partidos_evaluados": 29190,
-          "apuestas": 23751,
-          "aciertos": 7552,
-          "tasa_acierto": 0.3179655593448697,
-          "cuota_media": 3.6378573528024143,
-          "beneficio_unidades": -919.5600148439407,
-          "roi": -0.038716686238219056,
-          "max_caida": 1051.1700137853622
+          "apuestas": 23818,
+          "aciertos": 7595,
+          "tasa_acierto": 0.31887647997312957,
+          "cuota_media": 3.640652866755518,
+          "beneficio_unidades": -813.1600149869919,
+          "roi": -0.034140566587748424,
+          "max_caida": 942.9300109148026
         },
         {
           "umbral_valor": 0.06,
           "partidos_evaluados": 29190,
-          "apuestas": 21187,
-          "aciertos": 6593,
-          "tasa_acierto": 0.311181384811441,
-          "cuota_media": 3.709681879834354,
-          "beneficio_unidades": -816.3500134944916,
-          "roi": -0.03853070342636954,
-          "max_caida": 961.9000127315521
+          "apuestas": 21273,
+          "aciertos": 6633,
+          "tasa_acierto": 0.3118036948244253,
+          "cuota_media": 3.7067132037846937,
+          "beneficio_unidades": -812.5800119638443,
+          "roi": -0.03819771597630068,
+          "max_caida": 961.2100113630295
         },
         {
           "umbral_valor": 0.08,
           "partidos_evaluados": 29190,
-          "apuestas": 18659,
-          "aciertos": 5647,
-          "tasa_acierto": 0.30264215660003213,
-          "cuota_media": 3.788102255909445,
-          "beneficio_unidades": -801.4900094270706,
-          "roi": -0.04295460686141115,
-          "max_caida": 936.310008764267
+          "apuestas": 18858,
+          "aciertos": 5690,
+          "tasa_acierto": 0.30172870930109236,
+          "cuota_media": 3.784064587270838,
+          "beneficio_unidades": -883.1500099897385,
+          "roi": -0.04683158394260995,
+          "max_caida": 1029.4000091552734
         },
         {
           "umbral_valor": 0.1,
           "partidos_evaluados": 29190,
-          "apuestas": 16320,
-          "aciertos": 4805,
-          "tasa_acierto": 0.29442401960784315,
-          "cuota_media": 3.870432597603284,
-          "beneficio_unidades": -773.5800106525421,
-          "roi": -0.04740073594684694,
-          "max_caida": 911.5400098562241
+          "apuestas": 16477,
+          "aciertos": 4830,
+          "tasa_acierto": 0.29313588638708504,
+          "cuota_media": 3.865945863406867,
+          "beneficio_unidades": -836.4200074672699,
+          "roi": -0.05076288204571645,
+          "max_caida": 970.9500061273575
         },
         {
           "umbral_valor": 0.12,
           "partidos_evaluados": 29190,
-          "apuestas": 14210,
-          "aciertos": 4086,
-          "tasa_acierto": 0.28754398311048557,
-          "cuota_media": 3.958719211300857,
-          "beneficio_unidades": -653.5700086355209,
-          "roi": -0.04599366703979739,
-          "max_caida": 790.6400057077408
+          "apuestas": 14452,
+          "aciertos": 4125,
+          "tasa_acierto": 0.285427622474398,
+          "cuota_media": 3.9553099907140736,
+          "beneficio_unidades": -726.5200108289719,
+          "roi": -0.05027124348387572,
+          "max_caida": 861.5700085163116
         },
         {
           "umbral_valor": 0.14,
           "partidos_evaluados": 29190,
-          "apuestas": 12410,
-          "aciertos": 3461,
-          "tasa_acierto": 0.27888799355358584,
-          "cuota_media": 4.058112811658,
-          "beneficio_unidades": -622.1800074577332,
-          "roi": -0.050135375298769796,
-          "max_caida": 762.7500060796738
+          "apuestas": 12592,
+          "aciertos": 3516,
+          "tasa_acierto": 0.2792249047013977,
+          "cuota_media": 4.053551460473101,
+          "beneficio_unidades": -603.2400084733963,
+          "roi": -0.047906608042677594,
+          "max_caida": 754.9500062465668
         },
         {
           "umbral_valor": 0.16,
           "partidos_evaluados": 29190,
-          "apuestas": 10836,
-          "aciertos": 2928,
-          "tasa_acierto": 0.2702104097452935,
-          "cuota_media": 4.1511111102913,
-          "beneficio_unidades": -591.8800064325333,
-          "roi": -0.05462163219200196,
-          "max_caida": 719.3700051307678
+          "apuestas": 10917,
+          "aciertos": 2972,
+          "tasa_acierto": 0.27223596226069435,
+          "cuota_media": 4.146098743933423,
+          "beneficio_unidades": -521.5600079298019,
+          "roi": -0.04777503049645525,
+          "max_caida": 652.1000069379807
         },
         {
           "umbral_valor": 0.18,
           "partidos_evaluados": 29190,
-          "apuestas": 9448,
-          "aciertos": 2521,
-          "tasa_acierto": 0.26682895850973753,
-          "cuota_media": 4.245820278880659,
-          "beneficio_unidades": -441.96000480651855,
-          "roi": -0.046778154615423215,
-          "max_caida": 564.1600034236908
+          "apuestas": 9509,
+          "aciertos": 2525,
+          "tasa_acierto": 0.2655379114523083,
+          "cuota_media": 4.246065831357391,
+          "beneficio_unidades": -461.19000566005707,
+          "roi": -0.04850036866758409,
+          "max_caida": 595.2900056838989
         },
         {
           "umbral_valor": 0.2,
           "partidos_evaluados": 29190,
-          "apuestas": 8245,
-          "aciertos": 2130,
-          "tasa_acierto": 0.25833838690115224,
-          "cuota_media": 4.3512880532361295,
-          "beneficio_unidades": -440.590004324913,
-          "roi": -0.0534372352122393,
-          "max_caida": 582.610004067421
+          "apuestas": 8310,
+          "aciertos": 2145,
+          "tasa_acierto": 0.2581227436823105,
+          "cuota_media": 4.354522261177733,
+          "beneficio_unidades": -437.3400068283081,
+          "roi": -0.052628159666463066,
+          "max_caida": 593.5200058221817
         },
         {
           "umbral_valor": 0.22,
           "partidos_evaluados": 29190,
-          "apuestas": 7243,
-          "aciertos": 1804,
-          "tasa_acierto": 0.2490680657186249,
-          "cuota_media": 4.444520226404447,
-          "beneficio_unidades": -490.10000371932983,
-          "roi": -0.06766533255823966,
-          "max_caida": 605.2200030088425
+          "apuestas": 7302,
+          "aciertos": 1834,
+          "tasa_acierto": 0.2511640646398247,
+          "cuota_media": 4.4448288126992255,
+          "beneficio_unidades": -425.91000616550446,
+          "roi": -0.05832785622644542,
+          "max_caida": 582.5700056552887
         },
         {
           "umbral_valor": 0.24,
           "partidos_evaluados": 29190,
-          "apuestas": 6351,
-          "aciertos": 1554,
-          "tasa_acierto": 0.2446858762399622,
-          "cuota_media": 4.547082349702592,
-          "beneficio_unidades": -419.13000309467316,
-          "roi": -0.065994332088596,
-          "max_caida": 549.3700025081635
+          "apuestas": 6420,
+          "aciertos": 1561,
+          "tasa_acierto": 0.24314641744548288,
+          "cuota_media": 4.542523364411708,
+          "beneficio_unidades": -427.6500037908554,
+          "roi": -0.0666121501231862,
+          "max_caida": 587.4100036621094
         },
         {
           "umbral_valor": 0.26,
           "partidos_evaluados": 29190,
-          "apuestas": 5636,
-          "aciertos": 1334,
-          "tasa_acierto": 0.23669268985095812,
-          "cuota_media": 4.644579489363094,
-          "beneficio_unidades": -419.1800044775009,
-          "roi": -0.07437544437145155,
-          "max_caida": 546.7700027227402
+          "apuestas": 5664,
+          "aciertos": 1344,
+          "tasa_acierto": 0.23728813559322035,
+          "cuota_media": 4.639470339537004,
+          "beneficio_unidades": -411.15000450611115,
+          "roi": -0.07259004316845183,
+          "max_caida": 540.4800033569336
         },
         {
           "umbral_valor": 0.28,
           "partidos_evaluados": 29190,
-          "apuestas": 4964,
-          "aciertos": 1144,
-          "tasa_acierto": 0.23045930701047543,
-          "cuota_media": 4.734313054155861,
-          "beneficio_unidades": -365.6000051498413,
-          "roi": -0.07365028306805828,
-          "max_caida": 492.6000038385391
+          "apuestas": 5006,
+          "aciertos": 1166,
+          "tasa_acierto": 0.23292049540551338,
+          "cuota_media": 4.733677587269117,
+          "beneficio_unidades": -329.6900053024292,
+          "roi": -0.06585897029613048,
+          "max_caida": 501.08000457286835
         },
         {
           "umbral_valor": 0.3,
           "partidos_evaluados": 29190,
-          "apuestas": 4361,
-          "aciertos": 989,
-          "tasa_acierto": 0.22678284797064893,
-          "cuota_media": 4.839575785558395,
-          "beneficio_unidades": -297.84000504016876,
-          "roi": -0.06829626348089171,
-          "max_caida": 422.2300029993057
+          "apuestas": 4419,
+          "aciertos": 1012,
+          "tasa_acierto": 0.2290110884815569,
+          "cuota_media": 4.828592442419497,
+          "beneficio_unidades": -260.35000491142273,
+          "roi": -0.05891604546535929,
+          "max_caida": 422.4800033569336
         }
       ]
     },
@@ -1697,190 +1865,190 @@
       "umbral_5pct": {
         "umbral_valor": 0.05,
         "partidos_evaluados": 29190,
-        "apuestas": 7847,
-        "aciertos": 2481,
-        "tasa_acierto": 0.31617178539569263,
-        "cuota_media": 3.6866624176965574,
-        "beneficio_unidades": 107.29999375343323,
-        "roi": 0.013674014751297722,
-        "max_caida": 100.3500030040741
+        "apuestas": 9141,
+        "aciertos": 2841,
+        "tasa_acierto": 0.31079750574335413,
+        "cuota_media": 3.688699265940551,
+        "beneficio_unidades": 24.39999485015869,
+        "roi": 0.0026692916365997914,
+        "max_caida": 143.13999819755554
       },
       "curva": [
         {
           "umbral_valor": 0.0,
           "partidos_evaluados": 29190,
-          "apuestas": 24060,
-          "aciertos": 9181,
-          "tasa_acierto": 0.3815876974231089,
-          "cuota_media": 3.164046134031126,
-          "beneficio_unidades": 163.01998209953308,
-          "roi": 0.006775560353264052,
-          "max_caida": 164.16000390052795
+          "apuestas": 24448,
+          "aciertos": 9165,
+          "tasa_acierto": 0.37487729057591623,
+          "cuota_media": 3.2258229704563997,
+          "beneficio_unidades": 200.8499835729599,
+          "roi": 0.008215395270490833,
+          "max_caida": 169.4500012397766
         },
         {
           "umbral_valor": 0.02,
           "partidos_evaluados": 29190,
-          "apuestas": 16836,
-          "aciertos": 6097,
-          "tasa_acierto": 0.3621406509859824,
-          "cuota_media": 3.3323610115218374,
-          "beneficio_unidades": 304.049987077713,
-          "roi": 0.018059514556766038,
-          "max_caida": 122.83000457286835
+          "apuestas": 17860,
+          "aciertos": 6313,
+          "tasa_acierto": 0.353471444568869,
+          "cuota_media": 3.3758924965361867,
+          "beneficio_unidades": 138.9799883365631,
+          "roi": 0.0077816342853618764,
+          "max_caida": 114.91000199317932
         },
         {
           "umbral_valor": 0.04,
           "partidos_evaluados": 29190,
-          "apuestas": 10266,
-          "aciertos": 3383,
-          "tasa_acierto": 0.32953438534969803,
-          "cuota_media": 3.564851937297722,
-          "beneficio_unidades": 128.73999059200287,
-          "roi": 0.012540423786479921,
-          "max_caida": 120.34000074863434
+          "apuestas": 11547,
+          "aciertos": 3744,
+          "tasa_acierto": 0.32424006235385816,
+          "cuota_media": 3.5918160551521616,
+          "beneficio_unidades": 62.24999284744263,
+          "roi": 0.005391010032687505,
+          "max_caida": 158.75000071525574
         },
         {
           "umbral_valor": 0.06,
           "partidos_evaluados": 29190,
-          "apuestas": 5924,
-          "aciertos": 1804,
-          "tasa_acierto": 0.30452397029034434,
-          "cuota_media": 3.7944547592547195,
-          "beneficio_unidades": 59.15999507904053,
-          "roi": 0.009986494780391717,
-          "max_caida": 110.15000092983246
+          "apuestas": 7133,
+          "aciertos": 2159,
+          "tasa_acierto": 0.3026776952194028,
+          "cuota_media": 3.7757367148533723,
+          "beneficio_unidades": 59.469992876052856,
+          "roi": 0.00833730448283371,
+          "max_caida": 112.65999841690063
         },
         {
           "umbral_valor": 0.08,
           "partidos_evaluados": 29190,
-          "apuestas": 3376,
-          "aciertos": 991,
-          "tasa_acierto": 0.29354265402843605,
-          "cuota_media": 4.002354857374989,
-          "beneficio_unidades": 55.96999549865723,
-          "roi": 0.016578790135858182,
-          "max_caida": 98.36000072956085
+          "apuestas": 4399,
+          "aciertos": 1303,
+          "tasa_acierto": 0.2962036826551489,
+          "cuota_media": 3.9491770840634213,
+          "beneficio_unidades": 107.51999485492706,
+          "roi": 0.024441917448267122,
+          "max_caida": 59.860000133514404
         },
         {
           "umbral_valor": 0.1,
           "partidos_evaluados": 29190,
-          "apuestas": 1851,
-          "aciertos": 549,
-          "tasa_acierto": 0.2965964343598055,
-          "cuota_media": 4.175051323856167,
-          "beneficio_unidades": 96.89999687671661,
-          "roi": 0.05235007934992794,
-          "max_caida": 66.20000064373016
+          "apuestas": 2657,
+          "aciertos": 768,
+          "tasa_acierto": 0.2890477982687241,
+          "cuota_media": 4.110259689959898,
+          "beneficio_unidades": 79.75999438762665,
+          "roi": 0.030018816103736037,
+          "max_caida": 68.48000109195709
         },
         {
           "umbral_valor": 0.12,
           "partidos_evaluados": 29190,
-          "apuestas": 1031,
-          "aciertos": 308,
-          "tasa_acierto": 0.2987390882638215,
-          "cuota_media": 4.352667312386195,
-          "beneficio_unidades": 79.71999847888947,
-          "roi": 0.0773229859155087,
-          "max_caida": 47.730000138282776
+          "apuestas": 1622,
+          "aciertos": 468,
+          "tasa_acierto": 0.2885326757090012,
+          "cuota_media": 4.262620221230899,
+          "beneficio_unidades": 85.05999863147736,
+          "roi": 0.05244142948919689,
+          "max_caida": 66.75
         },
         {
           "umbral_valor": 0.14,
           "partidos_evaluados": 29190,
-          "apuestas": 607,
-          "aciertos": 174,
-          "tasa_acierto": 0.28665568369028005,
-          "cuota_media": 4.501482699416222,
-          "beneficio_unidades": 21.78999960422516,
-          "roi": 0.035897857667586755,
-          "max_caida": 41.78999984264374
+          "apuestas": 995,
+          "aciertos": 275,
+          "tasa_acierto": 0.27638190954773867,
+          "cuota_media": 4.374412058226428,
+          "beneficio_unidades": 33.24999952316284,
+          "roi": 0.033417084947902354,
+          "max_caida": 61.97000014781952
         },
         {
           "umbral_valor": 0.16,
           "partidos_evaluados": 29190,
-          "apuestas": 380,
-          "aciertos": 102,
-          "tasa_acierto": 0.26842105263157895,
-          "cuota_media": 4.6624999968629135,
-          "beneficio_unidades": -11.450000882148743,
-          "roi": -0.03013158126881248,
-          "max_caida": 46.639999866485596
+          "apuestas": 638,
+          "aciertos": 171,
+          "tasa_acierto": 0.26802507836990597,
+          "cuota_media": 4.4595924729837515,
+          "beneficio_unidades": 1.7700004577636719,
+          "roi": 0.0027742953883443133,
+          "max_caida": 63.16999959945679
         },
         {
           "umbral_valor": 0.18,
           "partidos_evaluados": 29190,
-          "apuestas": 260,
-          "aciertos": 70,
-          "tasa_acierto": 0.2692307692307692,
-          "cuota_media": 4.688961534316723,
-          "beneficio_unidades": -0.5600008964538574,
-          "roi": -0.0021538496017456054,
-          "max_caida": 26.950000047683716
+          "apuestas": 440,
+          "aciertos": 114,
+          "tasa_acierto": 0.2590909090909091,
+          "cuota_media": 4.584840905124491,
+          "beneficio_unidades": -8.200000286102295,
+          "roi": -0.018636364286596124,
+          "max_caida": 45.72999978065491
         },
         {
           "umbral_valor": 0.2,
           "partidos_evaluados": 29190,
-          "apuestas": 171,
-          "aciertos": 43,
-          "tasa_acierto": 0.25146198830409355,
-          "cuota_media": 4.976608189923025,
-          "beneficio_unidades": -9.350000381469727,
-          "roi": -0.05467836480391653,
-          "max_caida": 27.15999984741211
+          "apuestas": 289,
+          "aciertos": 67,
+          "tasa_acierto": 0.23183391003460208,
+          "cuota_media": 4.753529406748841,
+          "beneficio_unidades": -23.84000062942505,
+          "roi": -0.08249135165891021,
+          "max_caida": 50.71000027656555
         },
         {
           "umbral_valor": 0.22,
           "partidos_evaluados": 29190,
-          "apuestas": 124,
-          "aciertos": 29,
-          "tasa_acierto": 0.23387096774193547,
-          "cuota_media": 5.102580649237479,
-          "beneficio_unidades": -10.650000095367432,
-          "roi": -0.08588709754328575,
-          "max_caida": 32.46999955177307
+          "apuestas": 197,
+          "aciertos": 49,
+          "tasa_acierto": 0.24873096446700507,
+          "cuota_media": 4.678832486196217,
+          "beneficio_unidades": -11.950000286102295,
+          "roi": -0.060659899929453275,
+          "max_caida": 36.69999980926514
         },
         {
           "umbral_valor": 0.24,
           "partidos_evaluados": 29190,
-          "apuestas": 94,
-          "aciertos": 25,
-          "tasa_acierto": 0.26595744680851063,
-          "cuota_media": 4.8539361725462244,
-          "beneficio_unidades": 5.069999933242798,
-          "roi": 0.053936169502582954,
-          "max_caida": 19.489999532699585
+          "apuestas": 130,
+          "aciertos": 34,
+          "tasa_acierto": 0.26153846153846155,
+          "cuota_media": 4.731076920949496,
+          "beneficio_unidades": -2.880000114440918,
+          "roi": -0.022153847034160908,
+          "max_caida": 28.43999981880188
         },
         {
           "umbral_valor": 0.26,
           "partidos_evaluados": 29190,
-          "apuestas": 67,
-          "aciertos": 19,
-          "tasa_acierto": 0.2835820895522388,
-          "cuota_media": 4.801791045203138,
-          "beneficio_unidades": 11.279999732971191,
-          "roi": 0.1683582049697193,
-          "max_caida": 13.019999980926514
+          "apuestas": 91,
+          "aciertos": 26,
+          "tasa_acierto": 0.2857142857142857,
+          "cuota_media": 4.746593404602218,
+          "beneficio_unidades": 10.869999647140503,
+          "roi": 0.11945054557297256,
+          "max_caida": 19.869999885559082
         },
         {
           "umbral_valor": 0.28,
           "partidos_evaluados": 29190,
-          "apuestas": 54,
-          "aciertos": 16,
-          "tasa_acierto": 0.2962962962962963,
-          "cuota_media": 4.732592595948113,
-          "beneficio_unidades": 9.529999732971191,
-          "roi": 0.17648147653650353,
-          "max_caida": 12.339999914169312
+          "apuestas": 74,
+          "aciertos": 21,
+          "tasa_acierto": 0.28378378378378377,
+          "cuota_media": 4.7890540522498055,
+          "beneficio_unidades": 8.069999933242798,
+          "roi": 0.1090540531519297,
+          "max_caida": 19.109999895095825
         },
         {
           "umbral_valor": 0.3,
           "partidos_evaluados": 29190,
-          "apuestas": 39,
-          "aciertos": 13,
-          "tasa_acierto": 0.3333333333333333,
-          "cuota_media": 4.6397436031928425,
-          "beneficio_unidades": 13.499999761581421,
-          "roi": 0.3461538400405493,
-          "max_caida": 10.0
+          "apuestas": 53,
+          "aciertos": 14,
+          "tasa_acierto": 0.2641509433962264,
+          "cuota_media": 4.766226422111943,
+          "beneficio_unidades": 2.929999828338623,
+          "roi": 0.055283015629030624,
+          "max_caida": 17.549999952316284
         }
       ]
     },
@@ -2077,12 +2245,43 @@
     }
   },
   "criterios_exito": {
-    "f1_macro_vs_ingenua_pct": 119.8,
+    "f1_macro_vs_ingenua_pct": 121.0,
     "cumple_f1_10pct": true,
-    "logloss_modelo_vs_casa": -0.0001,
-    "cumple_logloss_casa": true,
-    "accuracy_sin_cuotas_vs_casa_pp": -1.19,
+    "logloss_modelo_vs_casa": 0.00024,
+    "cumple_logloss_casa": false,
+    "accuracy_sin_cuotas_vs_casa_pp": -1.15,
     "roi_positivo": true
   },
-  "segundos_totales": 335.3
+  "ablacion_fatiga": {
+    "sin_cuotas": {
+      "con_fatiga": {
+        "log_loss": 1.0186337465185793,
+        "accuracy": 0.49044193216855086,
+        "log_loss_post_paron": 0.9684203210041746
+      },
+      "sin_fatiga": {
+        "log_loss": 1.0186974962396913,
+        "accuracy": 0.48996231586159644,
+        "log_loss_post_paron": 0.970012693170272
+      },
+      "mejora_log_loss": 6.374972111200528e-05,
+      "mejora_log_loss_post_paron": 0.0015923721660973111
+    },
+    "con_cuotas": {
+      "con_fatiga": {
+        "log_loss": 1.002337172012488,
+        "accuracy": 0.5022953066118534,
+        "log_loss_post_paron": 0.9564775154212082
+      },
+      "sin_fatiga": {
+        "log_loss": 1.0024308399107829,
+        "accuracy": 0.5025008564576909,
+        "log_loss_post_paron": 0.9578426976673446
+      },
+      "mejora_log_loss": 9.366789829479139e-05,
+      "mejora_log_loss_post_paron": 0.0013651822461364649
+    },
+    "partidos_post_paron_prueba": 1645
+  },
+  "segundos_totales": 402.2
 }

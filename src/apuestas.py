@@ -41,7 +41,7 @@ def simular_apuestas(df: pd.DataFrame, columnas_prob: list[str], umbral_valor: f
     ap = ap.sort_values("fecha")
     ap["acumulado"] = ap["ganancia"].cumsum()
     n = len(ap)
-    pico = ap["acumulado"].cummax() if n else pd.Series(dtype=float)
+    pico = ap["acumulado"].cummax().clip(lower=0) if n else pd.Series(dtype=float)  # la banca arranca en 0
     resumen = {
         "umbral_valor": umbral_valor,
         "partidos_evaluados": int(len(df)),

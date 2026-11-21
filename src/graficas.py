@@ -218,6 +218,28 @@ def mapa_pais_decada(m: pd.DataFrame):
     return fig, _cerrar(fig, "07_olap_pais_decada", "Cubo país × década (primeras divisiones)")
 
 
+def fatiga_paron(m: pd.DataFrame):
+    """Fatiga y parón: victorias locales reales − esperadas por la casa, según quién tuvo más viajeros (IC 95 %)."""
+    f = m.dropna(subset=["prob_casa_local", "dif_viajeros"])
+    f = f[f["post_paron"] == 1]
+    etiquetas = ["Visitante\n+3", "Visitante\n+1-2", "Igual", "Local\n+1-2", "Local\n+3"]
+    grupos = pd.cut(f["dif_viajeros"], [-50, -2.5, -0.5, 0.5, 2.5, 50], labels=etiquetas)
+    r = f.assign(res=(f["resultado"] == "Local").astype(float) - f["prob_casa_local"]).groupby(grupos, observed=True)["res"]
+    t = pd.DataFrame({"pp": r.mean() * 100, "ee": r.std() / np.sqrt(r.size()) * 100, "n": r.size()})
+    fig, ax = plt.subplots(figsize=(9, 4.4))
+    ax.axhline(0, color=NEUTRO, linewidth=1, linestyle="--")
+    ax.errorbar(range(len(t)), t["pp"], yerr=1.96 * t["ee"], fmt="o", color=COLORES["Local"], ecolor=NEUTRO, elinewidth=1.4,
+                capsize=4, markersize=8)
+    for i, (v, n) in enumerate(zip(t["pp"], t["n"])):
+        ax.text(i + 0.12, v, f"{num(v, 1)} pp\n({n:,} part.)".replace(",", "."), fontsize=8, color=TINTA_2, va="center")
+    ax.set_xticks(range(len(t)), t.index)
+    ax.set_xlim(-0.5, len(t) - 0.2)
+    ax.set_xlabel("Quién tuvo más convocados con viaje intercontinental en el parón")
+    ax.set_ylabel("Victorias locales: real − esperado (pp)")
+    ax.set_title("Tras el parón, la fatiga de los viajes casi no sorprende al mercado")
+    return fig, _cerrar(fig, "12_fatiga_paron", f"{num(len(f), 0)} primeros partidos tras una fecha FIFA · barras = IC 95 %")
+
+
 # ==================================================================================================
 # Resultados del modelo
 # ==================================================================================================
@@ -296,7 +318,7 @@ def curva_roi(metricas: dict):
 
 
 def generar_todas(m: pd.DataFrame | None = None, metricas: dict | None = None) -> list[dict]:
-    """Genera las 11 figuras y devuelve su descripción (se guarda en MongoDB como visualizaciones_generadas)."""
+    """Genera las 12 figuras y devuelve su descripción (se guarda en MongoDB como visualizaciones_generadas)."""
     estilo()
     m = pd.read_parquet(C.PARQUET_PARTIDOS) if m is None else m
     metricas = json.loads(C.JSON_MODELO.read_text(encoding="utf-8")) if metricas is None else metricas
@@ -308,6 +330,7 @@ def generar_todas(m: pd.DataFrame | None = None, metricas: dict | None = None) -
         (margen_casa, (m,), "Evolución temporal", "Líneas", "Margen de la casa por temporada"),
         (valor_mercado, (m,), "Relación entre variables", "Barras apiladas al 100 %", "Valor de plantilla vs. resultado"),
         (mapa_pais_decada, (m,), "Agregación OLAP", "Mapa de calor secuencial", "País × década: % de victorias locales"),
+        (fatiga_paron, (m,), "Relación entre variables", "Puntos con intervalo de confianza", "Fatiga de viajes tras el parón vs. lo esperado por la casa"),
         (comparacion_modelos, (metricas,), "Resultados del modelo", "Barras horizontales", "Log-loss de modelos y líneas base"),
         (matriz_confusion, (metricas,), "Resultados del modelo", "Mapa de calor", "Matriz de confusión del mejor modelo"),
         (importancia, (metricas,), "Resultados del modelo", "Barras con error", "Importancia de variables (sin cuotas)"),

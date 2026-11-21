@@ -14,15 +14,18 @@ from apuestas import simular_apuestas
 
 ORDEN = ["Local", "Empate", "Visitante"]
 NOMBRES = {"con_cuotas": "Con cuotas", "sin_cuotas": "Sin cuotas (fútbol puro)"}
+COLOR_TIPO = {"Línea base": ui.NEUTRO_OSCURO, "Con cuotas": ui.VERDE, "Sin cuotas (fútbol puro)": ui.SECUNDARIOS[0]}
+METRICAS = {"log_loss": "Log-loss", "accuracy": "Accuracy", "f1_macro": "F1 macro", "brier": "Brier"}
 
 
 def pagina() -> None:
     met = D.metricas()
-    ui.titulo("CRISP-DM · Modeling & Evaluation", "El modelo contra", "la casa",
+    ui.titulo("El modelo contra", "la casa",
               f"Clasificación Local / Empate / Visitante con partición temporal: se entrena hasta junio de 2023 y se evalúa en "
               f"{ui.num(met['particion']['prueba'], 0)} partidos de 2023/24 en adelante que el modelo nunca vio.",
               [("Modelo cargado desde models/ (sin re-entrenar)", "")])
-    t1, t2, t3, t4 = st.tabs(["🏆 Rendimiento", "🧠 Interpretación", "🔮 Simulador de partido", "💰 Simulador de apuestas"])
+    t1, t2, t3, t4 = st.tabs([":material/leaderboard: Rendimiento", ":material/psychology: Interpretación",
+                              ":material/sports_soccer: Simulador de partido", ":material/payments: Simulador de apuestas"])
     with t1:
         rendimiento(met)
     with t2:
@@ -46,35 +49,42 @@ def rendimiento(met: dict) -> None:
     tabla = pd.DataFrame(filas)
     c1, c2 = st.columns([1.25, 1], gap="medium")
     with c1, st.container(key="tarjeta_m1"):
-        metrica = st.segmented_control("Métrica", ["log_loss", "accuracy", "f1_macro", "brier"], default="log_loss", key="m_metrica",
-                                       format_func={"log_loss": "Log-loss", "accuracy": "Accuracy", "f1_macro": "F1 macro", "brier": "Brier"}.get)
-        metrica = metrica or "log_loss"
+        metrica = st.segmented_control("Métrica", list(METRICAS), default="log_loss", key="m_metrica", format_func=METRICAS.get) or "log_loss"
         menor_mejor = metrica in ("log_loss", "brier")
         t = tabla.sort_values(metrica, ascending=not menor_mejor)
-        colores = {"Línea base": "#5b6b62", "Con cuotas": ui.VERDE, "Sin cuotas (fútbol puro)": ui.ORO}
-        fig = go.Figure(go.Bar(x=t[metrica], y=t["Modelo"], orientation="h", marker_color=[colores[x] for x in t["Tipo"]],
-                               text=[f"{v:.4f}" for v in t[metrica]], textposition="outside", textfont=dict(color=ui.MUTED),
-                               hovertemplate="%{y}: %{x:.4f}<extra></extra>"))
+        dec = 4 if metrica in ("log_loss", "brier") else 3
+        fig = go.Figure()
+        for tipo, grupo in t.groupby("Tipo", sort=False):
+            fig.add_scatter(x=grupo[metrica], y=grupo["Modelo"], mode="markers+text", name=tipo,
+                            marker=dict(size=13, color=COLOR_TIPO[tipo], symbol="diamond" if tipo == "Línea base" else "circle"),
+                            text=[ui.num(v, dec) for v in grupo[metrica]], textposition="middle right", textfont=dict(color=ui.MUTED, size=11),
+                            hovertemplate="%{y}: %{x:." + str(dec) + "f}<extra>" + tipo + "</extra>")
         casa = met["lineas_base"]["Favorito de la casa"]["prueba"][metrica]
-        fig.add_vline(x=casa, line_dash="dash", line_color=ui.TEXTO, annotation_text="casa", annotation_font_color=ui.MUTED)
-        rango = [t[metrica].min() * (0.985 if menor_mejor else 0.9), t[metrica].max() * (1.01 if menor_mejor else 1.08)]
-        fig.update_layout(title=f"Comparación en prueba ({'menor' if menor_mejor else 'mayor'} es mejor)", xaxis=dict(range=rango),
-                          yaxis=dict(autorange="reversed"))
-        ui.grafico(fig, 430, key="m_comp")
+        fig.add_vline(x=casa, line_dash="dash", line_color=ui.MUTED)
+        fig.update_layout(title=f"{METRICAS[metrica]} en prueba ({'menor' if menor_mejor else 'mayor'} es mejor) · línea = casa",
+                          yaxis=dict(categoryorder="array", categoryarray=list(t["Modelo"])[::-1]),
+                          xaxis=dict(title=f"{METRICAS[metrica]} (el eje no parte de 0: son diferencias de milésimas)",
+                                     range=[t[metrica].min() - 0.04 * (t[metrica].max() - t[metrica].min()),
+                                            t[metrica].max() + 0.18 * (t[metrica].max() - t[metrica].min())]))
+        ui.grafico(fig, 450, key="m_comp")
     with c2, st.container(key="tarjeta_m2"):
-        conj = st.segmented_control("Conjunto", list(NOMBRES), default="con_cuotas", format_func=NOMBRES.get, key="m_conj_cm") or "con_cuotas"
-        modo = st.toggle("Usar umbral de empate (optimizado en validación)", value=True, key="m_umbral")
+        conj = st.segmented_control("Conjunto", list(NOMBRES), default="con_cuotas", key="m_conj_cm",
+                                    format_func={"con_cuotas": "Con cuotas", "sin_cuotas": "Sin cuotas"}.get) or "con_cuotas"
+        modo = st.toggle("Usar umbral de empate (elegido en validación)", value=True, key="m_umbral")
         mejor = met["resultados"][conj]["_mejor"]
         r = mejor["prueba_con_umbral"] if modo else met["resultados"][conj][mejor["modelo"]]["prueba"]
         mc = np.array(r["matriz_confusion"])
         pct = mc / mc.sum(axis=1, keepdims=True) * 100
-        fig = go.Figure(go.Heatmap(z=pct, x=ORDEN, y=ORDEN, colorscale=ui.SECUENCIAL, zmin=0, zmax=80, showscale=False,
-                                   text=[[f"{pct[i, j]:.0f}%<br>({mc[i, j]:,})" for j in range(3)] for i in range(3)],
-                                   texttemplate="%{text}", textfont=dict(size=14, family="Barlow Condensed"),
+        fig = go.Figure(go.Heatmap(z=pct, x=ORDEN, y=ORDEN, colorscale=ui.RAMPA_VERDE, zmin=0, zmax=80, showscale=False,
                                    hovertemplate="Real %{y} → predicho %{x}: %{z:.1f} %<extra></extra>"))
+        for i in range(3):
+            for j in range(3):
+                fondo = ui.color_en_rampa(ui.RAMPA_VERDE, min(pct[i, j], 80) / 80)
+                fig.add_annotation(x=ORDEN[j], y=ORDEN[i], showarrow=False, text=f"<b>{ui.num(pct[i, j], 0)} %</b><br>{ui.num(mc[i, j], 0)}",
+                                   font=dict(size=14, family="Barlow Condensed", color=ui.texto_sobre(fondo)))
         fig.update_layout(title=f"Matriz de confusión · {mejor['modelo']}", xaxis_title="Predicción", yaxis=dict(title="Real", autorange="reversed"))
-        ui.grafico(fig, 360, key="m_cm")
-        st.caption(f"Umbral: predecir empate si p(empate) ≥ {mejor['umbral_empate']:.3f}. Sube el recall de empates a costa de algo de accuracy.")
+        ui.grafico(fig, 380, key="m_cm")
+        st.caption(f"Umbral: predecir empate si p(empate) ≥ {ui.num(mejor['umbral_empate'], 3)}. Sube el recall de empates a cambio de un poco de accuracy.")
 
     st.dataframe(tabla, hide_index=True, column_config={
         "accuracy": st.column_config.ProgressColumn("Accuracy", min_value=0.4, max_value=0.55, format="%.4f"),
@@ -82,55 +92,70 @@ def rendimiento(met: dict) -> None:
         "brier": st.column_config.NumberColumn("Brier", format="%.4f"), "roc_auc_ovr": st.column_config.NumberColumn("ROC-AUC", format="%.4f")})
     ce = met["criterios_exito"]
     ui.kpis([
-        {"lbl": "Criterio 1 · F1 macro ≥ +10 % vs. ingenua", "val": "✔ Cumple" if ce["cumple_f1_10pct"] else "✘ No cumple",
-         "sub": f"<b>+{ui.num(ce['f1_macro_vs_ingenua_pct'], 1)} %</b>", "acento": ui.VERDE if ce["cumple_f1_10pct"] else ui.ROJO},
-        {"lbl": "Criterio 2 · log-loss ≤ casa", "val": "✔ Cumple" if ce["cumple_logloss_casa"] else "✘ No cumple",
-         "sub": f"diferencia {ui.num(ce['logloss_modelo_vs_casa'], 5)}", "acento": ui.VERDE if ce["cumple_logloss_casa"] else ui.ROJO},
-        {"lbl": "Extra · ROI positivo", "val": "✔ Sí" if ce["roi_positivo"] else "✘ No", "acento": ui.ORO,
+        {"lbl": "Criterio 1 · F1 macro ≥ +10 % vs. ingenua", "val": "Cumple" if ce["cumple_f1_10pct"] else "No cumple",
+         "sub": f"<b>{ui.num(ce['f1_macro_vs_ingenua_pct'], 1, signo=True)} %</b>", "acento": ui.VERDE if ce["cumple_f1_10pct"] else ui.ROJO},
+        {"lbl": "Criterio 2 · log-loss ≤ casa", "val": "Cumple" if ce["cumple_logloss_casa"] else "No cumple",
+         "sub": f"diferencia {ui.num(ce['logloss_modelo_vs_casa'], 5, signo=True)}", "acento": ui.VERDE if ce["cumple_logloss_casa"] else ui.ROJO},
+        {"lbl": "Extra · ROI positivo", "val": "Sí" if ce["roi_positivo"] else "No", "acento": ui.VERDE if ce["roi_positivo"] else ui.ROJO,
          "sub": "simulación con valor ≥ 5 % y mejores cuotas"},
-        {"lbl": "Fútbol puro vs. casa", "val": f"{ui.num(ce['accuracy_sin_cuotas_vs_casa_pp'], 2)} pp", "acento": ui.COLORES["Visitante"],
+        {"lbl": "Fútbol puro vs. casa", "val": f"{ui.num(ce['accuracy_sin_cuotas_vs_casa_pp'], 2, signo=True)} pp", "acento": ui.SECUNDARIOS[0],
          "sub": "accuracy sin usar cuotas"},
     ])
 
 
 # ==================================================================================================
 def interpretacion(met: dict) -> None:
-    conj = st.segmented_control("Modelo", list(NOMBRES), default="sin_cuotas", format_func=NOMBRES.get, key="m_conj_imp") or "sin_cuotas"
+    conj = st.segmented_control("Modelo", list(NOMBRES), default="sin_cuotas", key="m_conj_imp",
+                                format_func={"con_cuotas": "Con cuotas", "sin_cuotas": "Sin cuotas"}.get) or "sin_cuotas"
     c1, c2 = st.columns([1.2, 1], gap="medium")
     with c1, st.container(key="tarjeta_m3"):
         imp = pd.DataFrame(met["importancias"][conj]).head(12).iloc[::-1]
-        fig = go.Figure(go.Bar(x=imp["importancia"], y=imp["etiqueta"], orientation="h",
+        colores = [ui.COLOR_FATIGA if v.startswith(("descanso_real", "carga_min", "post_paron", "convocados", "viajeros", "dif_carga", "dif_descanso", "dif_viajeros"))
+                   else ui.NEUTRO for v in imp["variable"]]
+        fig = go.Figure(go.Bar(x=imp["importancia"], y=imp["etiqueta"], orientation="h", marker_color=colores,
                                error_x=dict(type="data", array=imp["desviacion"], color=ui.MUTED, thickness=1),
-                               marker=dict(color=imp["importancia"], colorscale=ui.SECUENCIAL),
                                hovertemplate="%{y}: %{x:.5f}<extra></extra>"))
-        fig.update_layout(title="Importancia por permutación (Δ log-loss al desordenar)", xaxis_title="Importancia")
-        ui.grafico(fig, 470, key="m_imp")
+        fig.update_layout(title="Importancia por permutación · violeta = variables de fatiga y parón", xaxis_title="Aumento del log-loss al desordenar la variable")
+        ui.grafico(fig, 480, key="m_imp")
     with c2, st.container(key="tarjeta_m4"):
         cal = met["calibracion"]
         clase = st.pills("Clase", ORDEN, default="Local", key="m_cal_clase") or "Local"
         fig = go.Figure()
-        fig.add_scatter(x=[0, 0.85], y=[0, 0.85], mode="lines", line=dict(color=ui.MUTED, dash="dash", width=1), showlegend=False)
-        for fuente, nombre, color in [(conj, "Modelo", ui.COLORES[clase]), ("casa", "Casa (Bet365)", ui.MUTED)]:
+        fig.add_scatter(x=[0, 0.85], y=[0, 0.85], mode="lines", line=dict(color=ui.NEUTRO_OSCURO, dash="dot", width=1), name="Perfecta", hoverinfo="skip")
+        for fuente, nombre, color, guion in [(conj, "Modelo", ui.COLORES[clase], None), ("casa", "Casa (Bet365)", ui.MUTED, "dash")]:
             d = cal[fuente][clase]
-            fig.add_scatter(x=d["prob_media"], y=d["frecuencia_real"], mode="lines+markers", name=nombre, line=dict(color=color, width=3),
+            fig.add_scatter(x=d["prob_media"], y=d["frecuencia_real"], mode="lines+markers", name=nombre, line=dict(color=color, width=3, dash=guion),
                             hovertemplate=f"{nombre}: predice %{{x:.0%}} → ocurre %{{y:.0%}}<extra></extra>")
         fig.update_layout(title=f"Calibración en prueba · {clase}", xaxis=dict(title="Probabilidad predicha", tickformat=".0%"),
                           yaxis=dict(title="Frecuencia real", tickformat=".0%"))
-        ui.grafico(fig, 470, key="m_cal")
+        ui.grafico(fig, 480, key="m_cal")
+    abl = met.get("ablacion_fatiga")
+    if abl:
+        st.markdown("#### ¿Aportan la fatiga y los parones? (ablación)")
+        st.caption("Mismo LightGBM entrenado con y sin las 12 variables de fatiga y parón. Mejora = log-loss sin fatiga − con fatiga "
+                   f"(positivo = la fatiga ayuda). «Tras parón» = los {ui.num(abl['partidos_post_paron_prueba'], 0)} partidos de prueba "
+                   "que fueron el primero después de una fecha FIFA.")
+        ui.kpis([
+            {"lbl": f"{'Con' if c == 'con_cuotas' else 'Sin'} cuotas · {'todos' if k == 'mejora_log_loss' else 'tras parón'}",
+             "val": ui.num(abl[c][k], 4, signo=True), "acento": ui.VERDE if abl[c][k] > 0 else ui.ROJO,
+             "sub": f"log-loss {ui.num(abl[c]['sin_fatiga'][k.replace('mejora_', '')], 4)} → {ui.num(abl[c]['con_fatiga'][k.replace('mejora_', '')], 4)}"}
+            for c in ("sin_cuotas", "con_cuotas") for k in ("mejora_log_loss", "mejora_log_loss_post_paron")])
     top = pd.DataFrame(met["importancias"][conj])
+    fatiga = top[top["variable"].str.contains("descanso_real|carga_min|post_paron|convocados|viajeros")]
     st.markdown("#### Lectura en lenguaje de negocio")
     if conj == "sin_cuotas":
         st.markdown(
-            f"- **{top.iloc[0]['etiqueta']}** domina: saber cuánto mejor es un equipo que otro (historial completo resumido en un número) "
+            f"- **{top.iloc[0]['etiqueta']}** domina: saber cuánto mejor es un equipo que otro (todo su historial resumido en un número) "
             "explica más que cualquier racha reciente.\n"
-            f"- Después vienen **{top.iloc[1]['etiqueta']}** y **{top.iloc[2]['etiqueta']}**: la liga cambia la tasa de empates y de "
-            "victorias locales, y el valor de plantilla aporta calidad individual que el Elo tarda en reflejar (fichajes).\n"
+            f"- Después vienen **{top.iloc[1]['etiqueta']}** y **{top.iloc[2]['etiqueta']}**.\n"
+            f"- **Fatiga y parones**: la mejor variable de ese grupo es *{fatiga.iloc[0]['etiqueta'].lower()}* (puesto "
+            f"{int(fatiga.index[0]) + 1} de {len(top)}). Aporta, pero mucho menos que el Elo o el valor de plantilla.\n"
             "- La **forma de los últimos 5 partidos** pesa muy poco una vez que se conoce el Elo: las rachas se sobrevaloran.")
     else:
         st.markdown(
-            f"- **{top.iloc[0]['etiqueta']}** concentra casi toda la información: la cuota ya resume Elo, forma, lesiones y noticias.\n"
-            "- Las variables futbolísticas añaden poco encima del mercado, pero lo suficiente para encontrar algunas cuotas con valor "
-            "(ver *Simulador de apuestas*).\n"
+            f"- **{top.iloc[0]['etiqueta']}** concentra casi toda la información: la cuota ya resume Elo, forma, lesiones, cansancio y noticias.\n"
+            "- Las variables de fútbol y de fatiga añaden poco encima del mercado, pero lo suficiente para encontrar algunas cuotas con "
+            "valor (ver *Simulador de apuestas*).\n"
             "- El modelo está tan bien calibrado como la casa: cuando dice 50 %, ocurre ~50 % de las veces.")
 
 
@@ -140,20 +165,27 @@ def simulador_partido(met: dict) -> None:
     modelos = D.modelos()
     recientes = estado[estado["ultima_fecha"] >= estado["ultima_fecha"].max() - pd.Timedelta(days=420)]
     ligas = recientes.groupby("liga")["equipo"].count()
-    ligas = ligas[ligas >= 8].index.tolist()
+    ligas = sorted(ligas[ligas >= 8].index.tolist())
     st.markdown("Elija dos equipos de la misma liga. El modelo usa su **último estado conocido** (Elo propio, forma, puntos por "
                 "partido, récord como local/visitante y valor de plantilla) y predice sin re-entrenar.")
     c0, c1, c2 = st.columns([1.2, 1, 1])
-    liga = c0.selectbox("Liga", sorted(ligas), index=sorted(ligas).index("Premier League") if "Premier League" in ligas else 0)
+    liga = c0.selectbox("Liga", ligas, index=ligas.index("LaLiga") if "LaLiga" in ligas else 0)
     equipos = recientes[recientes["liga"] == liga].sort_values("elo_propio", ascending=False)
     nombres = equipos["equipo"].tolist()
-    local = c1.selectbox("🏠 Local", nombres, index=0)
-    visitante = c2.selectbox("🚗 Visitante", [n for n in nombres if n != local], index=0)
+    local = c1.selectbox("Local", nombres, index=nombres.index("Real Madrid") if "Real Madrid" in nombres else 0)
+    visitante = c2.selectbox("Visitante", [n for n in nombres if n != local], index=0)
     c3, c4, c5 = st.columns(3)
-    descanso_l = c3.slider("Días de descanso del local", 2, 14, 7)
+    descanso_l = c3.slider("Días de descanso del local", 2, 14, 7, help="Contando todas las competiciones (liga, Champions, copa)")
     descanso_v = c4.slider("Días de descanso del visitante", 2, 14, 7)
     mes = c5.select_slider("Mes del partido", list(range(1, 13)), value=date.today().month,
                            format_func=lambda x: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"][x - 1])
+    paron = None
+    if st.toggle("Es el primer partido después de un parón de selecciones", value=False, key="m_paron"):
+        p1, p2, p3, p4 = st.columns(4)
+        paron = {"convocados_local": p1.number_input("Convocados del local", 0, 25, 12),
+                 "viajeros_local": p2.number_input("…con viaje intercontinental", 0, 25, 4, key="vl"),
+                 "convocados_visitante": p3.number_input("Convocados del visitante", 0, 25, 3),
+                 "viajeros_visitante": p4.number_input("…con viaje intercontinental", 0, 25, 0, key="vv")}
     usar_cuotas = st.toggle("Tengo las cuotas de una casa (usa el modelo con cuotas)", value=False)
     cuotas = None
     if usar_cuotas:
@@ -162,31 +194,37 @@ def simulador_partido(met: dict) -> None:
                   q3.number_input("Cuota visitante (2)", 1.01, 50.0, 3.60, 0.05))
 
     fila_l, fila_v = equipos.set_index("equipo").loc[local], equipos.set_index("equipo").loc[visitante]
-    nivel = int(fila_l["nivel"])
-    codigo = str(fila_l["liga_codigo"])
-    fila = D.fila_prediccion(fila_l, fila_v, codigo, nivel, mes, descanso_l, descanso_v, cuotas)
     paquete = modelos["con_cuotas" if usar_cuotas else "sin_cuotas"]
-    probs = D.predecir(paquete, fila)
+    base = D.fila_prediccion(fila_l, fila_v, str(fila_l["liga_codigo"]), int(fila_l["nivel"]), mes, descanso_l, descanso_v, cuotas)
+    probs = D.predecir(paquete, base)
+    probs_paron = D.predecir(paquete, D.fila_prediccion(fila_l, fila_v, str(fila_l["liga_codigo"]), int(fila_l["nivel"]), mes,
+                                                        descanso_l, descanso_v, cuotas, paron)) if paron else None
+    final = probs_paron or probs
 
     c1, c2 = st.columns([1.15, 1], gap="medium")
     with c1, st.container(key="tarjeta_m5"):
         st.markdown(f"### {local} <span style='color:var(--muted)'>vs.</span> {visitante}", unsafe_allow_html=True)
         st.caption(f"Modelo: {paquete['nombre']} · {NOMBRES[paquete['conjunto']]} · entrenado hasta {paquete['entrenado_hasta']}")
-        st.html(ui.barras_probabilidad(probs))
-        justas = {k: 1 / v for k, v in probs.items()}
+        st.html(ui.barras_probabilidad(final))
+        if probs_paron:
+            dl = (probs_paron["Local"] - probs["Local"]) * 100
+            st.caption(f"Efecto del parón en la victoria local: **{ui.num(dl, 1, signo=True)} pp** "
+                       f"({ui.num(probs['Local'] * 100, 1)} % sin parón → {ui.num(probs_paron['Local'] * 100, 1)} % con estos convocados).")
+        justas = {k: 1 / v for k, v in final.items()}
         celdas = []
         for i, k in enumerate(ORDEN):
-            valor = cuotas is not None and probs[k] * cuotas[i] > 1.0
-            extra = f"<div class='k' style='margin-top:.3rem'>casa {cuotas[i]:.2f} · VE {probs[k] * cuotas[i] - 1:+.1%}</div>" if cuotas else ""
-            celdas.append(f"<div class='sb-cuota {'valor' if valor else ''}'><div class='k'>Cuota justa {k}</div>"
-                          f"<div class='v'>{justas[k]:.2f}</div>{extra}</div>")
+            valor = cuotas is not None and final[k] * cuotas[i] > 1.0
+            extra = (f"<div class='k' style='margin-top:.3rem'>casa {ui.num(cuotas[i], 2)} · VE {ui.num((final[k] * cuotas[i] - 1) * 100, 1, signo=True)} %</div>"
+                     if cuotas else "")
+            celdas.append(f"<div class='sb-cuota {'valor' if valor else ''}'><div class='k'>Cuota justa · {k}</div>"
+                          f"<div class='v'>{ui.num(justas[k], 2)}</div>{extra}</div>")
         st.html(f"<div class='sb-cuotas'>{''.join(celdas)}</div>")
         if cuotas:
-            mejores = [k for i, k in enumerate(ORDEN) if probs[k] * cuotas[i] > 1.05]
+            mejores = [k for i, k in enumerate(ORDEN) if final[k] * cuotas[i] > 1.05]
             if mejores:
-                st.success(f"Apuesta con valor según el modelo: **{', '.join(mejores)}** (valor esperado > 5 %).", icon="💰")
+                st.success(f"Apuesta con valor según el modelo: **{', '.join(mejores)}** (valor esperado > 5 %).", icon=":material/check_circle:")
             else:
-                st.info("Ninguna cuota tiene valor esperado > 5 % según el modelo: mejor no apostar.", icon="🛑")
+                st.info("Ninguna cuota tiene valor esperado > 5 % según el modelo: mejor no apostar.", icon=":material/block:")
     with c2, st.container(key="tarjeta_m6"):
         comp = pd.DataFrame({
             "Variable": ["Elo propio", "Elo ClubElo", "Puntos prom. (5)", "Goles a favor (5)", "Goles en contra (5)", "Pts/partido temporada",
@@ -202,10 +240,11 @@ def simulador_partido(met: dict) -> None:
         ep = D.equipos_partido()
         h2h = ep[(ep["equipo"] == local) & (ep["rival"] == visitante)].sort_values("fecha", ascending=False).head(8)
         if len(h2h):
-            st.caption("Últimos enfrentamientos (desde el punto de vista del local elegido)")
+            st.caption(f"Últimos enfrentamientos (marcador desde el punto de vista de {local})")
             st.dataframe(h2h.assign(marcador=h2h["gf"].astype(int).astype(str) + " – " + h2h["gc"].astype(int).astype(str),
                                     condicion=np.where(h2h["es_local"], "Local", "Visitante"))[["fecha", "condicion", "marcador"]],
-                         hide_index=True, column_config={"fecha": st.column_config.DateColumn(format="DD/MM/YYYY")})
+                         hide_index=True, column_config={"fecha": st.column_config.DateColumn("Fecha", format="DD/MM/YYYY"),
+                                                         "condicion": "Jugó como", "marcador": "Marcador"})
         st.caption(f"Último partido registrado: {local} {fila_l['ultima_fecha']:%d/%m/%Y} · {visitante} {fila_v['ultima_fecha']:%d/%m/%Y}")
 
 
@@ -219,42 +258,40 @@ def simulador_apuestas(met: dict) -> None:
         pred = pred[pred["liga"].isin(s["f_ligas"])]
     st.markdown("Estrategia de **apuestas de valor**: se apuesta 1 unidad solo cuando `probabilidad × cuota − 1` supera el umbral. "
                 "Se evalúa en las temporadas de prueba (respeta los filtros de país y liga del panel).")
-    c1, c2, c3, c4 = st.columns([1.3, 1.2, 1, 1])
+    c1, c2 = st.columns([1.4, 1])
     estrategia = c1.segmented_control("Probabilidades", ["con_cuotas", "sin_cuotas", "casa"], default="con_cuotas", key="ap_estr",
                                       format_func={"con_cuotas": "Modelo con cuotas", "sin_cuotas": "Modelo sin cuotas", "casa": "Control: casa"}.get) or "con_cuotas"
-    umbral = c2.slider("Umbral de valor esperado", 0.0, 0.30, 0.05, 0.01, format="%.2f")
-    cuota_max = c3.slider("Cuota máxima", 2.0, 15.0, 10.0, 0.5)
-    maximas = c4.toggle("Mejor cuota del mercado", value=True, help="Si se apaga, se usan solo las cuotas de Bet365")
+    maximas = c2.toggle("Usar la mejor cuota del mercado", value=True, help="Si se apaga, se usan solo las cuotas de Bet365")
+    c3, c4 = st.columns(2)
+    umbral = c3.slider("Umbral de valor esperado", 0.0, 0.30, 0.05, 0.01, format="%.2f")
+    cuota_max = c4.slider("Cuota máxima", 2.0, 15.0, 10.0, 0.5)
     cols = ([f"p_{estrategia}_{c.lower()}" for c in ORDEN] if estrategia != "casa" else ["prob_casa_local", "prob_casa_empate", "prob_casa_visitante"])
     apuestas, res = simular_apuestas(pred, cols, umbral, maximas, cuota_max)
     if res["apuestas"] == 0:
-        st.warning("Con esos parámetros no se hace ninguna apuesta.")
+        st.info("Con esos parámetros no se hace ninguna apuesta: baje el umbral o suba la cuota máxima.")
         return
+    gana = res["beneficio_unidades"] >= 0
     ui.kpis([
-        {"lbl": "Apuestas", "val": ui.num(res["apuestas"], 0), "icono": "🎟️", "sub": f"de {ui.num(res['partidos_evaluados'], 0)} partidos"},
-        {"lbl": "Aciertos", "val": ui.num(res["tasa_acierto"] * 100, 1), "unidad": "%", "icono": "✅", "acento": ui.COLORES["Visitante"],
-         "sub": f"cuota media {ui.num(res['cuota_media'], 2)}"},
-        {"lbl": "Beneficio", "val": f"{res['beneficio_unidades']:+,.1f}".replace(",", "."), "unidad": "u", "icono": "💵",
-         "acento": ui.VERDE if res["beneficio_unidades"] > 0 else ui.ROJO, "sub": "1 unidad por apuesta"},
-        {"lbl": "ROI", "val": f"{res['roi'] * 100:+.2f}".replace(".", ","), "unidad": "%", "icono": "📈",
-         "acento": ui.VERDE if res["roi"] > 0 else ui.ROJO, "sub": "beneficio / unidades apostadas"},
-        {"lbl": "Peor racha", "val": ui.num(res["max_caida"], 1), "unidad": "u", "icono": "📉", "acento": ui.ROJO, "sub": "caída máxima desde un pico"},
+        {"lbl": "Apuestas", "val": ui.num(res["apuestas"], 0), "sub": f"de {ui.num(res['partidos_evaluados'], 0)} partidos"},
+        {"lbl": "Aciertos", "val": ui.num(res["tasa_acierto"] * 100, 1), "unidad": "%", "sub": f"cuota media {ui.num(res['cuota_media'], 2)}"},
+        {"lbl": "Beneficio", "val": ui.num(res["beneficio_unidades"], 1, signo=True), "unidad": "u", "acento": ui.VERDE if gana else ui.ROJO,
+         "sub": "1 unidad por apuesta"},
+        {"lbl": "ROI", "val": ui.num(res["roi"] * 100, 2, signo=True), "unidad": "%", "acento": ui.VERDE if gana else ui.ROJO,
+         "sub": "beneficio / unidades apostadas"},
+        {"lbl": "Peor racha", "val": ui.num(res["max_caida"], 1), "unidad": "u", "acento": ui.ROJO, "sub": "mayor caída desde el mejor momento"},
     ])
     c1, c2 = st.columns([1.6, 1], gap="medium")
     with c1, st.container(key="tarjeta_m7"):
-        fig = go.Figure()
-        color = ui.VERDE if res["beneficio_unidades"] >= 0 else ui.ROJO
-        fig.add_scatter(x=apuestas["fecha"], y=apuestas["acumulado"], mode="lines", line=dict(color=color, width=2.5), fill="tozeroy",
-                        fillcolor="rgba(34,224,138,.08)" if res["beneficio_unidades"] >= 0 else "rgba(230,103,103,.08)",
-                        hovertemplate="%{x|%d %b %Y}: %{y:+.1f} u<extra></extra>", name="Banca")
+        fig = go.Figure(go.Scatter(x=apuestas["fecha"], y=apuestas["acumulado"], mode="lines", line=dict(color=ui.VERDE if gana else ui.ROJO, width=2.5),
+                                   hovertemplate="%{x|%d %b %Y}: %{y:+.1f} u<extra></extra>", name="Banca"))
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)
-        fig.update_layout(title="Evolución de la banca (unidades)", yaxis_title="Beneficio acumulado", showlegend=False)
+        fig.update_layout(title="Evolución de la banca", yaxis_title="Unidades ganadas (acumulado)", showlegend=False)
         ui.grafico(fig, 400, key="ap_banca")
     with c2, st.container(key="tarjeta_m8"):
         por = apuestas.groupby("apuesta").agg(n=("ganancia", "size"), roi=("ganancia", "mean")).reindex(ORDEN).dropna()
         fig = go.Figure(go.Bar(x=por.index, y=por["roi"] * 100, marker_color=[ui.COLORES[k] for k in por.index],
-                               text=[f"{v * 100:+.1f}%<br>{int(n)} ap." for v, n in zip(por["roi"], por["n"])], textposition="outside",
-                               hovertemplate="%{x}: ROI %{y:.2f} %<extra></extra>"))
+                               text=[f"{ui.num(v * 100, 1, signo=True)} %<br>{ui.num(n, 0)} ap." for v, n in zip(por["roi"], por["n"])],
+                               textposition="outside", textfont=dict(color=ui.MUTED), hovertemplate="%{x}: ROI %{y:.2f} %<extra></extra>"))
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)
         fig.update_layout(title="ROI por tipo de apuesta", yaxis_title="ROI (%)")
         ui.grafico(fig, 400, key="ap_tipo")
@@ -262,20 +299,22 @@ def simulador_apuestas(met: dict) -> None:
     curva = curva[curva["apuestas"] >= 30]
     with st.container(key="tarjeta_m9"):
         fig = go.Figure()
-        fig.add_bar(x=curva["umbral_valor"] * 100, y=curva["apuestas"], name="Apuestas", marker_color="rgba(57,135,229,.35)", yaxis="y2",
+        fig.add_bar(x=curva["umbral_valor"] * 100, y=curva["apuestas"], name="Apuestas", marker_color="rgba(163,184,173,.22)", yaxis="y2",
                     hovertemplate="Umbral %{x:.0f} %: %{y:,} apuestas<extra></extra>")
-        fig.add_scatter(x=curva["umbral_valor"] * 100, y=curva["roi"] * 100, name="ROI", mode="lines+markers", line=dict(color=ui.ORO, width=3),
+        fig.add_scatter(x=curva["umbral_valor"] * 100, y=curva["roi"] * 100, name="ROI", mode="lines+markers", line=dict(color=ui.VERDE, width=3),
                         hovertemplate="Umbral %{x:.0f} %: ROI %{y:+.2f} %<extra></extra>")
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)
         fig.update_layout(title="Más exigencia = menos apuestas (y más varianza)", xaxis_title="Umbral de valor esperado (%)",
                           yaxis=dict(title="ROI (%)"), yaxis2=dict(overlaying="y", side="right", showgrid=False, visible=False))
         ui.grafico(fig, 360, key="ap_curva")
-        st.caption("Las barras (número de apuestas, sin eje) dan contexto: con pocas apuestas el ROI es pura varianza.")
+        st.caption("Las barras grises (número de apuestas) dan contexto: con pocas apuestas el ROI es pura varianza.")
     st.markdown("#### Últimas apuestas de la simulación")
     st.dataframe(apuestas.sort_values("fecha", ascending=False).head(60), hide_index=True, column_config={
-        "fecha": st.column_config.DateColumn(format="DD/MM/YYYY"), "cuota": st.column_config.NumberColumn(format="%.2f"),
+        "fecha": st.column_config.DateColumn("Fecha", format="DD/MM/YYYY"), "liga_codigo": "Liga", "local": "Local", "visitante": "Visitante",
+        "resultado": "Resultado", "apuesta": "Apuesta", "cuota": st.column_config.NumberColumn("Cuota", format="%.2f"),
         "prob_modelo": st.column_config.ProgressColumn("Prob.", min_value=0, max_value=1, format="percent"),
-        "valor_esperado": st.column_config.NumberColumn("VE", format="%.1%"), "ganancia": st.column_config.NumberColumn(format="%+.2f"),
-        "acumulado": st.column_config.NumberColumn(format="%+.1f")})
+        "valor_esperado": st.column_config.NumberColumn("VE", format="percent", help="Valor esperado = probabilidad × cuota − 1"),
+        "acierto": "Acierto", "ganancia": st.column_config.NumberColumn("Ganancia", format="%+.2f"),
+        "acumulado": st.column_config.NumberColumn("Acumulado", format="%+.1f")})
     st.warning("Simulación académica con datos históricos: no es una recomendación de apuesta. Las casas limitan a quien gana "
-               "seguido y las cuotas máximas no siempre están disponibles al mismo tiempo.", icon="⚠️")
+               "seguido y las cuotas máximas no siempre están disponibles al mismo tiempo.", icon=":material/info:")

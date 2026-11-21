@@ -29,7 +29,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (accuracy_score, balanced_accuracy_score, confusion_matrix, f1_score, log_loss,
+from sklearn.metrics import (accuracy_score, balanced_accuracy_score, confusion_matrix, f1_score,
                              precision_recall_fscore_support, roc_auc_score)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
@@ -48,10 +48,16 @@ VARS_FUTBOL = [
     "record_condicion_local", "record_condicion_visitante",
     "dias_descanso_local", "dias_descanso_visitante",
     "log_ratio_valor", "valor_plantilla_local", "valor_plantilla_visitante",
+    "descanso_real_local", "descanso_real_visitante", "dif_descanso_real",
+    "carga_min14_local", "carga_min14_visitante", "dif_carga_min14",
+    "post_paron", "convocados_local", "convocados_visitante", "viajeros_local", "viajeros_visitante", "dif_viajeros",
     "nivel", "mes",
 ]
 VARS_MERCADO = ["prob_casa_local", "prob_casa_empate", "prob_casa_visitante", "logit_casa", "margen_casa", "prob_casa_mas25", "handicap"]
 VARS_CATEGORICAS = ["liga_codigo"]
+VARS_FATIGA = ["descanso_real_local", "descanso_real_visitante", "dif_descanso_real", "carga_min14_local", "carga_min14_visitante",
+               "dif_carga_min14", "post_paron", "convocados_local", "convocados_visitante", "viajeros_local", "viajeros_visitante",
+               "dif_viajeros"]
 CONJUNTOS = {"sin_cuotas": VARS_FUTBOL, "con_cuotas": VARS_FUTBOL + VARS_MERCADO}
 
 ETIQUETAS = {
@@ -67,6 +73,12 @@ ETIQUETAS = {
     "dias_descanso_local": "Días de descanso (local)", "dias_descanso_visitante": "Días de descanso (visitante)",
     "log_ratio_valor": "Ratio de valor de plantilla (log)", "valor_plantilla_local": "Valor plantilla local (M€)",
     "valor_plantilla_visitante": "Valor plantilla visitante (M€)", "nivel": "Nivel de la liga", "mes": "Mes del partido",
+    "descanso_real_local": "Descanso real del local (todas las competiciones)", "descanso_real_visitante": "Descanso real del visitante",
+    "dif_descanso_real": "Diferencia de descanso real", "carga_min14_local": "Minutos jugados últimos 14 días (local)",
+    "carga_min14_visitante": "Minutos jugados últimos 14 días (visitante)", "dif_carga_min14": "Diferencia de carga de minutos",
+    "post_paron": "Primer partido tras parón de selecciones", "convocados_local": "Convocados al parón (local)",
+    "convocados_visitante": "Convocados al parón (visitante)", "viajeros_local": "Convocados con viaje intercontinental (local)",
+    "viajeros_visitante": "Convocados con viaje intercontinental (visitante)", "dif_viajeros": "Diferencia de viajeros",
     "prob_casa_local": "Prob. implícita casa: local", "prob_casa_empate": "Prob. implícita casa: empate",
     "prob_casa_visitante": "Prob. implícita casa: visitante", "margen_casa": "Margen de la casa",
     "prob_casa_mas25": "Prob. implícita casa: más de 2,5 goles", "logit_casa": "Log-odds casa (local vs. visitante)", "handicap": "Hándicap asiático", "liga_codigo": "Liga",
@@ -200,6 +212,29 @@ def curva_calibracion(y: pd.Series, probs: np.ndarray, bins: int = 10) -> dict:
     return salida
 
 
+def ablacion_fatiga(tr: pd.DataFrame, va: pd.DataFrame, te: pd.DataFrame, log=print) -> dict:
+    """¿Aportan las variables de fatiga y parón? Mismo LightGBM (parada temprana en validación) con y sin ellas.
+
+    Se mide en prueba total y en el subconjunto donde la hipótesis aplica (primer partido tras un parón).
+    """
+    salida = {}
+    tras_paron = te["post_paron"] == 1
+    for conjunto, numericas in CONJUNTOS.items():
+        fila = {}
+        for nombre, cols in [("con_fatiga", numericas), ("sin_fatiga", [c for c in numericas if c not in VARS_FATIGA])]:
+            modelo, _ = ajustar_lightgbm(cols, tr[cols + VARS_CATEGORICAS], tr["resultado"], va[cols + VARS_CATEGORICAS], va["resultado"])
+            p = probas_ordenadas(modelo, te[cols + VARS_CATEGORICAS])
+            fila[nombre] = {"log_loss": metricas(te["resultado"], p)["log_loss"], "accuracy": metricas(te["resultado"], p)["accuracy"],
+                            "log_loss_post_paron": metricas(te.loc[tras_paron, "resultado"], p[tras_paron.to_numpy()])["log_loss"]}
+        fila["mejora_log_loss"] = fila["sin_fatiga"]["log_loss"] - fila["con_fatiga"]["log_loss"]
+        fila["mejora_log_loss_post_paron"] = fila["sin_fatiga"]["log_loss_post_paron"] - fila["con_fatiga"]["log_loss_post_paron"]
+        salida[conjunto] = fila
+        log(f"  [ablación {conjunto}] mejora de log-loss con fatiga: total {fila['mejora_log_loss']:+.5f} · "
+            f"tras parón {fila['mejora_log_loss_post_paron']:+.5f} ({int(tras_paron.sum())} partidos)")
+    salida["partidos_post_paron_prueba"] = int(tras_paron.sum())
+    return salida
+
+
 # ==================================================================================================
 # Orquestación
 # ==================================================================================================
@@ -295,6 +330,8 @@ def ejecutar_modelado(partidos: pd.DataFrame | None = None, verbose: bool = True
 
     predicciones.to_parquet(C.PARQUET_PREDICCIONES, index=False)
 
+    ablacion = ablacion_fatiga(tr, va, te, log)
+
     # ---------------- criterios de éxito (definidos en Business Understanding) ----------------
     base_f1 = lineas_base["Siempre local"]["prueba"]["f1_macro"]
     casa = lineas_base["Favorito de la casa"]["prueba"]
@@ -318,7 +355,7 @@ def ejecutar_modelado(partidos: pd.DataFrame | None = None, verbose: bool = True
                       "distribucion_prueba": y_te.value_counts(normalize=True).round(4).to_dict()},
         "variables": {k: v + VARS_CATEGORICAS for k, v in CONJUNTOS.items()},
         "lineas_base": lineas_base, "resultados": resultados, "importancias": importancias,
-        "calibracion": calibracion, "simulacion": simulacion, "criterios_exito": criterios,
+        "calibracion": calibracion, "simulacion": simulacion, "criterios_exito": criterios, "ablacion_fatiga": ablacion,
         "segundos_totales": round(time.perf_counter() - t0, 1),
     }
     C.JSON_MODELO.write_text(json.dumps(salida, indent=2, ensure_ascii=False), encoding="utf-8")

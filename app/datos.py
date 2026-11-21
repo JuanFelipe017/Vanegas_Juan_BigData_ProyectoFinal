@@ -23,6 +23,7 @@ COLUMNAS_PARTIDOS = [
     "valor_plantilla_local", "valor_plantilla_visitante", "log_ratio_valor", "puntos_prom5_local", "puntos_prom5_visitante",
     "tiros_local", "tiros_visitante", "tiros_arco_local", "tiros_arco_visitante", "corners_local", "corners_visitante",
     "amarillas_local", "amarillas_visitante", "rojas_local", "rojas_visitante", "faltas_local", "faltas_visitante",
+    "post_paron", "dif_viajeros", "dif_descanso_real", "dif_carga_min14",
 ]
 
 
@@ -137,7 +138,8 @@ def descripcion_filtros() -> str:
 # Predicción de un partido nuevo con el modelo guardado
 # ==================================================================================================
 def fila_prediccion(local: pd.Series, visitante: pd.Series, liga_codigo: str, nivel: int, mes: int, descanso_l: float,
-                    descanso_v: float, cuotas: tuple[float, float, float] | None) -> pd.DataFrame:
+                    descanso_v: float, cuotas: tuple[float, float, float] | None,
+                    paron: dict | None = None) -> pd.DataFrame:
     """Construye las variables del partido con el mismo significado que en el entrenamiento."""
     vl, vv = local["valor_plantilla"], visitante["valor_plantilla"]
     fila = {
@@ -157,7 +159,15 @@ def fila_prediccion(local: pd.Series, visitante: pd.Series, liga_codigo: str, ni
         "nivel": nivel, "mes": mes, "liga_codigo": liga_codigo,
         "prob_casa_local": np.nan, "prob_casa_empate": np.nan, "prob_casa_visitante": np.nan, "logit_casa": np.nan,
         "margen_casa": np.nan, "prob_casa_mas25": np.nan, "handicap": np.nan,
+        # fatiga: el descanso del formulario es descanso real; la carga de minutos se deja al modelo (NaN = desconocida)
+        "descanso_real_local": descanso_l, "descanso_real_visitante": descanso_v, "dif_descanso_real": descanso_l - descanso_v,
+        "carga_min14_local": np.nan, "carga_min14_visitante": np.nan, "dif_carga_min14": np.nan,
+        "post_paron": 0.0, "convocados_local": 0.0, "convocados_visitante": 0.0,
+        "viajeros_local": 0.0, "viajeros_visitante": 0.0, "dif_viajeros": 0.0,
     }
+    if paron:
+        fila.update({"post_paron": 1.0, **{k: float(v) for k, v in paron.items()},
+                     "dif_viajeros": float(paron["viajeros_local"] - paron["viajeros_visitante"])})
     if cuotas:
         inv = np.array([1 / q for q in cuotas])
         p = inv / inv.sum()

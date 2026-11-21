@@ -19,7 +19,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-cambie_esta_clave}
     ports:
-      - "${MONGO_PUERTO_HOST:-27018}:27017"
+      - "127.0.0.1:${MONGO_PUERTO_HOST:-27018}:27017"   # solo este equipo: no exponer Mongo a la red
     volumes:
       - mongo_data:/data/db              # persistencia de MongoDB entre reinicios
     healthcheck:
@@ -39,7 +39,7 @@ services:
       mongo:
         condition: service_healthy
     ports:
-      - "${JUPYTER_PUERTO_HOST:-8888}:8888"
+      - "127.0.0.1:${JUPYTER_PUERTO_HOST:-8888}:8888"   # solo este equipo: Jupyter ejecuta código
     volumes:
       - ./data:/proyecto/data            # data/raw (descarga) y data/processed (Parquet)
       - ./models:/proyecto/models        # modelos .joblib y métricas

@@ -120,6 +120,10 @@ def construir_insights(m: pd.DataFrame, met: dict) -> tuple[list[dict], list[dic
     deciles = pd.qcut(d["log_ratio_valor"], 10, labels=False)
     local_dec = d.groupby(deciles)["resultado"].apply(lambda s: (s == "Local").mean() * 100)
     primera = m[m["nivel"] == 1].groupby("liga", observed=True)["total_goles"].mean().sort_values()
+    abl = met.get("ablacion_fatiga", {})
+    pp = m[(m["post_paron"] == 1)].dropna(subset=["prob_casa_local", "dif_viajeros"])
+    res_pp = ((pp["resultado"] == "Local").astype(float) - pp["prob_casa_local"])
+    muchos = res_pp[pp["dif_viajeros"] <= -3].mean() * 100 if len(pp) else float("nan")    # el visitante con 3+ viajeros más
     empates = (m["resultado"] == "Empate").mean() * 100
 
     insights = [
@@ -164,6 +168,17 @@ def construir_insights(m: pd.DataFrame, met: dict) -> tuple[list[dict], list[dic
          "texto": f"Entre primeras divisiones, {primera.index[-1]} promedia {num(primera.iloc[-1], 2)} goles por partido y "
                   f"{primera.index[0]} solo {num(primera.iloc[0], 2)}. Un modelo de goles debe tener en cuenta la liga.",
          "valor": round(float(primera.iloc[-1] - primera.iloc[0]), 3), "unidad": "goles por partido"},
+        {"id": 9, "tema": "Fatiga y parones", "titulo": "La fatiga de los parones pesa justo después de la fecha FIFA",
+         "texto": f"Con los minutos de 1,9 millones de apariciones de jugadores y 50.099 partidos de selecciones se midió, para "
+                  f"{num(len(pp), 0)} primeros partidos tras una fecha FIFA, cuántos titulares viajaron con su selección. Cuando el "
+                  f"visitante trajo 3 o más viajeros intercontinentales que el local, las victorias locales se desviaron {num(muchos, 1)} pp de lo "
+                  f"que esperaba la casa, dentro del margen de error. En la ablación, agregar las 12 variables de fatiga cambió el "
+                  f"log-loss del modelo sin cuotas en {num(abl.get('sin_cuotas', {}).get('mejora_log_loss', 0) * -1, 4)} y el del modelo "
+                  f"con cuotas en {num(abl.get('con_cuotas', {}).get('mejora_log_loss', 0) * -1, 4)} en promedio, casi nada; pero en los "
+                  f"partidos justo después de un parón la mejora fue de {num(abl.get('sin_cuotas', {}).get('mejora_log_loss_post_paron', 0), 4)} "
+                  f"(sin cuotas) y {num(abl.get('con_cuotas', {}).get('mejora_log_loss_post_paron', 0), 4)} (con cuotas), muchas veces "
+                  f"mayor: la fatiga informa justo donde la hipótesis aplica, aunque gran parte ya está en las cuotas.",
+         "valor": round(float(abl.get("sin_cuotas", {}).get("mejora_log_loss", 0)), 5), "unidad": "mejora de log-loss (sin cuotas)"},
     ]
     recomendaciones = [
         {"id": 1, "dirigida_a": "Apostadores", "texto": "No apostar con las cuotas de una sola casa: sin comparar cuotas el ROI esperado es "
@@ -175,6 +190,9 @@ def construir_insights(m: pd.DataFrame, met: dict) -> tuple[list[dict], list[dic
          "modelo entrenado con los 2000 sobreestima al local. Vigilar la calibración con el diagrama de la pestaña Modelo."},
         {"id": 4, "dirigida_a": "Equipo de datos", "texto": "Para mejorar el empate, probar un modelo específico de goles (Poisson "
          "bivariado o Dixon-Coles) y variables de estilo (tiros, xG) cuando la fuente las tenga completas."},
+        {"id": 5, "dirigida_a": "Apostadores y analistas", "texto": "No apostar contra un equipo solo porque viene de un parón con muchos "
+         "convocados: el mercado ya ajusta la cuota. La fatiga solo daría ventaja con información que la casa aún no tiene, como "
+         "minutos reales del viaje o lesiones confirmadas antes de que se publiquen."},
     ]
     return insights, recomendaciones
 

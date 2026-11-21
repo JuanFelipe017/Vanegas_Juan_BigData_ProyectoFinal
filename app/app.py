@@ -27,7 +27,7 @@ ui.registrar_plantilla(st.session_state["f_animaciones"])
 # Pantalla de espera: el servicio de procesamiento todavía no termina el pipeline
 # --------------------------------------------------------------------------------------------------
 if not D.listo():
-    ui.titulo("Calentando motores", "El pipeline está", "procesando…",
+    ui.titulo("El pipeline está", "procesando…",
               "El contenedor <b>procesamiento</b> está descargando los datos, ejecutando el ETL y entrenando los modelos. "
               "Esta página se actualiza sola cada 5 segundos.", [("En proceso", "oro")])
 
@@ -51,10 +51,15 @@ def restablecer() -> None:
 
 
 partidos = D.partidos()
+s = st.session_state
+activos = (s["f_temporadas"] != D.FILTROS_DEFECTO["f_temporadas"]) + sum(bool(s[k]) for k in ("f_continentes", "f_paises", "f_ligas", "f_niveles"))
 with st.container(key="panel_flotante"):
-    with st.popover("Opciones", icon=":material/tune:"):
-        ui.panel_titulo("Panel de", "opciones")
-        st.caption("Los filtros aplican a todas las pestañas (slice & dice del cubo OLAP).")
+    with st.popover(f"Opciones · {activos}" if activos else "Opciones", icon=":material/tune:"):
+        ui.panel_titulo("Filtros", "globales")
+        c1, c2 = st.columns([1.3, 1], vertical_alignment="center")
+        c1.html(f'<div class="sb-panel-conteo"><b>{ui.num(len(D.filtrar(partidos)), 0)}</b><span>partidos con estos filtros</span></div>')
+        c2.button("Restablecer", on_click=restablecer, width="stretch", icon=":material/restart_alt:", disabled=not activos)
+        st.caption("Aplican a todas las pestañas: recortan el cubo por temporada, país, liga y nivel.")
         st.slider("Temporadas (año de inicio)", 2000, 2026, key="f_temporadas")
         continentes = sorted(partidos["continente"].unique())
         st.pills("Continente", continentes, selection_mode="multi", key="f_continentes")
@@ -66,12 +71,7 @@ with st.container(key="panel_flotante"):
         st.segmented_control("Nivel de la liga", [1, 2, 3, 4, 5], selection_mode="multi", key="f_niveles",
                              format_func=lambda n: f"{n}ª")
         st.divider()
-        st.toggle("Animaciones", key="f_animaciones", help="Transiciones, contadores y efectos del estadio")
-        c1, c2 = st.columns(2)
-        c1.button("Restablecer", on_click=restablecer, width="stretch", icon=":material/restart_alt:")
-        n = len(D.filtrar(partidos))
-        c2.html(f'<div style="text-align:right;font:700 1.35rem/1.1 var(--display);color:var(--green)">{ui.num(n, 0)}'
-                f'<div style="font-size:.7rem;color:var(--muted);letter-spacing:.12em">PARTIDOS</div></div>')
+        st.toggle("Animaciones", key="f_animaciones", help="Marcador animado, ticker de insights y transiciones de los gráficos")
 
 # --------------------------------------------------------------------------------------------------
 # Navegación superior
@@ -79,7 +79,7 @@ with st.container(key="panel_flotante"):
 from paginas import datos_tabla, insights, modelo, resumen, visualizaciones  # noqa: E402
 
 navegacion = st.navigation([
-    st.Page(resumen.pagina, title="Resumen", icon=":material/stadium:", url_path="resumen", default=True),
+    st.Page(resumen.pagina, title="Resumen", icon=":material/stadium:", default=True),
     st.Page(datos_tabla.pagina, title="Datos", icon=":material/table_chart:", url_path="datos"),
     st.Page(visualizaciones.pagina, title="Visualizaciones", icon=":material/monitoring:", url_path="visualizaciones"),
     st.Page(modelo.pagina, title="Modelo", icon=":material/model_training:", url_path="modelo"),

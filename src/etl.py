@@ -60,6 +60,11 @@ def cargar_crudos() -> dict[str, pd.DataFrame]:
         "tm_clubes": pd.read_csv(C.DATA_RAW / "clubs.csv.gz"),
         "tm_competiciones": pd.read_csv(C.DATA_RAW / "competitions.csv.gz"),
         "tm_valores": pd.read_csv(C.DATA_RAW / "player_valuations.csv.gz"),
+        "tm_apariciones": pd.read_csv(C.DATA_RAW / "appearances.csv.gz", low_memory=False,
+                                      usecols=["player_id", "player_club_id", "date", "minutes_played"]),
+        "tm_jugadores": pd.read_csv(C.DATA_RAW / "players.csv.gz", low_memory=False,
+                                    usecols=["player_id", "country_of_citizenship", "international_caps"]),
+        "selecciones": pd.read_csv(C.DATA_RAW / "selecciones_results.csv"),
     }
 
 
@@ -449,6 +454,116 @@ def unir_valor_mercado(m: pd.DataFrame, mapeo: pd.DataFrame, valores: pd.DataFra
     return m
 
 
+def _confederacion_selecciones(sel: pd.DataFrame) -> pd.Series:
+    """Confederación de cada selección según el torneo continental que más juega (Euro → UEFA, Copa América → CONMEBOL…)."""
+    reglas = [("UEFA", "UEFA"), ("Copa América", "CONMEBOL"), ("CONMEBOL", "CONMEBOL"), ("Gold Cup", "CONCACAF"),
+              ("CONCACAF", "CONCACAF"), ("African", "CAF"), ("CAF", "CAF"), ("AFC", "AFC"), ("Asian", "AFC"), ("Oceania", "OFC"), ("OFC", "OFC")]
+    largo = pd.concat([sel[["home_team", "tournament"]].set_axis(["equipo", "torneo"], axis=1),
+                       sel[["away_team", "tournament"]].set_axis(["equipo", "torneo"], axis=1)])
+    largo["confederacion"] = None
+    for clave, conf in reglas:
+        sin = largo["confederacion"].isna() & largo["torneo"].str.contains(clave, regex=False)
+        largo.loc[sin, "confederacion"] = conf
+    return largo.dropna().groupby("equipo")["confederacion"].agg(lambda s: s.value_counts().index[0])
+
+
+def variables_fatiga(m: pd.DataFrame, mapeo: pd.DataFrame, tm_partidos: pd.DataFrame, apariciones: pd.DataFrame,
+                     jugadores: pd.DataFrame, selecciones: pd.DataFrame, reg: RegistroETL) -> pd.DataFrame:
+    """Fatiga y parones de selecciones, por equipo y partido, solo con información previa al partido.
+
+    - descanso_real: días desde el último partido del club en CUALQUIER competición (liga, Champions, copa).
+    - carga_min14: minutos jugados por los jugadores del club entre 15 y 2 días antes del partido.
+    - post_paron: entre el partido anterior del club y este hubo una fecha FIFA (≥ 20 partidos de selecciones).
+    - convocados: jugadores habituales (≥ 45 min en algún partido de los 35 días previos al parón) que jugaron con
+      su selección en ese parón; viajeros: los de esos convocados cuya selección es de otra confederación que la liga.
+    Solo hay datos de Transfermarkt para ligas con código Transfermarkt desde la temporada 2012: fuera de eso, NaN.
+    """
+    ids = mapeo.set_index("equipo")["club_id"]
+    cubierto = m["tm_competicion"].notna() & (m["temporada_inicio"] >= 2012)
+    # calendario de cada club en todas las competiciones de Transfermarkt
+    tm = tm_partidos.drop_duplicates("game_id")
+    calendario = pd.concat([tm[["home_club_id", "date"]].set_axis(["club_id", "fecha_prev"], axis=1),
+                            tm[["away_club_id", "date"]].set_axis(["club_id", "fecha_prev"], axis=1)])
+    calendario["fecha_prev"] = pd.to_datetime(calendario["fecha_prev"])
+    # + partidos de liga de Football-Data: cubren lo que Transfermarkt aún no tiene (p. ej. la temporada 2026/27)
+    liga = pd.concat([pd.DataFrame({"club_id": m[l].astype(str).map(ids), "fecha_prev": m["fecha"]}) for l in ("local", "visitante")])
+    calendario = pd.concat([calendario, liga.dropna()]).astype({"club_id": "int64"})
+    calendario = calendario.drop_duplicates().sort_values("fecha_prev")
+    fin_minutos = pd.to_datetime(apariciones["date"]).max()     # después de esta fecha no hay minutos: NaN, no 0
+    # minutos acumulados por club y día
+    ap = apariciones.assign(fecha=pd.to_datetime(apariciones["date"]))
+    minutos = ap.groupby(["player_club_id", "fecha"])["minutes_played"].sum().rename("min").reset_index()
+    minutos = minutos.sort_values(["player_club_id", "fecha"])
+    minutos["acum"] = minutos.groupby("player_club_id")["min"].cumsum()
+    minutos = minutos.rename(columns={"player_club_id": "club_id"}).sort_values("fecha")
+    # selecciones: partidos por día y por equipo (desde 2011 para cubrir la primera temporada)
+    sel = selecciones.assign(fecha=pd.to_datetime(selecciones["date"]))
+    sel = sel[sel["fecha"] >= "2011-06-01"]
+    conf_sel = _confederacion_selecciones(sel)
+    por_dia = sel.groupby("fecha").size().rename("n").reset_index().sort_values("fecha")
+    por_dia["acum"] = por_dia["n"].cumsum()
+    partidos_sel = pd.concat([sel[["home_team", "fecha"]].set_axis(["seleccion", "fecha_sel"], axis=1),
+                              sel[["away_team", "fecha"]].set_axis(["seleccion", "fecha_sel"], axis=1)])
+    nac = jugadores.assign(seleccion=jugadores["country_of_citizenship"].replace(C.ALIAS_SELECCION))
+    # shortcut: international_caps es el dato actual del jugador (no el de esa fecha); aproxima "es internacional".
+    nac = nac[nac["international_caps"].fillna(0) >= 1][["player_id", "seleccion"]]
+
+    def asof(izq, der, col_izq, col_der, por=None):
+        return pd.merge_asof(izq.sort_values(col_izq), der, left_on=col_izq, right_on=col_der, by=por, direction="backward")
+
+    for lado in ("local", "visitante"):
+        base = pd.DataFrame({"idx": m.index, "club_id": m[lado].astype(str).map(ids), "fecha": m["fecha"]})
+        base = base[cubierto & base["club_id"].notna()].copy()
+        base["club_id"] = base["club_id"].astype("int64")
+        base["ref"] = base["fecha"] - pd.Timedelta(days=2)         # el mismo partido puede figurar con ±1 día
+        base = asof(base, calendario.astype({"club_id": "int64"}), "ref", "fecha_prev", "club_id")
+        base["descanso_real"] = (base["fecha"] - base["fecha_prev"]).dt.days.clip(upper=30)
+        # carga de minutos: acumulado(d−2) − acumulado(d−15)
+        mins = minutos.astype({"club_id": "int64"})
+        a2 = asof(base[["idx", "club_id", "ref"]], mins[["club_id", "fecha", "acum"]], "ref", "fecha", "club_id")
+        base["ref15"] = base["fecha"] - pd.Timedelta(days=15)
+        a15 = asof(base[["idx", "club_id", "ref15"]], mins[["club_id", "fecha", "acum"]], "ref15", "fecha", "club_id")
+        base = base.merge(a2[["idx", "acum"]].rename(columns={"acum": "a2"}), on="idx", how="left")
+        base = base.merge(a15[["idx", "acum"]].rename(columns={"acum": "a15"}), on="idx", how="left")
+        base["carga_min14"] = (base["a2"].fillna(0) - base["a15"].fillna(0)).where(base["a2"].notna() & (base["fecha"] <= fin_minutos))
+        # ¿hubo fecha FIFA entre el partido anterior y este?
+        hoy = asof(base[["idx", "fecha"]].assign(r=base["fecha"] - pd.Timedelta(days=1)), por_dia[["fecha", "acum"]].rename(columns={"fecha": "f"}), "r", "f")
+        antes = asof(base[["idx", "fecha_prev"]].dropna(), por_dia[["fecha", "acum"]].rename(columns={"fecha": "f"}), "fecha_prev", "f")
+        base = base.merge(hoy[["idx", "acum"]].rename(columns={"acum": "s1"}), on="idx", how="left")
+        base = base.merge(antes[["idx", "acum"]].rename(columns={"acum": "s0"}), on="idx", how="left")
+        base["post_paron"] = (((base["s1"].fillna(0) - base["s0"].fillna(0)) >= 20) & base["fecha_prev"].notna()
+                              & (base["descanso_real"] <= 21))
+        # convocados y viajeros (solo partidos después de un parón)
+        pp = base.loc[base["post_paron"], ["idx", "club_id", "fecha_prev", "fecha"]]
+        habituales = pp.merge(ap.loc[ap["minutes_played"] >= 45, ["player_club_id", "player_id", "fecha"]],
+                              left_on="club_id", right_on="player_club_id", suffixes=("", "_ap"))
+        habituales = habituales[(habituales["fecha_ap"] <= habituales["fecha_prev"]) &
+                                (habituales["fecha_ap"] >= habituales["fecha_prev"] - pd.Timedelta(days=35))]
+        habituales = habituales.drop_duplicates(["idx", "player_id"]).merge(nac, on="player_id")
+        jugo = habituales.merge(partidos_sel, on="seleccion")
+        jugo = jugo[(jugo["fecha_sel"] > jugo["fecha_prev"]) & (jugo["fecha_sel"] < jugo["fecha"])].drop_duplicates(["idx", "player_id"])
+        conf_liga = m.loc[jugo["idx"], "pais"].astype(str).map(C.CONFEDERACION_PAIS).fillna("UEFA").to_numpy()
+        jugo["viajero"] = jugo["seleccion"].map(conf_sel).to_numpy() != conf_liga
+        conteo = jugo.groupby("idx").agg(convocados=("player_id", "size"), viajeros=("viajero", "sum"))
+        base = base.set_index("idx").join(conteo)
+        base.loc[base["post_paron"], ["convocados", "viajeros"]] = base.loc[base["post_paron"], ["convocados", "viajeros"]].fillna(0)
+        base.loc[~base["post_paron"], ["convocados", "viajeros"]] = 0
+        base.loc[base["fecha_prev"] > fin_minutos, ["convocados", "viajeros"]] = np.nan
+        for col in ["descanso_real", "carga_min14", "convocados", "viajeros"]:
+            m[f"{col}_{lado}"] = base[col].reindex(m.index).astype("float32")
+        m[f"post_paron_{lado}"] = base["post_paron"].reindex(m.index).astype("float32")
+    m["post_paron"] = m[["post_paron_local", "post_paron_visitante"]].max(axis=1)
+    m["dif_carga_min14"] = (m["carga_min14_local"] - m["carga_min14_visitante"]).astype("float32")
+    m["dif_descanso_real"] = (m["descanso_real_local"] - m["descanso_real_visitante"]).astype("float32")
+    m["dif_viajeros"] = (m["viajeros_local"] - m["viajeros_visitante"]).astype("float32")
+    n = len(m)
+    reg.anotar("Enriquecimiento", "Descanso real (todas las competiciones) y carga de minutos 14 días (Transfermarkt appearances)", n, n,
+               int(m["descanso_real_local"].notna().sum()), f"{len(apariciones):,} apariciones de jugadores → minutos por club y día")
+    reg.anotar("Enriquecimiento", "Parón de selecciones: post-parón, convocados y viajeros entre confederaciones (martj42 + players)", n, n,
+               int((m["post_paron"] == 1).sum()), f"{len(selecciones):,} partidos de selecciones · {len(nac):,} internacionales con selección identificada")
+    return m
+
+
 def variables_derivadas(m: pd.DataFrame) -> pd.DataFrame:
     """Variables de negocio derivadas (para EDA, dashboard y modelo)."""
     m["total_goles"] = (m["goles_local"] + m["goles_visitante"]).astype("int8")
@@ -471,10 +586,6 @@ def variables_derivadas(m: pd.DataFrame) -> pd.DataFrame:
 # ==================================================================================================
 # 3. AGREGACIÓN (cubos OLAP)
 # ==================================================================================================
-def _pct(serie: pd.Series) -> float:
-    return float(serie.mean() * 100) if len(serie) else np.nan
-
-
 def cubo_liga_temporada(m: pd.DataFrame) -> pd.DataFrame:
     g = m.groupby(["continente", "pais", "liga_codigo", "liga", "nivel", "temporada", "temporada_inicio"], observed=True)
     cubo = g.agg(
@@ -607,6 +718,9 @@ def ejecutar_etl(verbose: bool = True) -> dict:
     con_valor = int(m["log_ratio_valor"].notna().sum())
     reg.anotar("Enriquecimiento", "Valor de mercado de ambas plantillas al inicio de la temporada (Transfermarkt)", n, n, con_valor,
                f"{len(tm_valores):,} valoraciones de jugadores → suma por club y temporada")
+
+    m = variables_fatiga(m, mapeo, crudos["tm_partidos"], crudos["tm_apariciones"], crudos["tm_jugadores"],
+                         crudos["selecciones"], reg)
 
     m = variables_derivadas(m)
     reg.anotar("Enriquecimiento", "Variables derivadas: total_goles, más de 2,5, ambos marcan, favorito, acierto, sorpresa", n, n, n,

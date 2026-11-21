@@ -29,15 +29,30 @@
       "filas": 656301,
       "columnas": 6,
       "memoria_mb": 49.33
+    },
+    "tm_apariciones": {
+      "filas": 1894350,
+      "columnas": 4,
+      "memoria_mb": 79.56
+    },
+    "tm_jugadores": {
+      "filas": 50149,
+      "columnas": 3,
+      "memoria_mb": 1.58
+    },
+    "selecciones": {
+      "filas": 50099,
+      "columnas": 9,
+      "memoria_mb": 6.24
     }
   },
-  "filas_crudas_total": 1258950,
-  "tiempo_carga_s": 3.9,
-  "tiempo_total_s": 115.76,
+  "filas_crudas_total": 3253548,
+  "tiempo_carga_s": 6.54,
+  "tiempo_total_s": 112.12,
   "partidos_limpios": 238854,
-  "columnas_limpias": 87,
-  "memoria_limpia_mb": 77.09,
-  "peso_parquet_mb": 21.24,
+  "columnas_limpias": 101,
+  "memoria_limpia_mb": 90.47,
+  "peso_parquet_mb": 21.95,
   "filas_formato_largo": 477708,
   "equipos": 1222,
   "ligas": 38,
@@ -327,6 +342,22 @@
       "despues": 238854,
       "afectados": 87816,
       "detalle": "656,301 valoraciones de jugadores → suma por club y temporada"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Descanso real (todas las competiciones) y carga de minutos 14 días (Transfermarkt appearances)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 59938,
+      "detalle": "1,894,350 apariciones de jugadores → minutos por club y día"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Parón de selecciones: post-parón, convocados y viajeros entre confederaciones (martj42 + players)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 8553,
+      "detalle": "50,099 partidos de selecciones · 16,946 internacionales con selección identificada"
     },
     {
       "tecnica": "Enriquecimiento",

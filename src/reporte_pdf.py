@@ -207,7 +207,7 @@ def generar(doc_m: dict | None = None, salida: Path = C.REPORTE_PDF) -> Path:
     h += [PageBreak(), Paragraph("4. Análisis exploratorio", E["h1"]),
           Paragraph("Cada gráfica responde una pregunta de negocio. El título enuncia el hallazgo; los tres resultados usan siempre los "
                     "mismos colores (validados para daltonismo) y llevan etiqueta directa.", E["p"])]
-    for clave, ancho in [("01", 16.5), ("02", 14.5), ("03", 14), ("04", 11.5), ("05", 15.5), ("06", 16.5)]:
+    for clave, ancho in [("01", 16.5), ("02", 14.5), ("03", 14), ("04", 11.5), ("05", 15.5), ("06", 16.5), ("12", 15.5)]:
         if clave in figs:
             h += [KeepTogether([figura(figs[clave]["archivo"], ancho), Spacer(1, 0.35 * cm)])]
 

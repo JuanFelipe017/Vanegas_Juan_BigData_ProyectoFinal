@@ -10,7 +10,7 @@ gatherUsageStats = false
 
 [client]
 toolbarMode = "minimal"
-showErrorDetails = "full"
+showErrorDetails = "type"
 
 [theme]
 base = "dark"

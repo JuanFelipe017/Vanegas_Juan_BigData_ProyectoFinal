@@ -10,17 +10,18 @@ from config import REPORTE_PDF
 
 def pagina() -> None:
     doc, fuente = D.documento_mongo()
-    ui.titulo("Insights · MongoDB · Reporte PDF", "Lo que", "aprendimos",
+    ui.titulo("Lo que", "aprendimos",
               "Insights y recomendaciones leídos en vivo desde el documento de análisis guardado en MongoDB, y el reporte PDF "
               "generado automáticamente a partir de ese mismo documento.",
-              [(f"Fuente: {fuente}", "" if fuente == "MongoDB" else "rojo")])
+              [(f"Fuente: {fuente.split(' (')[0]}", "" if fuente == "MongoDB" else "neutro")])
     if not doc:
         st.error("No hay documento de análisis. Revise que el servicio de procesamiento haya terminado.")
         return
     if fuente != "MongoDB":
-        st.warning("MongoDB no respondió; se muestra la copia JSON del documento (reports/analisis_mongodb.json).", icon="⚠️")
+        st.caption("Esta versión en la nube no tiene MongoDB: se muestra la copia JSON del mismo documento "
+                   "(reports/analisis_mongodb.json). Con Docker, los insights se leen en vivo desde MongoDB.")
 
-    t1, t2, t3 = st.tabs(["💡 Insights y recomendaciones", "📄 Reporte PDF", "🍃 Documento MongoDB"])
+    t1, t2, t3 = st.tabs([":material/lightbulb: Insights y recomendaciones", ":material/picture_as_pdf: Reporte PDF", ":material/database: Documento MongoDB"])
     with t1:
         temas = sorted({i["tema"] for i in doc["insights"]})
         elegidos = st.pills("Filtrar por tema", temas, selection_mode="multi", key="ins_temas")
@@ -45,16 +46,15 @@ def pagina() -> None:
     with t3:
         meta = doc["metadata"]
         ui.kpis([
-            {"lbl": "Base / colección", "val": "futbol_apuestas", "sub": "colección <b>analisis</b>", "icono": "🍃"},
-            {"lbl": "Fecha del análisis", "val": meta["fecha_analisis"][:10], "sub": meta["fecha_analisis"][11:19] + " UTC", "icono": "🗓️", "acento": ui.ORO},
-            {"lbl": "Insights", "val": str(len(doc["insights"])), "sub": f"{len(doc['recomendaciones'])} recomendaciones", "icono": "💡"},
-            {"lbl": "Problemas de calidad", "val": str(len(doc["calidad_datos"]["problemas_detectados"])), "icono": "🧹", "acento": ui.ROJO,
+            {"lbl": "Base / colección", "val": "futbol_apuestas", "sub": "colección <b>analisis</b>"},
+            {"lbl": "Fecha del análisis", "val": meta["fecha_analisis"][:10], "sub": meta["fecha_analisis"][11:19] + " UTC", "acento": ui.ORO},
+            {"lbl": "Insights", "val": str(len(doc["insights"])), "sub": f"{len(doc['recomendaciones'])} recomendaciones"},
+            {"lbl": "Problemas de calidad", "val": str(len(doc["calidad_datos"]["problemas_detectados"])), "acento": ui.ROJO,
              "sub": f"{doc['calidad_datos']['registros_eliminados']} partidos eliminados"},
         ])
         st.markdown("#### Consultas en vivo")
         if fuente == "MongoDB":
             try:
-                import sys
                 from pymongo import MongoClient
 
                 import config as C
@@ -66,7 +66,7 @@ def pagina() -> None:
                     with st.expander(nombre.replace("_", " ").capitalize()):
                         st.json(valor, expanded=2)
             except Exception as error:  # noqa: BLE001
-                st.warning(f"No se pudieron ejecutar las consultas: {error}")
+                st.info("No se pudieron ejecutar las consultas en vivo; revise que el contenedor de MongoDB esté encendido.")
         else:
             st.caption("Las consultas en vivo necesitan MongoDB.")
         st.markdown("#### Documento completo")

@@ -38,15 +38,15 @@ def preparar(m: pd.DataFrame) -> pd.DataFrame:
 
 def pagina() -> None:
     m = D.filtrar(D.partidos())
-    ui.titulo("Datos limpios y cubos OLAP", "Explora los", "datos",
+    ui.titulo("Explora los", "datos",
               "Muestra del dataset limpio (Parquet), las tablas de agregación precalculadas y un explorador para cortar el cubo "
               "por cualquier combinación de dimensiones.", [(f"{ui.num(len(m), 0)} partidos filtrados", ""), (D.descripcion_filtros(), "oro")])
-    tab1, tab2, tab3, tab4 = st.tabs(["🔎 Partidos", "🧊 Explorador OLAP", "📦 Cubos precalculados", "🧹 Calidad de datos"])
+    tab1, tab2, tab3, tab4 = st.tabs([":material/search: Partidos", ":material/view_in_ar: Explorador OLAP", ":material/inventory_2: Cubos precalculados", ":material/cleaning_services: Calidad de datos"])
 
     # ------------------------------------------------------------------ partidos
     with tab1:
         c1, c2, c3 = st.columns([2, 2, 1])
-        equipo = c1.text_input("Buscar equipo", placeholder="Ej.: Barcelona, Liverpool, Boca Juniors…")
+        equipo = c1.text_input("Buscar equipo", placeholder="Ej.: Real Madrid, Liverpool, Boca Juniors…")
         resultado = c2.pills("Resultado", ["Local", "Empate", "Visitante"], selection_mode="multi", key="pills_resultado")
         filas = c3.select_slider("Filas", [100, 500, 1000, 5000, 20000], value=1000)
         t = m
@@ -90,6 +90,7 @@ def pagina() -> None:
         else:
             datos = preparar(m)
             col, func, escala = MEDIDAS[medida]
+            rampa = ui.RAMPA_ORO if "oles" in medida else ui.RAMPA_VERDE      # oro = goles; verde = el resto
             claves = [DIMENSIONES[d] for d in filas_dim] + ([DIMENSIONES[col_dim]] if col_dim != "(ninguna)" else [])
             g = datos.groupby(claves, observed=True)[col].agg(func).mul(escala).rename(medida).reset_index()
             g["_n"] = datos.groupby(claves, observed=True).size().to_numpy()
@@ -100,13 +101,13 @@ def pagina() -> None:
                 if col_dim == "Temporada":
                     pivote = pivote.iloc[:, -12:]
                 from matplotlib.colors import LinearSegmentedColormap
-                escala = LinearSegmentedColormap.from_list("sb", ui.SECUENCIAL)
+                escala = LinearSegmentedColormap.from_list("sb", rampa)
                 estilo = (pivote.style.format(lambda v: "—" if pd.isna(v) else f"{v:,.1f}")
                           .background_gradient(cmap=escala, axis=None, text_color_threshold=0.45)
-                          .highlight_null(color="#07110c"))
+                          .highlight_null(color=ui.FONDO_SIN_DATOS))
                 st.dataframe(estilo, height=460)
                 if len(filas_dim) == 1:
-                    fig = px.imshow(pivote, color_continuous_scale=ui.SECUENCIAL, aspect="auto", labels=dict(color=medida))
+                    fig = px.imshow(pivote, color_continuous_scale=rampa, aspect="auto", labels=dict(color=medida))
                     fig.update_layout(xaxis_title=col_dim, yaxis_title=filas_dim[0])
                     ui.grafico(fig, 120 + 22 * len(pivote), key="olap_heat")
             else:
@@ -116,8 +117,8 @@ def pagina() -> None:
                 for c in [DIMENSIONES[d] for d in filas_dim]:
                     g2[c] = g2[c].astype(str)
                 fig = px.sunburst(g2, path=[DIMENSIONES[d] for d in filas_dim], values="_n", color=medida,
-                                  color_continuous_scale=ui.SECUENCIAL, hover_data={medida: ":.1f", "_n": ":,"})
-                fig.update_traces(marker=dict(line=dict(color="#050d09", width=1.5)), insidetextfont=dict(family="Barlow Condensed"))
+                                  color_continuous_scale=rampa, hover_data={medida: ":.1f", "_n": ":,"})
+                fig.update_traces(marker=dict(line=dict(color="#050d09", width=1.5)), insidetextfont=dict(family="Barlow Condensed", color=ui.TEXTO_OSCURO))
                 fig.update_layout(margin=dict(t=10, b=10), coloraxis_colorbar=dict(title=medida))
                 st.caption("Haga clic en un sector para hacer drill-down; clic en el centro para volver (roll-up). Tamaño = partidos.")
                 ui.grafico(fig, 560, key="olap_sun")
@@ -150,7 +151,7 @@ def pagina() -> None:
             "porcentaje": st.column_config.ProgressColumn("% del total", min_value=0, max_value=60, format="%.2f %%")})
         st.markdown("#### Las 4 técnicas ETL: conteos antes / después")
         pasos = pd.DataFrame(etl["pasos"])
-        colores = {"Limpieza": ui.ROJO, "Normalización": ui.COLORES["Visitante"], "Enriquecimiento": ui.VERDE, "Agregación": ui.ORO}
+        colores = {"Limpieza": ui.ROJO, "Normalización": ui.SECUNDARIOS[0], "Enriquecimiento": ui.SECUNDARIOS[1], "Agregación": ui.SECUNDARIOS[2]}
         fig = go.Figure()
         for tecnica, grupo in pasos.groupby("tecnica", sort=False):
             fig.add_bar(y=grupo["paso"].str.slice(0, 70), x=grupo["afectados"], orientation="h", name=tecnica,
