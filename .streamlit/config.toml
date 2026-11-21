@@ -1,0 +1,24 @@
+# Streamlit Community Cloud ejecuta la app desde la raiz del repo: aqui va solo el tema (el servidor lo maneja la nube).
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"
+
+[theme]
+base = "dark"
+primaryColor = "#22e08a"
+backgroundColor = "#050d09"
+secondaryBackgroundColor = "#0e2018"
+textColor = "#e7f2ec"
+borderColor = "#1d3b2c"
+linkColor = "#f4c542"
+baseRadius = "12px"
+buttonRadius = "10px"
+showWidgetBorder = true
+font = "Barlow:https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap"
+headingFont = "Barlow Condensed:https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap"
+dataframeHeaderBackgroundColor = "#0b1a12"
+chartCategoricalColors = ["#199e70", "#d95926", "#3987e5", "#c98500", "#d55181", "#9085e9", "#e66767", "#008300"]
+chartSequentialColors = ["#0d2a1d", "#0f3d29", "#125436", "#156b43", "#199e70", "#3cc28c", "#7ddbb0", "#bdf0d6", "#e6faf0", "#ffffff"]

@@ -1,0 +1,364 @@
+{
+  "perfil_crudo": {
+    "partidos": {
+      "filas": 238858,
+      "columnas": 48,
+      "memoria_mb": 100.28
+    },
+    "elo": {
+      "filas": 273972,
+      "columnas": 4,
+      "memoria_mb": 14.62
+    },
+    "tm_partidos": {
+      "filas": 88958,
+      "columnas": 23,
+      "memoria_mb": 37.13
+    },
+    "tm_clubes": {
+      "filas": 796,
+      "columnas": 17,
+      "memoria_mb": 0.26
+    },
+    "tm_competiciones": {
+      "filas": 65,
+      "columnas": 11,
+      "memoria_mb": 0.02
+    },
+    "tm_valores": {
+      "filas": 656301,
+      "columnas": 6,
+      "memoria_mb": 49.33
+    }
+  },
+  "filas_crudas_total": 1258950,
+  "tiempo_carga_s": 3.9,
+  "tiempo_total_s": 115.76,
+  "partidos_limpios": 238854,
+  "columnas_limpias": 87,
+  "memoria_limpia_mb": 77.09,
+  "peso_parquet_mb": 21.24,
+  "filas_formato_largo": 477708,
+  "equipos": 1222,
+  "ligas": 38,
+  "fecha_min": "2000-07-28",
+  "fecha_max": "2026-09-03",
+  "correlacion_elo_propio_clubelo": 0.9561,
+  "equipos_mapeados_transfermarkt": 456,
+  "partidos_con_valor_mercado": 87816,
+  "diagnostico": [
+    {
+      "problema": "Espacios sobrantes en nombres de equipo",
+      "tipo": "Formato",
+      "registros": 43,
+      "porcentaje": 0.018,
+      "accion": "Recortar con str.strip()"
+    },
+    {
+      "problema": "Cuotas 1X2 menores a 1,01 (imposibles: pagarían menos de lo apostado)",
+      "tipo": "Validez",
+      "registros": 7,
+      "porcentaje": 0.003,
+      "accion": "Anular las 3 cuotas del partido"
+    },
+    {
+      "problema": "Margen de la casa fuera de [0 %, 30 %] (suma de 1/cuota < 1 o > 1,3)",
+      "tipo": "Consistencia",
+      "registros": 15,
+      "porcentaje": 0.006,
+      "accion": "Anular las 3 cuotas del partido"
+    },
+    {
+      "problema": "Cuota máxima > 3 veces la de Bet365 o < 1,01 (error de captura)",
+      "tipo": "Validez",
+      "registros": 32,
+      "porcentaje": 0.013,
+      "accion": "Anular cuotas máximas"
+    },
+    {
+      "problema": "Cuotas máximas de goles > 20 (Over/Under 2,5)",
+      "tipo": "Validez",
+      "registros": 2,
+      "porcentaje": 0.001,
+      "accion": "Anular"
+    },
+    {
+      "problema": "Hándicap asiático fuera de ±10 goles (p. ej. −99,9)",
+      "tipo": "Validez",
+      "registros": 3,
+      "porcentaje": 0.001,
+      "accion": "Anular hándicap y sus cuotas"
+    },
+    {
+      "problema": "Cuotas de hándicap fuera de [1,01; 20]",
+      "tipo": "Validez",
+      "registros": 6,
+      "porcentaje": 0.003,
+      "accion": "Anular hándicap y sus cuotas"
+    },
+    {
+      "problema": "Más tiros al arco que tiros totales",
+      "tipo": "Consistencia",
+      "registros": 17,
+      "porcentaje": 0.007,
+      "accion": "Anular tiros y tiros al arco del partido"
+    },
+    {
+      "problema": "Más de 60 faltas de un equipo (máx. real ≈ 35)",
+      "tipo": "Atípico",
+      "registros": 2,
+      "porcentaje": 0.001,
+      "accion": "Anular faltas"
+    },
+    {
+      "problema": "Más de 5 expulsados de un equipo (el partido se suspende con 6 o menos jugadores)",
+      "tipo": "Validez",
+      "registros": 1,
+      "porcentaje": 0.0,
+      "accion": "Anular tarjetas rojas"
+    },
+    {
+      "problema": "Elo de ClubElo faltante",
+      "tipo": "Completitud",
+      "registros": 98144,
+      "porcentaje": 41.089,
+      "accion": "Imputar con Elo propio calculado (enriquecimiento)"
+    },
+    {
+      "problema": "Estadísticas de partido faltantes (tiros, faltas, córners, tarjetas)",
+      "tipo": "Completitud",
+      "registros": 116375,
+      "porcentaje": 48.721,
+      "accion": "Conservar NaN: solo se usan en EDA, nunca en el modelo (son posteriores al partido)"
+    },
+    {
+      "problema": "Cuotas Bet365 faltantes",
+      "tipo": "Completitud",
+      "registros": 3042,
+      "porcentaje": 1.274,
+      "accion": "Excluir del modelo y de la simulación de apuestas"
+    },
+    {
+      "problema": "Columnas de clúster C_* del autor del espejo (calculadas con estadísticas del propio partido)",
+      "tipo": "Fuga de información",
+      "registros": 112602,
+      "porcentaje": 47.142,
+      "accion": "Eliminar las 6 columnas"
+    },
+    {
+      "problema": "Partidos sin resultado (suspendidos o no jugados, p. ej. Chapecoense 2016)",
+      "tipo": "Completitud",
+      "registros": 4,
+      "porcentaje": 0.002,
+      "accion": "Eliminar el partido"
+    },
+    {
+      "problema": "Filas duplicadas exactas",
+      "tipo": "Unicidad",
+      "registros": 0,
+      "porcentaje": 0.0,
+      "accion": "Eliminar duplicados"
+    },
+    {
+      "problema": "Partidos duplicados (misma liga, fecha, local y visitante)",
+      "tipo": "Unicidad",
+      "registros": 0,
+      "porcentaje": 0.0,
+      "accion": "Eliminar duplicados"
+    }
+  ],
+  "diagnostico_transfermarkt": [
+    {
+      "problema": "Valoraciones con valor de mercado 0 €",
+      "registros": 1,
+      "tipo": "Validez",
+      "accion": "Excluir de la suma de plantilla"
+    },
+    {
+      "problema": "Valoraciones duplicadas (jugador, fecha)",
+      "registros": 0,
+      "tipo": "Unicidad",
+      "accion": "Conservar la última"
+    },
+    {
+      "problema": "Valoraciones con club 'Unknown'",
+      "registros": 3199,
+      "tipo": "Completitud",
+      "accion": "Se usa el id del club, no el nombre"
+    },
+    {
+      "problema": "Partidos de Transfermarkt duplicados (game_id)",
+      "registros": 0,
+      "tipo": "Unicidad",
+      "accion": "Eliminar duplicados"
+    },
+    {
+      "problema": "Partidos de Transfermarkt sin nombre de club",
+      "registros": 122,
+      "tipo": "Completitud",
+      "accion": "Se usa el id del club"
+    }
+  ],
+  "pasos": [
+    {
+      "tecnica": "Limpieza",
+      "paso": "Recortar espacios en nombres de equipo",
+      "antes": 238858,
+      "despues": 238858,
+      "afectados": 43,
+      "detalle": "str.strip() sobre local y visitante"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Eliminar duplicados (exactos y por liga+fecha+equipos)",
+      "antes": 238858,
+      "despues": 238858,
+      "afectados": 0,
+      "detalle": "Se verificó la clave natural del partido"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Eliminar partidos sin resultado (suspendidos o no jugados)",
+      "antes": 238858,
+      "despues": 238854,
+      "afectados": 4,
+      "detalle": "Ej.: Chapecoense–Atlético MG (nov-2016, tragedia aérea), Panathinaikos–Olympiakos 2019"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Anular cuotas 1X2 imposibles (<1,01) o con margen fuera de [0 %, 30 %]",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 15,
+      "detalle": "Las 3 cuotas del partido pasan a NaN"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Anular cuotas máximas >3× Bet365 o <1,01",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 23,
+      "detalle": "Error de captura en el mercado"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Anular cuotas de goles (>20) y hándicaps imposibles (|h|>10, p. ej. −99,9)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 11,
+      "detalle": "Valores imposibles en el mercado de goles y asiático"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Anular estadísticas imposibles (tiros al arco > tiros, >60 faltas, >5 rojas)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 20,
+      "detalle": "Se conserva el partido; solo la estadística pasa a NaN"
+    },
+    {
+      "tecnica": "Limpieza",
+      "paso": "Eliminar columnas C_* (clústeres calculados con estadísticas del mismo partido)",
+      "antes": 48,
+      "despues": 42,
+      "afectados": 6,
+      "detalle": "Conteo en columnas: usarlas filtraría el resultado al modelo"
+    },
+    {
+      "tecnica": "Normalización",
+      "paso": "Renombrar 42 columnas a español snake_case",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 42,
+      "detalle": "HomeTeam → local, OddHome → cuota_local, FTResult → resultado…"
+    },
+    {
+      "tecnica": "Normalización",
+      "paso": "Unificar temporada (jul–jun vs. año natural) y añadir país/nivel/continente",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 32968,
+      "detalle": "Afectados = partidos de ligas con calendario anual"
+    },
+    {
+      "tecnica": "Normalización",
+      "paso": "Convertir cuotas en probabilidades implícitas sin margen (suman 1)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 235798,
+      "detalle": "p_i = (1/cuota_i) / Σ(1/cuota)"
+    },
+    {
+      "tecnica": "Normalización",
+      "paso": "Optimizar tipos (category, Int8, float32): 91 MB → 37 MB",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 57,
+      "detalle": "Conteo en columnas convertidas; la memoria se mide con deep=True"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Elo propio previo al partido para todas las ligas (r = 0.96 con la diferencia de ClubElo)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 98143,
+      "detalle": "Afectados = partidos sin Elo de ClubElo que ahora tienen Elo"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Forma reciente (5 partidos), puntos por partido en la temporada, récord local/visitante y descanso",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 238244,
+      "detalle": "Calculadas con shift(1): solo usan partidos anteriores"
+    },
+    {
+      "tecnica": "Normalización",
+      "paso": "Homologar nombres Football-Data ↔ Transfermarkt (456 de 850 equipos de ligas con cobertura)",
+      "antes": 850,
+      "despues": 456,
+      "afectados": 456,
+      "detalle": "Voto por coincidencia de liga+fecha±1+marcador; similitud de texto como control"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Valor de mercado de ambas plantillas al inicio de la temporada (Transfermarkt)",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 87816,
+      "detalle": "656,301 valoraciones de jugadores → suma por club y temporada"
+    },
+    {
+      "tecnica": "Enriquecimiento",
+      "paso": "Variables derivadas: total_goles, más de 2,5, ambos marcan, favorito, acierto, sorpresa",
+      "antes": 238854,
+      "despues": 238854,
+      "afectados": 238854,
+      "detalle": "Se añaden a todos los partidos"
+    },
+    {
+      "tecnica": "Agregación",
+      "paso": "Cubo liga × temporada (13 medidas)",
+      "antes": 238854,
+      "despues": 780,
+      "afectados": 780,
+      "detalle": "Filas del cubo resultante"
+    },
+    {
+      "tecnica": "Agregación",
+      "paso": "Cubo país × década × nivel × resultado",
+      "antes": 238854,
+      "despues": 291,
+      "afectados": 291,
+      "detalle": "Filas del cubo resultante"
+    },
+    {
+      "tecnica": "Agregación",
+      "paso": "Cubo equipo × temporada (tabla de posiciones)",
+      "antes": 477708,
+      "despues": 14215,
+      "afectados": 14215,
+      "detalle": "Filas del cubo resultante"
+    }
+  ]
+}

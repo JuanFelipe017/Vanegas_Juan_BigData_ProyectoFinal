@@ -1,0 +1,1360 @@
+{
+  "_id": "analisis_futbol_apuestas",
+  "metadata": {
+    "fecha_analisis": "2026-11-21T21:19:21+00:00",
+    "autores": [
+      "Juan Felipe Vanegas Silva"
+    ],
+    "curso": "Gerencia y almacenamiento en Big Data — Fundación Universitaria Los Libertadores",
+    "proyecto": "Fútbol y apuestas: ¿se le puede ganar a la casa? (38 ligas, 2000–2026)",
+    "video": "PEGAR AQUI EL ENLACE NO LISTADO DEL VIDEO",
+    "dataset": {
+      "fuente": "Football-Data.co.uk + ClubElo + Transfermarkt",
+      "url": [
+        "https://raw.githubusercontent.com/xgabora/Club-Football-Match-Data/main/data/Matches.csv",
+        "https://raw.githubusercontent.com/xgabora/Club-Football-Match-Data/main/data/EloRatings.csv",
+        "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/games.csv.gz",
+        "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/clubs.csv.gz",
+        "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/competitions.csv.gz",
+        "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/player_valuations.csv.gz"
+      ],
+      "registros": 1258950,
+      "columnas": 109,
+      "archivos": {
+        "Matches.csv": {
+          "fecha_descarga": "2026-11-07T21:36:51+00:00",
+          "url": "https://raw.githubusercontent.com/xgabora/Club-Football-Match-Data/main/data/Matches.csv",
+          "fuente": "Football-Data.co.uk (resultados, estadísticas y cuotas) vía repositorio xgabora/Club-Football-Match-Data",
+          "pagina": "https://www.football-data.co.uk/data.php",
+          "filas": 238858,
+          "columnas": 48,
+          "peso_disco_mb": 45.37,
+          "peso_memoria_mb": 100.28
+        },
+        "EloRatings.csv": {
+          "fecha_descarga": "2026-11-07T21:36:53+00:00",
+          "url": "https://raw.githubusercontent.com/xgabora/Club-Football-Match-Data/main/data/EloRatings.csv",
+          "fuente": "ClubElo (ratings Elo quincenales de clubes) vía repositorio xgabora/Club-Football-Match-Data",
+          "pagina": "http://clubelo.com/",
+          "filas": 273972,
+          "columnas": 4,
+          "peso_disco_mb": 11.06,
+          "peso_memoria_mb": 14.62
+        },
+        "games.csv.gz": {
+          "fecha_descarga": "2026-11-07T21:37:27+00:00",
+          "url": "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/games.csv.gz",
+          "fuente": "Transfermarkt (partidos con identificadores de club) vía dcaribou/transfermarkt-datasets",
+          "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+          "filas": 88958,
+          "columnas": 23,
+          "peso_disco_mb": 5.0,
+          "peso_memoria_mb": 37.13
+        },
+        "clubs.csv.gz": {
+          "fecha_descarga": "2026-11-07T21:37:28+00:00",
+          "url": "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/clubs.csv.gz",
+          "fuente": "Transfermarkt (clubes) vía dcaribou/transfermarkt-datasets",
+          "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+          "filas": 796,
+          "columnas": 17,
+          "peso_disco_mb": 0.05,
+          "peso_memoria_mb": 0.26
+        },
+        "competitions.csv.gz": {
+          "fecha_descarga": "2026-11-07T21:37:28+00:00",
+          "url": "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/competitions.csv.gz",
+          "fuente": "Transfermarkt (competiciones) vía dcaribou/transfermarkt-datasets",
+          "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+          "filas": 65,
+          "columnas": 11,
+          "peso_disco_mb": 0.0,
+          "peso_memoria_mb": 0.02
+        },
+        "player_valuations.csv.gz": {
+          "fecha_descarga": "2026-11-07T21:37:29+00:00",
+          "url": "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data/player_valuations.csv.gz",
+          "fuente": "Transfermarkt (historial de valor de mercado de jugadores) vía dcaribou/transfermarkt-datasets",
+          "pagina": "https://github.com/dcaribou/transfermarkt-datasets",
+          "filas": 656301,
+          "columnas": 6,
+          "peso_disco_mb": 7.2,
+          "peso_memoria_mb": 49.33
+        }
+      },
+      "partidos_limpios": 238854,
+      "columnas_limpias": 87,
+      "periodo": "2000-07-28 a 2026-09-03",
+      "ligas": 38,
+      "equipos": 1222
+    },
+    "herramienta": "pandas (justificación en el notebook, sección 2)"
+  },
+  "calidad_datos": {
+    "problemas_detectados": [
+      {
+        "problema": "Espacios sobrantes en nombres de equipo",
+        "tipo": "Formato",
+        "registros": 43,
+        "porcentaje": 0.018,
+        "accion": "Recortar con str.strip()"
+      },
+      {
+        "problema": "Cuotas 1X2 menores a 1,01 (imposibles: pagarían menos de lo apostado)",
+        "tipo": "Validez",
+        "registros": 7,
+        "porcentaje": 0.003,
+        "accion": "Anular las 3 cuotas del partido"
+      },
+      {
+        "problema": "Margen de la casa fuera de [0 %, 30 %] (suma de 1/cuota < 1 o > 1,3)",
+        "tipo": "Consistencia",
+        "registros": 15,
+        "porcentaje": 0.006,
+        "accion": "Anular las 3 cuotas del partido"
+      },
+      {
+        "problema": "Cuota máxima > 3 veces la de Bet365 o < 1,01 (error de captura)",
+        "tipo": "Validez",
+        "registros": 32,
+        "porcentaje": 0.013,
+        "accion": "Anular cuotas máximas"
+      },
+      {
+        "problema": "Cuotas máximas de goles > 20 (Over/Under 2,5)",
+        "tipo": "Validez",
+        "registros": 2,
+        "porcentaje": 0.001,
+        "accion": "Anular"
+      },
+      {
+        "problema": "Hándicap asiático fuera de ±10 goles (p. ej. −99,9)",
+        "tipo": "Validez",
+        "registros": 3,
+        "porcentaje": 0.001,
+        "accion": "Anular hándicap y sus cuotas"
+      },
+      {
+        "problema": "Cuotas de hándicap fuera de [1,01; 20]",
+        "tipo": "Validez",
+        "registros": 6,
+        "porcentaje": 0.003,
+        "accion": "Anular hándicap y sus cuotas"
+      },
+      {
+        "problema": "Más tiros al arco que tiros totales",
+        "tipo": "Consistencia",
+        "registros": 17,
+        "porcentaje": 0.007,
+        "accion": "Anular tiros y tiros al arco del partido"
+      },
+      {
+        "problema": "Más de 60 faltas de un equipo (máx. real ≈ 35)",
+        "tipo": "Atípico",
+        "registros": 2,
+        "porcentaje": 0.001,
+        "accion": "Anular faltas"
+      },
+      {
+        "problema": "Más de 5 expulsados de un equipo (el partido se suspende con 6 o menos jugadores)",
+        "tipo": "Validez",
+        "registros": 1,
+        "porcentaje": 0.0,
+        "accion": "Anular tarjetas rojas"
+      },
+      {
+        "problema": "Elo de ClubElo faltante",
+        "tipo": "Completitud",
+        "registros": 98144,
+        "porcentaje": 41.089,
+        "accion": "Imputar con Elo propio calculado (enriquecimiento)"
+      },
+      {
+        "problema": "Estadísticas de partido faltantes (tiros, faltas, córners, tarjetas)",
+        "tipo": "Completitud",
+        "registros": 116375,
+        "porcentaje": 48.721,
+        "accion": "Conservar NaN: solo se usan en EDA, nunca en el modelo (son posteriores al partido)"
+      },
+      {
+        "problema": "Cuotas Bet365 faltantes",
+        "tipo": "Completitud",
+        "registros": 3042,
+        "porcentaje": 1.274,
+        "accion": "Excluir del modelo y de la simulación de apuestas"
+      },
+      {
+        "problema": "Columnas de clúster C_* del autor del espejo (calculadas con estadísticas del propio partido)",
+        "tipo": "Fuga de información",
+        "registros": 112602,
+        "porcentaje": 47.142,
+        "accion": "Eliminar las 6 columnas"
+      },
+      {
+        "problema": "Partidos sin resultado (suspendidos o no jugados, p. ej. Chapecoense 2016)",
+        "tipo": "Completitud",
+        "registros": 4,
+        "porcentaje": 0.002,
+        "accion": "Eliminar el partido"
+      },
+      {
+        "problema": "Valoraciones con valor de mercado 0 €",
+        "registros": 1,
+        "tipo": "Validez",
+        "accion": "Excluir de la suma de plantilla"
+      },
+      {
+        "problema": "Valoraciones con club 'Unknown'",
+        "registros": 3199,
+        "tipo": "Completitud",
+        "accion": "Se usa el id del club, no el nombre"
+      },
+      {
+        "problema": "Partidos de Transfermarkt sin nombre de club",
+        "registros": 122,
+        "tipo": "Completitud",
+        "accion": "Se usa el id del club"
+      }
+    ],
+    "registros_eliminados": 4,
+    "pasos_etl": [
+      {
+        "tecnica": "Limpieza",
+        "paso": "Recortar espacios en nombres de equipo",
+        "antes": 238858,
+        "despues": 238858,
+        "afectados": 43,
+        "detalle": "str.strip() sobre local y visitante"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Eliminar duplicados (exactos y por liga+fecha+equipos)",
+        "antes": 238858,
+        "despues": 238858,
+        "afectados": 0,
+        "detalle": "Se verificó la clave natural del partido"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Eliminar partidos sin resultado (suspendidos o no jugados)",
+        "antes": 238858,
+        "despues": 238854,
+        "afectados": 4,
+        "detalle": "Ej.: Chapecoense–Atlético MG (nov-2016, tragedia aérea), Panathinaikos–Olympiakos 2019"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Anular cuotas 1X2 imposibles (<1,01) o con margen fuera de [0 %, 30 %]",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 15,
+        "detalle": "Las 3 cuotas del partido pasan a NaN"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Anular cuotas máximas >3× Bet365 o <1,01",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 23,
+        "detalle": "Error de captura en el mercado"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Anular cuotas de goles (>20) y hándicaps imposibles (|h|>10, p. ej. −99,9)",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 11,
+        "detalle": "Valores imposibles en el mercado de goles y asiático"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Anular estadísticas imposibles (tiros al arco > tiros, >60 faltas, >5 rojas)",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 20,
+        "detalle": "Se conserva el partido; solo la estadística pasa a NaN"
+      },
+      {
+        "tecnica": "Limpieza",
+        "paso": "Eliminar columnas C_* (clústeres calculados con estadísticas del mismo partido)",
+        "antes": 48,
+        "despues": 42,
+        "afectados": 6,
+        "detalle": "Conteo en columnas: usarlas filtraría el resultado al modelo"
+      },
+      {
+        "tecnica": "Normalización",
+        "paso": "Renombrar 42 columnas a español snake_case",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 42,
+        "detalle": "HomeTeam → local, OddHome → cuota_local, FTResult → resultado…"
+      },
+      {
+        "tecnica": "Normalización",
+        "paso": "Unificar temporada (jul–jun vs. año natural) y añadir país/nivel/continente",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 32968,
+        "detalle": "Afectados = partidos de ligas con calendario anual"
+      },
+      {
+        "tecnica": "Normalización",
+        "paso": "Convertir cuotas en probabilidades implícitas sin margen (suman 1)",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 235798,
+        "detalle": "p_i = (1/cuota_i) / Σ(1/cuota)"
+      },
+      {
+        "tecnica": "Normalización",
+        "paso": "Optimizar tipos (category, Int8, float32): 91 MB → 37 MB",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 57,
+        "detalle": "Conteo en columnas convertidas; la memoria se mide con deep=True"
+      },
+      {
+        "tecnica": "Enriquecimiento",
+        "paso": "Elo propio previo al partido para todas las ligas (r = 0.96 con la diferencia de ClubElo)",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 98143,
+        "detalle": "Afectados = partidos sin Elo de ClubElo que ahora tienen Elo"
+      },
+      {
+        "tecnica": "Enriquecimiento",
+        "paso": "Forma reciente (5 partidos), puntos por partido en la temporada, récord local/visitante y descanso",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 238244,
+        "detalle": "Calculadas con shift(1): solo usan partidos anteriores"
+      },
+      {
+        "tecnica": "Normalización",
+        "paso": "Homologar nombres Football-Data ↔ Transfermarkt (456 de 850 equipos de ligas con cobertura)",
+        "antes": 850,
+        "despues": 456,
+        "afectados": 456,
+        "detalle": "Voto por coincidencia de liga+fecha±1+marcador; similitud de texto como control"
+      },
+      {
+        "tecnica": "Enriquecimiento",
+        "paso": "Valor de mercado de ambas plantillas al inicio de la temporada (Transfermarkt)",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 87816,
+        "detalle": "656,301 valoraciones de jugadores → suma por club y temporada"
+      },
+      {
+        "tecnica": "Enriquecimiento",
+        "paso": "Variables derivadas: total_goles, más de 2,5, ambos marcan, favorito, acierto, sorpresa",
+        "antes": 238854,
+        "despues": 238854,
+        "afectados": 238854,
+        "detalle": "Se añaden a todos los partidos"
+      },
+      {
+        "tecnica": "Agregación",
+        "paso": "Cubo liga × temporada (13 medidas)",
+        "antes": 238854,
+        "despues": 780,
+        "afectados": 780,
+        "detalle": "Filas del cubo resultante"
+      },
+      {
+        "tecnica": "Agregación",
+        "paso": "Cubo país × década × nivel × resultado",
+        "antes": 238854,
+        "despues": 291,
+        "afectados": 291,
+        "detalle": "Filas del cubo resultante"
+      },
+      {
+        "tecnica": "Agregación",
+        "paso": "Cubo equipo × temporada (tabla de posiciones)",
+        "antes": 477708,
+        "despues": 14215,
+        "afectados": 14215,
+        "detalle": "Filas del cubo resultante"
+      }
+    ]
+  },
+  "estadisticas_descriptivas": {
+    "variables": [
+      {
+        "variable": "total_goles",
+        "count": 238854.0,
+        "mean": 2.642,
+        "std": 1.651,
+        "min": 0.0,
+        "25%": 1.0,
+        "50%": 2.0,
+        "75%": 4.0,
+        "max": 13.0
+      },
+      {
+        "variable": "goles_local",
+        "count": 238854.0,
+        "mean": 1.489,
+        "std": 1.258,
+        "min": 0.0,
+        "25%": 1.0,
+        "50%": 1.0,
+        "75%": 2.0,
+        "max": 10.0
+      },
+      {
+        "variable": "goles_visitante",
+        "count": 238854.0,
+        "mean": 1.153,
+        "std": 1.113,
+        "min": 0.0,
+        "25%": 0.0,
+        "50%": 1.0,
+        "75%": 2.0,
+        "max": 13.0
+      },
+      {
+        "variable": "cuota_local",
+        "count": 235798.0,
+        "mean": 2.464,
+        "std": 1.373,
+        "min": 1.01,
+        "25%": 1.75,
+        "50%": 2.15,
+        "75%": 2.69,
+        "max": 53.18
+      },
+      {
+        "variable": "cuota_empate",
+        "count": 235798.0,
+        "mean": 3.616,
+        "std": 0.85,
+        "min": 1.29,
+        "25%": 3.21,
+        "50%": 3.4,
+        "75%": 3.72,
+        "max": 22.55
+      },
+      {
+        "variable": "cuota_visitante",
+        "count": 235798.0,
+        "mean": 4.01,
+        "std": 2.639,
+        "min": 1.01,
+        "25%": 2.59,
+        "50%": 3.32,
+        "75%": 4.5,
+        "max": 71.71
+      },
+      {
+        "variable": "margen_casa",
+        "count": 235798.0,
+        "mean": 0.073,
+        "std": 0.025,
+        "min": 0.01,
+        "25%": 0.061,
+        "50%": 0.067,
+        "75%": 0.08,
+        "max": 0.273
+      },
+      {
+        "variable": "diferencia_elo",
+        "count": 238854.0,
+        "mean": 0.007,
+        "std": 130.777,
+        "min": -838.823,
+        "25%": -75.402,
+        "50%": 0.0,
+        "75%": 75.241,
+        "max": 912.078
+      },
+      {
+        "variable": "valor_plantilla_local",
+        "count": 106212.0,
+        "mean": 77.7,
+        "std": 134.61,
+        "min": 0.05,
+        "25%": 15.2,
+        "50%": 32.75,
+        "75%": 78.0,
+        "max": 1320.3
+      },
+      {
+        "variable": "tiros_local",
+        "count": 122466.0,
+        "mean": 12.819,
+        "std": 5.026,
+        "min": 0.0,
+        "25%": 9.0,
+        "50%": 12.0,
+        "75%": 16.0,
+        "max": 46.0
+      },
+      {
+        "variable": "amarillas_local",
+        "count": 127598.0,
+        "mean": 1.698,
+        "std": 1.311,
+        "min": 0.0,
+        "25%": 1.0,
+        "50%": 2.0,
+        "75%": 2.0,
+        "max": 11.0
+      }
+    ],
+    "distribucion_resultados_pct": {
+      "Local": 44.57,
+      "Visitante": 28.93,
+      "Empate": 26.5
+    },
+    "partidos_por_continente": {
+      "Europa": 212729,
+      "América": 19492,
+      "Asia": 6633
+    },
+    "partidos_por_nivel": {
+      "nivel_1": 139076,
+      "nivel_2": 56325,
+      "nivel_3": 18115,
+      "nivel_4": 17592,
+      "nivel_5": 7746
+    }
+  },
+  "agregaciones": [
+    {
+      "nombre": "Liga × temporada",
+      "tipo_olap": "slice (temporada 2025/26) sobre el cubo liga × temporada",
+      "dimensiones": [
+        "continente",
+        "pais",
+        "liga",
+        "nivel",
+        "temporada"
+      ],
+      "medidas": [
+        "partidos",
+        "pct_local",
+        "pct_empate",
+        "pct_visitante",
+        "goles_prom",
+        "margen_casa_prom",
+        "acierto_favorito"
+      ],
+      "filas_cubo": 780,
+      "muestra": [
+        {
+          "liga": "Bundesliga",
+          "partidos": 306,
+          "pct_local": 43.791,
+          "pct_empate": 24.51,
+          "pct_visitante": 31.699,
+          "goles_prom": 3.235,
+          "margen_casa_prom": 5.528,
+          "acierto_favorito": 54.901961
+        },
+        {
+          "liga": "LaLiga",
+          "partidos": 380,
+          "pct_local": 48.947,
+          "pct_empate": 24.474,
+          "pct_visitante": 26.579,
+          "goles_prom": 2.695,
+          "margen_casa_prom": 5.615,
+          "acierto_favorito": 55.0
+        },
+        {
+          "liga": "Ligue 1",
+          "partidos": 306,
+          "pct_local": 46.078,
+          "pct_empate": 24.51,
+          "pct_visitante": 29.412,
+          "goles_prom": 2.82,
+          "margen_casa_prom": 5.63,
+          "acierto_favorito": 54.248366
+        },
+        {
+          "liga": "Premier League",
+          "partidos": 380,
+          "pct_local": 42.632,
+          "pct_empate": 27.368,
+          "pct_visitante": 30.0,
+          "goles_prom": 2.75,
+          "margen_casa_prom": 5.515,
+          "acierto_favorito": 48.947368
+        },
+        {
+          "liga": "Serie A",
+          "partidos": 380,
+          "pct_local": 38.947,
+          "pct_empate": 26.053,
+          "pct_visitante": 35.0,
+          "goles_prom": 2.426,
+          "margen_casa_prom": 5.509,
+          "acierto_favorito": 53.947368
+        }
+      ]
+    },
+    {
+      "nombre": "País × década × nivel × resultado",
+      "tipo_olap": "dice (nivel 1, resultado Local) y pivote país × década",
+      "dimensiones": [
+        "continente",
+        "pais",
+        "decada",
+        "nivel",
+        "resultado"
+      ],
+      "medidas": [
+        "partidos",
+        "goles_prom",
+        "pct_dentro_grupo"
+      ],
+      "filas_cubo": 291,
+      "muestra": [
+        {
+          "pais": "Alemania",
+          "2000s": 47.1,
+          "2010s": 45.3,
+          "2020s": 43.9
+        },
+        {
+          "pais": "Argentina",
+          "2000s": null,
+          "2010s": 44.1,
+          "2020s": 42.5
+        },
+        {
+          "pais": "Austria",
+          "2000s": null,
+          "2010s": 44.2,
+          "2020s": 38.5
+        },
+        {
+          "pais": "Brasil",
+          "2000s": null,
+          "2010s": 50.0,
+          "2020s": 46.1
+        },
+        {
+          "pais": "Bélgica",
+          "2000s": 47.9,
+          "2010s": 46.7,
+          "2020s": 42.7
+        },
+        {
+          "pais": "China",
+          "2000s": null,
+          "2010s": 46.5,
+          "2020s": 43.5
+        },
+        {
+          "pais": "Dinamarca",
+          "2000s": null,
+          "2010s": 43.7,
+          "2020s": 41.4
+        },
+        {
+          "pais": "Escocia",
+          "2000s": 44.1,
+          "2010s": 42.1,
+          "2020s": 44.5
+        },
+        {
+          "pais": "España",
+          "2000s": 48.1,
+          "2010s": 47.7,
+          "2020s": 45.0
+        },
+        {
+          "pais": "Estados Unidos",
+          "2000s": null,
+          "2010s": 52.2,
+          "2020s": 47.4
+        },
+        {
+          "pais": "Finlandia",
+          "2000s": null,
+          "2010s": 44.5,
+          "2020s": 43.0
+        },
+        {
+          "pais": "Francia",
+          "2000s": 46.6,
+          "2010s": 45.2,
+          "2020s": 42.2
+        },
+        {
+          "pais": "Grecia",
+          "2000s": 49.4,
+          "2010s": 49.0,
+          "2020s": 40.8
+        },
+        {
+          "pais": "Inglaterra",
+          "2000s": 47.2,
+          "2010s": 45.6,
+          "2020s": 43.4
+        },
+        {
+          "pais": "Irlanda",
+          "2000s": null,
+          "2010s": 43.3,
+          "2020s": 43.1
+        },
+        {
+          "pais": "Italia",
+          "2000s": 46.5,
+          "2010s": 45.0,
+          "2020s": 40.6
+        },
+        {
+          "pais": "Japón",
+          "2000s": null,
+          "2010s": 41.0,
+          "2020s": 40.1
+        },
+        {
+          "pais": "México",
+          "2000s": null,
+          "2010s": 44.3,
+          "2020s": 44.3
+        },
+        {
+          "pais": "Noruega",
+          "2000s": null,
+          "2010s": 47.9,
+          "2020s": 45.8
+        },
+        {
+          "pais": "Países Bajos",
+          "2000s": 48.6,
+          "2010s": 47.6,
+          "2020s": 43.4
+        },
+        {
+          "pais": "Polonia",
+          "2000s": null,
+          "2010s": 44.4,
+          "2020s": 43.0
+        },
+        {
+          "pais": "Portugal",
+          "2000s": 47.0,
+          "2010s": 44.8,
+          "2020s": 43.1
+        },
+        {
+          "pais": "Rumania",
+          "2000s": null,
+          "2010s": 42.9,
+          "2020s": 42.5
+        },
+        {
+          "pais": "Rusia",
+          "2000s": null,
+          "2010s": 42.9,
+          "2020s": 45.9
+        },
+        {
+          "pais": "Suecia",
+          "2000s": null,
+          "2010s": 44.0,
+          "2020s": 43.5
+        },
+        {
+          "pais": "Suiza",
+          "2000s": null,
+          "2010s": 43.8,
+          "2020s": 43.0
+        },
+        {
+          "pais": "Turquía",
+          "2000s": 47.8,
+          "2010s": 45.8,
+          "2020s": 44.8
+        }
+      ]
+    },
+    {
+      "nombre": "Equipo × temporada",
+      "tipo_olap": "drill-down liga → equipo (líderes 2025/26)",
+      "dimensiones": [
+        "pais",
+        "liga",
+        "temporada",
+        "equipo"
+      ],
+      "medidas": [
+        "partidos",
+        "puntos",
+        "gf",
+        "gc",
+        "ppg",
+        "valor_plantilla_meur"
+      ],
+      "filas_cubo": 14215,
+      "muestra": [
+        {
+          "liga": "Super League",
+          "equipo": "AEK",
+          "partidos": 32,
+          "puntos": 72,
+          "gf": 57.0,
+          "gc": 20.0,
+          "ppg": 2.25,
+          "valor_plantilla_meur": 57.849998
+        },
+        {
+          "liga": "Premier League",
+          "equipo": "Arsenal",
+          "partidos": 38,
+          "puntos": 85,
+          "gf": 71.0,
+          "gc": 27.0,
+          "ppg": 2.236842,
+          "valor_plantilla_meur": 1100.5
+        },
+        {
+          "liga": "LaLiga",
+          "equipo": "Barcelona",
+          "partidos": 38,
+          "puntos": 94,
+          "gf": 95.0,
+          "gc": 36.0,
+          "ppg": 2.473684,
+          "valor_plantilla_meur": 1065.0
+        },
+        {
+          "liga": "Bundesliga",
+          "equipo": "Bayern Munich",
+          "partidos": 34,
+          "puntos": 89,
+          "gf": 122.0,
+          "gc": 36.0,
+          "ppg": 2.617647,
+          "valor_plantilla_meur": 845.0
+        },
+        {
+          "liga": "Premiership",
+          "equipo": "Celtic",
+          "partidos": 38,
+          "puntos": 82,
+          "gf": 73.0,
+          "gc": 41.0,
+          "ppg": 2.157895,
+          "valor_plantilla_meur": 132.324997
+        },
+        {
+          "liga": "Pro League",
+          "equipo": "Club Brugge",
+          "partidos": 40,
+          "puntos": 88,
+          "gf": 91.0,
+          "gc": 45.0,
+          "ppg": 2.2,
+          "valor_plantilla_meur": 197.800003
+        },
+        {
+          "liga": "Süper Lig",
+          "equipo": "Galatasaray",
+          "partidos": 34,
+          "puntos": 77,
+          "gf": 77.0,
+          "gc": 30.0,
+          "ppg": 2.264706,
+          "valor_plantilla_meur": 253.100006
+        },
+        {
+          "liga": "Serie A",
+          "equipo": "Inter",
+          "partidos": 38,
+          "puntos": 87,
+          "gf": 89.0,
+          "gc": 35.0,
+          "ppg": 2.289474,
+          "valor_plantilla_meur": 671.799988
+        },
+        {
+          "liga": "Eredivisie",
+          "equipo": "PSV Eindhoven",
+          "partidos": 34,
+          "puntos": 84,
+          "gf": 101.0,
+          "gc": 45.0,
+          "ppg": 2.470588,
+          "valor_plantilla_meur": 305.649994
+        },
+        {
+          "liga": "Ligue 1",
+          "equipo": "Paris SG",
+          "partidos": 34,
+          "puntos": 76,
+          "gf": 74.0,
+          "gc": 29.0,
+          "ppg": 2.235294,
+          "valor_plantilla_meur": 1045.5
+        },
+        {
+          "liga": "Liga Portugal",
+          "equipo": "Porto",
+          "partidos": 34,
+          "puntos": 88,
+          "gf": 66.0,
+          "gc": 18.0,
+          "ppg": 2.588235,
+          "valor_plantilla_meur": 327.899994
+        }
+      ]
+    }
+  ],
+  "modelo": {
+    "tarea": "Clasificación multiclase (Local / Empate / Visitante)",
+    "algoritmo": "Regresión logística",
+    "algoritmo_sin_cuotas": "LightGBM",
+    "particion": {
+      "entrenamiento": 194274,
+      "validacion": 12334,
+      "prueba": 29190,
+      "inicio_validacion": "2022-07-01",
+      "inicio_prueba": "2023-07-01",
+      "distribucion_prueba": {
+        "Local": 0.4344,
+        "Visitante": 0.3019,
+        "Empate": 0.2637
+      }
+    },
+    "metricas": {
+      "accuracy": 0.502912,
+      "balanced_accuracy": 0.43674,
+      "f1_macro": 0.379193,
+      "log_loss": 1.002825,
+      "brier": 0.599924,
+      "roc_auc_ovr": 0.648157
+    },
+    "metricas_con_umbral_empate": {
+      "accuracy": 0.4852,
+      "balanced_accuracy": 0.446248,
+      "f1_macro": 0.443765,
+      "log_loss": 1.002825,
+      "brier": 0.599924,
+      "roc_auc_ovr": 0.648157,
+      "umbral_empate": 0.295
+    },
+    "metricas_sin_cuotas": {
+      "accuracy": 0.490065,
+      "balanced_accuracy": 0.419675,
+      "f1_macro": 0.35939,
+      "log_loss": 1.018571,
+      "brier": 0.610627,
+      "roc_auc_ovr": 0.629257
+    },
+    "linea_base": {
+      "Siempre local": {
+        "accuracy": 0.434361,
+        "balanced_accuracy": 0.333333,
+        "f1_macro": 0.201884,
+        "log_loss": 1.075856,
+        "brier": 0.651018,
+        "roc_auc_ovr": 0.5
+      },
+      "Favorito de la casa": {
+        "accuracy": 0.501918,
+        "balanced_accuracy": 0.433621,
+        "f1_macro": 0.370982,
+        "log_loss": 1.002921,
+        "brier": 0.59992,
+        "roc_auc_ovr": 0.648933
+      }
+    },
+    "comparacion": {
+      "sin_cuotas": {
+        "Regresión logística": {
+          "accuracy": 0.488078,
+          "balanced_accuracy": 0.419685,
+          "f1_macro": 0.359484,
+          "log_loss": 1.020611,
+          "brier": 0.611885,
+          "roc_auc_ovr": 0.626645
+        },
+        "Random Forest": {
+          "accuracy": 0.4889,
+          "balanced_accuracy": 0.41633,
+          "f1_macro": 0.353386,
+          "log_loss": 1.018983,
+          "brier": 0.610912,
+          "roc_auc_ovr": 0.62859
+        },
+        "LightGBM": {
+          "accuracy": 0.490065,
+          "balanced_accuracy": 0.419675,
+          "f1_macro": 0.35939,
+          "log_loss": 1.018571,
+          "brier": 0.610627,
+          "roc_auc_ovr": 0.629257
+        }
+      },
+      "con_cuotas": {
+        "Regresión logística": {
+          "accuracy": 0.502912,
+          "balanced_accuracy": 0.43674,
+          "f1_macro": 0.379193,
+          "log_loss": 1.002825,
+          "brier": 0.599924,
+          "roc_auc_ovr": 0.648157
+        },
+        "Random Forest": {
+          "accuracy": 0.502672,
+          "balanced_accuracy": 0.436401,
+          "f1_macro": 0.376497,
+          "log_loss": 1.001818,
+          "brier": 0.5993,
+          "roc_auc_ovr": 0.649475
+        },
+        "LightGBM": {
+          "accuracy": 0.503426,
+          "balanced_accuracy": 0.437275,
+          "f1_macro": 0.381809,
+          "log_loss": 1.002149,
+          "brier": 0.599492,
+          "roc_auc_ovr": 0.648953
+        }
+      }
+    },
+    "variables_importantes": [
+      {
+        "variable": "logit_casa",
+        "etiqueta": "Log-odds casa (local vs. visitante)",
+        "importancia": 0.167321,
+        "desviacion": 0.001225
+      },
+      {
+        "variable": "dif_ppg_temporada",
+        "etiqueta": "Diferencia de puntos por partido en la temporada",
+        "importancia": 0.00437,
+        "desviacion": 0.000181
+      },
+      {
+        "variable": "prob_casa_empate",
+        "etiqueta": "Prob. implícita casa: empate",
+        "importancia": 0.002906,
+        "desviacion": 0.000228
+      },
+      {
+        "variable": "ppg_temporada_visitante",
+        "etiqueta": "Puntos por partido en la temporada (visitante)",
+        "importancia": 0.001942,
+        "desviacion": 0.000434
+      },
+      {
+        "variable": "ppg_temporada_local",
+        "etiqueta": "Puntos por partido en la temporada (local)",
+        "importancia": 0.001305,
+        "desviacion": 0.000525
+      },
+      {
+        "variable": "valor_plantilla_visitante",
+        "etiqueta": "Valor plantilla visitante (M€)",
+        "importancia": 0.001297,
+        "desviacion": 0.000306
+      },
+      {
+        "variable": "valor_plantilla_local",
+        "etiqueta": "Valor plantilla local (M€)",
+        "importancia": 0.000648,
+        "desviacion": 0.000121
+      },
+      {
+        "variable": "dif_puntos_prom5",
+        "etiqueta": "Diferencia de forma (5 partidos)",
+        "importancia": 0.000646,
+        "desviacion": 0.000176
+      },
+      {
+        "variable": "gc_prom5_local",
+        "etiqueta": "Goles en contra prom. 5 (local)",
+        "importancia": 0.000584,
+        "desviacion": 0.000127
+      },
+      {
+        "variable": "log_ratio_valor",
+        "etiqueta": "Ratio de valor de plantilla (log)",
+        "importancia": 0.000578,
+        "desviacion": 0.000134
+      }
+    ],
+    "variables_importantes_sin_cuotas": [
+      {
+        "variable": "diferencia_elo",
+        "etiqueta": "Diferencia de Elo (local − visitante)",
+        "importancia": 0.066327,
+        "desviacion": 0.000618
+      },
+      {
+        "variable": "liga_codigo",
+        "etiqueta": "Liga",
+        "importancia": 0.0046,
+        "desviacion": 0.000738
+      },
+      {
+        "variable": "valor_plantilla_visitante",
+        "etiqueta": "Valor plantilla visitante (M€)",
+        "importancia": 0.001865,
+        "desviacion": 0.000555
+      },
+      {
+        "variable": "log_ratio_valor",
+        "etiqueta": "Ratio de valor de plantilla (log)",
+        "importancia": 0.001314,
+        "desviacion": 0.000224
+      },
+      {
+        "variable": "valor_plantilla_local",
+        "etiqueta": "Valor plantilla local (M€)",
+        "importancia": 0.001089,
+        "desviacion": 0.000407
+      },
+      {
+        "variable": "dif_ppg_temporada",
+        "etiqueta": "Diferencia de puntos por partido en la temporada",
+        "importancia": 0.000668,
+        "desviacion": 0.000475
+      },
+      {
+        "variable": "partidos_temporada_local",
+        "etiqueta": "Jornada (partidos jugados)",
+        "importancia": 0.000567,
+        "desviacion": 0.000122
+      },
+      {
+        "variable": "elo_propio_local",
+        "etiqueta": "Elo del local",
+        "importancia": 0.00045,
+        "desviacion": 0.000179
+      },
+      {
+        "variable": "ppg_temporada_visitante",
+        "etiqueta": "Puntos por partido en la temporada (visitante)",
+        "importancia": 0.000438,
+        "desviacion": 0.000121
+      },
+      {
+        "variable": "elo_propio_visitante",
+        "etiqueta": "Elo del visitante",
+        "importancia": 0.000375,
+        "desviacion": 0.000128
+      }
+    ],
+    "simulacion_apuestas": {
+      "sin_cuotas": {
+        "umbral_valor": 0.05,
+        "partidos_evaluados": 29190,
+        "apuestas": 22519,
+        "aciertos": 7099,
+        "tasa_acierto": 0.315245,
+        "cuota_media": 3.671154,
+        "beneficio_unidades": -843.320013,
+        "roi": -0.037449,
+        "max_caida": 975.110012
+      },
+      "con_cuotas": {
+        "umbral_valor": 0.05,
+        "partidos_evaluados": 29190,
+        "apuestas": 7847,
+        "aciertos": 2481,
+        "tasa_acierto": 0.316172,
+        "cuota_media": 3.686662,
+        "beneficio_unidades": 107.299994,
+        "roi": 0.013674,
+        "max_caida": 100.350003
+      },
+      "casa": {
+        "umbral_valor": 0.05,
+        "partidos_evaluados": 29190,
+        "apuestas": 2983,
+        "aciertos": 566,
+        "tasa_acierto": 0.189742,
+        "cuota_media": 6.14125,
+        "beneficio_unidades": -103.300006,
+        "roi": -0.03463,
+        "max_caida": 233.690003
+      }
+    },
+    "criterios_exito": {
+      "f1_macro_vs_ingenua_pct": 119.8,
+      "cumple_f1_10pct": true,
+      "logloss_modelo_vs_casa": -0.0001,
+      "cumple_logloss_casa": true,
+      "accuracy_sin_cuotas_vs_casa_pp": -1.19,
+      "roi_positivo": true
+    }
+  },
+  "insights": [
+    {
+      "id": 1,
+      "tema": "Ventaja local",
+      "titulo": "La ventaja de jugar en casa se está encogiendo",
+      "texto": "En las 5 grandes ligas el local ganaba el 48,4 % de los partidos a inicios de los 2000 y hoy gana el 43,0 %. En 2020/21, con estadios vacíos por la COVID-19, cayó a 40,4 %: el público explica buena parte de la ventaja.",
+      "valor": -5.34,
+      "unidad": "puntos porcentuales"
+    },
+    {
+      "id": 2,
+      "tema": "Mercado de apuestas",
+      "titulo": "Las casas están calibradas y cobran cada vez menos margen",
+      "texto": "Cuando Bet365 da 60 % a un resultado, ocurre cerca del 60 % de las veces (diagrama de calibración). Su margen en primeras europeas bajó de 12,6 % (2000) a 6,5 % (2025): el mercado es más eficiente y competitivo.",
+      "valor": 6.503,
+      "unidad": "% de margen"
+    },
+    {
+      "id": 3,
+      "tema": "Modelo",
+      "titulo": "El modelo con cuotas iguala a la casa; sin cuotas queda cerca",
+      "texto": "En 29.190 partidos de prueba (2023/24 en adelante), Regresión logística con cuotas logra log-loss 1,0028 frente a 1,0029 de la casa y 1,0759 de la línea base ingenua. El modelo de fútbol puro (LightGBM) acierta 49,0 % vs. 50,2 % de la casa: solo con datos públicos se llega a 1,2 pp del mercado.",
+      "valor": -0.0001,
+      "unidad": "diferencia de log-loss"
+    },
+    {
+      "id": 4,
+      "tema": "Modelo",
+      "titulo": "La diferencia de Elo es la variable reina del fútbol puro",
+      "texto": "En el modelo sin cuotas, 'Diferencia de Elo (local − visitante)' es por lejos la variable más importante (importancia por permutación 0,0663), seguida de 'Liga' y 'Valor plantilla visitante (M€)'. La forma reciente aporta poco una vez se conoce el Elo.",
+      "valor": 0.06633,
+      "unidad": "Δ log-loss"
+    },
+    {
+      "id": 5,
+      "tema": "Valor de mercado",
+      "titulo": "La plata sí juega: el valor de plantilla separa resultados",
+      "texto": "Cuando el local tiene la plantilla relativamente más cara (decil superior) gana el 66,1 % de las veces; cuando tiene la más barata, solo el 23,9 %. El valor de Transfermarkt enriquece el Elo con información de calidad individual.",
+      "valor": 42.23,
+      "unidad": "puntos porcentuales"
+    },
+    {
+      "id": 6,
+      "tema": "Empates",
+      "titulo": "El empate es el resultado más difícil de predecir",
+      "texto": "El 26,5 % de los partidos termina empatado, pero casi nunca es el resultado más probable. Con el umbral de decisión ajustado (predecir empate si p ≥ 0,295) el recall de empates sube a 24,8 % y el F1 macro pasa de 0,379 a 0,444.",
+      "valor": 0.4438,
+      "unidad": "F1 macro"
+    },
+    {
+      "id": 7,
+      "tema": "Apuestas",
+      "titulo": "Ganarle a la casa es posible solo en el margen y con la mejor cuota",
+      "texto": "Apostando solo cuando el valor esperado supera 5 % y con la mejor cuota del mercado, el modelo con cuotas hizo 7.847 apuestas con ROI 1,37 %. La estrategia de control (probabilidades de la propia casa) obtuvo ROI -3,46 % y el modelo sin cuotas -3,74 %. Como el control pierde y el modelo gana, el modelo aporta información más allá de buscar la mejor cuota, aunque el margen es pequeño y volátil.",
+      "valor": 0.01367,
+      "unidad": "ROI"
+    },
+    {
+      "id": 8,
+      "tema": "Ligas",
+      "titulo": "Hay ligas de goles y ligas de candado",
+      "texto": "Entre primeras divisiones, Eredivisie promedia 3,07 goles por partido y Liga Profesional solo 2,27. Un modelo de goles debe tener en cuenta la liga.",
+      "valor": 0.8,
+      "unidad": "goles por partido"
+    }
+  ],
+  "visualizaciones_generadas": [
+    {
+      "archivo": "reports/figuras/01_ventaja_local.png",
+      "titulo": "La ventaja de jugar en casa se encogió: de 48 % a 43 % de victorias locales",
+      "objetivo": "Evolución temporal",
+      "tipo": "Líneas",
+      "descripcion": "Ventaja local por temporada en las 5 grandes ligas"
+    },
+    {
+      "archivo": "reports/figuras/02_distribucion_goles.png",
+      "titulo": "El marcador típico tiene 2 goles y los goles siguen casi una Poisson",
+      "objetivo": "Distribución",
+      "tipo": "Histograma + curva",
+      "descripcion": "Goles por partido vs. Poisson"
+    },
+    {
+      "archivo": "reports/figuras/03_goles_por_liga.png",
+      "titulo": "Eredivisie es la liga más goleadora (3,07) y Liga Profesional la más cerrada (2,27)",
+      "objetivo": "Comparación por categoría",
+      "tipo": "Barras horizontales ordenadas",
+      "descripcion": "Goles por partido por liga"
+    },
+    {
+      "archivo": "reports/figuras/04_calibracion_casa.png",
+      "titulo": "Las casas de apuestas están casi perfectamente calibradas",
+      "objetivo": "Relación entre variables",
+      "tipo": "Diagrama de calibración",
+      "descripcion": "Probabilidad implícita vs. frecuencia real"
+    },
+    {
+      "archivo": "reports/figuras/05_margen_casa.png",
+      "titulo": "El margen de la casa cayó de 12,6 % a 6,5 % en Europa",
+      "objetivo": "Evolución temporal",
+      "tipo": "Líneas",
+      "descripcion": "Margen de la casa por temporada"
+    },
+    {
+      "archivo": "reports/figuras/06_valor_mercado.png",
+      "titulo": "Con la plantilla más cara, el local gana 66 % (vs. 24 % cuando es la más barata)",
+      "objetivo": "Relación entre variables",
+      "tipo": "Barras apiladas al 100 %",
+      "descripcion": "Valor de plantilla vs. resultado"
+    },
+    {
+      "archivo": "reports/figuras/07_olap_pais_decada.png",
+      "titulo": "Estados Unidos y Brasil son las mayores fortalezas locales;\n24 de 27 países bajan en los 2020s",
+      "objetivo": "Agregación OLAP",
+      "tipo": "Mapa de calor secuencial",
+      "descripcion": "País × década: % de victorias locales"
+    },
+    {
+      "archivo": "reports/figuras/08_comparacion_modelos.png",
+      "titulo": "Con cuotas, los modelos igualan a la casa (mejor log-loss 1,0018 vs. 1,0029)",
+      "objetivo": "Resultados del modelo",
+      "tipo": "Barras horizontales",
+      "descripcion": "Log-loss de modelos y líneas base"
+    },
+    {
+      "archivo": "reports/figuras/09_matriz_confusion.png",
+      "titulo": "El empate es lo más difícil: recall 25 %",
+      "objetivo": "Resultados del modelo",
+      "tipo": "Mapa de calor",
+      "descripcion": "Matriz de confusión del mejor modelo"
+    },
+    {
+      "archivo": "reports/figuras/10_importancia_sin_cuotas.png",
+      "titulo": "Lo que más pesa en el modelo fútbol puro (sin cuotas): Diferencia de Elo (local − visitante)",
+      "objetivo": "Resultados del modelo",
+      "tipo": "Barras con error",
+      "descripcion": "Importancia de variables (sin cuotas)"
+    },
+    {
+      "archivo": "reports/figuras/11_curva_roi.png",
+      "titulo": "Apostando con valor ≥ 5 %, el modelo con cuotas rinde 1,4 % en 7.847 apuestas",
+      "objetivo": "Resultados del modelo",
+      "tipo": "Líneas",
+      "descripcion": "ROI de la estrategia de apuestas por umbral"
+    }
+  ],
+  "recomendaciones": [
+    {
+      "id": 1,
+      "dirigida_a": "Apostadores",
+      "texto": "No apostar con las cuotas de una sola casa: sin comparar cuotas el ROI esperado es negativo (margen ≈ 6,5 %). Si se apuesta, hacerlo solo con valor esperado positivo, la mejor cuota disponible y montos fijos pequeños, porque las rachas negativas son largas."
+    },
+    {
+      "id": 2,
+      "dirigida_a": "Clubes y analistas",
+      "texto": "Usar el Elo (propio o de ClubElo) y el valor de plantilla como base de cualquier pronóstico de puntos o de presupuesto deportivo; la forma de los últimos 5 partidos aporta poco y suele sobrevalorarse."
+    },
+    {
+      "id": 3,
+      "dirigida_a": "Equipo de datos",
+      "texto": "Re-entrenar el modelo cada temporada: la ventaja local cambió (COVID, VAR) y un modelo entrenado con los 2000 sobreestima al local. Vigilar la calibración con el diagrama de la pestaña Modelo."
+    },
+    {
+      "id": 4,
+      "dirigida_a": "Equipo de datos",
+      "texto": "Para mejorar el empate, probar un modelo específico de goles (Poisson bivariado o Dixon-Coles) y variables de estilo (tiros, xG) cuando la fuente las tenga completas."
+    }
+  ]
+}

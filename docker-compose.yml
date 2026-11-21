@@ -1,0 +1,75 @@
+# Fútbol y apuestas — pipeline de Big Data con ML.  Un solo comando:  docker compose up --build
+# Servicios: mongo (insights) · procesamiento (ETL + ML + PDF + Jupyter) · app (dashboard Streamlit)
+name: futbol-apuestas
+
+x-mongo-env: &mongo-env
+  MONGO_HOST: mongo
+  MONGO_PORT: "27017"
+  MONGO_USER: ${MONGO_USER:-admin}
+  MONGO_PASSWORD: ${MONGO_PASSWORD:-cambie_esta_clave}
+  MONGO_DB: ${MONGO_DB:-futbol_apuestas}
+  VIDEO_URL: ${VIDEO_URL:-PEGAR AQUI EL ENLACE NO LISTADO DEL VIDEO}
+
+services:
+  mongo:
+    image: mongo:8.0
+    container_name: futbol-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-cambie_esta_clave}
+    ports:
+      - "${MONGO_PUERTO_HOST:-27018}:27017"
+    volumes:
+      - mongo_data:/data/db              # persistencia de MongoDB entre reinicios
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  procesamiento:
+    build:
+      context: .
+      dockerfile: procesamiento/Dockerfile
+    container_name: futbol-procesamiento
+    environment: *mongo-env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "${JUPYTER_PUERTO_HOST:-8888}:8888"
+    volumes:
+      - ./data:/proyecto/data            # data/raw (descarga) y data/processed (Parquet)
+      - ./models:/proyecto/models        # modelos .joblib y métricas
+      - ./reports:/proyecto/reports      # figuras, copia JSON del documento y PDF
+      - ./notebooks:/proyecto/notebooks  # notebook del proyecto
+    mem_limit: 6g
+    healthcheck:                         # "sano" = el pipeline terminó y dejó la bandera reports/.pipeline_ok
+      test: ["CMD", "test", "-f", "/proyecto/reports/.pipeline_ok"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30m
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: futbol-app
+    environment: *mongo-env
+    depends_on:
+      mongo:
+        condition: service_healthy
+      procesamiento:
+        condition: service_healthy       # la app abre cuando ya existen Parquet, modelos y PDF
+    ports:
+      - "${APP_PUERTO_HOST:-8501}:8501"
+    volumes:
+      - ./data:/proyecto/data:ro
+      - ./models:/proyecto/models:ro
+      - ./reports:/proyecto/reports:ro
+
+volumes:
+  mongo_data:

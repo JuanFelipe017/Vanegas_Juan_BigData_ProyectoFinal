@@ -1,0 +1,30 @@
+{
+  "maquina": {
+    "sistema": "Windows-11-10.0.26200-SP0",
+    "cpu_logicos": 4,
+    "ram_gb": 21.3,
+    "python": "3.13.4",
+    "pandas": "3.0.6"
+  },
+  "fecha": "2026-11-07 17:43",
+  "pandas": {
+    "lectura_csv_partidos_s": 1.841,
+    "lectura_csv_valoraciones_s": 1.626,
+    "agregacion_liga_anio_s": 0.548,
+    "agregacion_y_join_valoraciones_s": 0.076,
+    "lectura_parquet_limpio_s": 0.188,
+    "memoria_partidos_mb": 100.3
+  },
+  "spark": {
+    "version": "4.2.0",
+    "arranque_sesion_s": 18.6,
+    "lectura_csv_partidos_s": 1.944,
+    "agregacion_liga_anio_s": 0.864,
+    "agregacion_y_join_valoraciones_s": 1.452,
+    "configuracion": {
+      "master": "local[*]",
+      "spark.driver.memory": "4g",
+      "spark.sql.shuffle.partitions": 8
+    }
+  }
+}
