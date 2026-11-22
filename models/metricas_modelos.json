@@ -290,9 +290,9 @@
           "accuracy": 0.49870277282309067,
           "balanced_accuracy": 0.4258267129779601,
           "f1_macro": 0.36713206419423444,
-          "log_loss": 1.0127968124598912,
-          "brier": 0.6058598815614998,
-          "roc_auc_ovr": 0.6368824050291509,
+          "log_loss": 1.012796812116903,
+          "brier": 0.6058598809851483,
+          "roc_auc_ovr": 0.6368825042643945,
           "por_clase": {
             "Local": {
               "precision": 0.5104903078677309,
@@ -332,51 +332,51 @@
           ]
         },
         "prueba": {
-          "accuracy": 0.48828365878725594,
-          "balanced_accuracy": 0.42018820632224196,
-          "f1_macro": 0.3600339066041835,
-          "log_loss": 1.0206255056711417,
-          "brier": 0.6118490941391179,
-          "roc_auc_ovr": 0.6269441193502477,
+          "accuracy": 0.4883864337101747,
+          "balanced_accuracy": 0.4202676528631067,
+          "f1_macro": 0.3600072923785096,
+          "log_loss": 1.0206266491590708,
+          "brier": 0.6118523580242382,
+          "roc_auc_ovr": 0.6269277755043063,
           "por_clase": {
             "Local": {
-              "precision": 0.5006058843487955,
-              "recall": 0.8145752819622999,
-              "f1": 0.6201140798558992,
+              "precision": 0.5006542916686861,
+              "recall": 0.814733023109078,
+              "f1": 0.6201969260326609,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.3584905660377358,
-              "recall": 0.004936347103143674,
-              "f1": 0.009738595592004101,
+              "precision": 0.34615384615384615,
+              "recall": 0.004676539360872954,
+              "f1": 0.009228402973596514,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.45983674435111793,
-              "recall": 0.4410529899012822,
-              "f1": 0.4502490443646473,
+              "precision": 0.46019164793564415,
+              "recall": 0.4413933961193691,
+              "f1": 0.4505965481292714,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10328,
+              10330,
               34,
-              2317
+              2315
             ],
             [
-              5411,
-              38,
-              2249
+              5414,
+              36,
+              2248
             ],
             [
-              4892,
+              4889,
               34,
-              3887
+              3890
             ]
           ]
         },
-        "segundos": 22.5
+        "segundos": 43.1
       },
       "Random Forest": {
         "validacion": {
@@ -384,7 +384,7 @@
           "balanced_accuracy": 0.4187851042097626,
           "f1_macro": 0.3575192427628911,
           "log_loss": 1.013929948372358,
-          "brier": 0.6069185937321644,
+          "brier": 0.6069185937321643,
           "roc_auc_ovr": 0.6347706552855635,
           "por_clase": {
             "Local": {
@@ -469,7 +469,7 @@
             ]
           ]
         },
-        "segundos": 67.7
+        "segundos": 93.5
       },
       "LightGBM": {
         "validacion": {
@@ -521,9 +521,9 @@
           "accuracy": 0.4904076738609113,
           "balanced_accuracy": 0.42069722026924516,
           "f1_macro": 0.36095450526546174,
-          "log_loss": 1.0184525598230376,
-          "brier": 0.6105490282714506,
-          "roc_auc_ovr": 0.6294656039489265,
+          "log_loss": 1.0184525602614936,
+          "brier": 0.6105490285924665,
+          "roc_auc_ovr": 0.6294656114878635,
           "por_clase": {
             "Local": {
               "precision": 0.4998094330633635,
@@ -562,7 +562,7 @@
             ]
           ]
         },
-        "segundos": 32.6,
+        "segundos": 49.5,
         "arboles": 156
       },
       "_mejor": {
@@ -572,9 +572,9 @@
           "accuracy": 0.46128811236724904,
           "balanced_accuracy": 0.4305380219272956,
           "f1_macro": 0.43111057613105563,
-          "log_loss": 1.0184525598230376,
-          "brier": 0.6105490282714506,
-          "roc_auc_ovr": 0.6294656039489265,
+          "log_loss": 1.0184525602614936,
+          "brier": 0.6105490285924665,
+          "roc_auc_ovr": 0.6294656114878635,
           "por_clase": {
             "Local": {
               "precision": 0.5344908493664946,
@@ -618,140 +618,140 @@
     "con_cuotas": {
       "Regresión logística": {
         "validacion": {
-          "accuracy": 0.5084319766499108,
-          "balanced_accuracy": 0.43967370909787434,
-          "f1_macro": 0.38477162275377136,
-          "log_loss": 0.9961827996504233,
-          "brier": 0.5949615596298407,
-          "roc_auc_ovr": 0.6534651622175928,
+          "accuracy": 0.5085130533484676,
+          "balanced_accuracy": 0.43983334578934663,
+          "f1_macro": 0.3852779108611301,
+          "log_loss": 0.9961739255123295,
+          "brier": 0.5949582736665944,
+          "roc_auc_ovr": 0.6534715342781198,
           "por_clase": {
             "Local": {
-              "precision": 0.5259188315575243,
-              "recall": 0.8047261403187397,
-              "f1": 0.6361135244714741,
+              "precision": 0.5260510240747395,
+              "recall": 0.8045429565854552,
+              "f1": 0.6361529548088065,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.34210526315789475,
-              "recall": 0.016204425054534122,
-              "f1": 0.030943171675096696,
+              "precision": 0.3525641025641026,
+              "recall": 0.017139295730757245,
+              "f1": 0.03268945022288262,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.4768869156437712,
-              "recall": 0.4980905619203492,
-              "f1": 0.48725817211474315,
+              "precision": 0.47662575084878556,
+              "recall": 0.4978177850518276,
+              "f1": 0.48699132755170116,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4393,
+              4392,
               57,
-              1009
+              1010
             ],
             [
-              2163,
-              52,
+              2160,
+              55,
               994
             ],
             [
               1797,
-              43,
-              1826
+              44,
+              1825
             ]
           ]
         },
         "prueba": {
-          "accuracy": 0.5022267899965742,
-          "balanced_accuracy": 0.436419720970391,
-          "f1_macro": 0.3795179388328127,
-          "log_loss": 1.003163844160058,
-          "brier": 0.6001382950251545,
-          "roc_auc_ovr": 0.6477948370502643,
+          "accuracy": 0.5017814319972593,
+          "balanced_accuracy": 0.43596319723327,
+          "f1_macro": 0.37901789573415573,
+          "log_loss": 1.0031653547454797,
+          "brier": 0.6001458881571196,
+          "roc_auc_ovr": 0.6477597621204297,
           "por_clase": {
             "Local": {
-              "precision": 0.5176298978924602,
-              "recall": 0.8116570707469043,
-              "f1": 0.6321253071253071,
+              "precision": 0.5174026757871442,
+              "recall": 0.811341588453348,
+              "f1": 0.6318602008537821,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.3487654320987654,
-              "recall": 0.014679137438295662,
-              "f1": 0.028172525554724506,
+              "precision": 0.3415384615384615,
+              "recall": 0.014419329696024942,
+              "f1": 0.027670447463542316,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.4736783528102393,
-              "recall": 0.482922954725973,
-              "f1": 0.47825598381840656,
+              "precision": 0.4730045641767784,
+              "recall": 0.48212867355043687,
+              "f1": 0.47752303888514275,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              10291,
-              103,
-              2285
+              10287,
+              105,
+              2287
             ],
             [
-              5141,
-              113,
-              2444
+              5140,
+              111,
+              2447
             ],
             [
-              4449,
-              108,
-              4256
+              4455,
+              109,
+              4249
             ]
           ]
         },
-        "segundos": 24.2
+        "segundos": 57.6
       },
       "Random Forest": {
         "validacion": {
-          "accuracy": 0.5068915193773309,
-          "balanced_accuracy": 0.4371316208940712,
-          "f1_macro": 0.3787480511378474,
-          "log_loss": 0.9970657959753148,
-          "brier": 0.5955712193244325,
-          "roc_auc_ovr": 0.6528736407618726,
+          "accuracy": 0.5069725960758877,
+          "balanced_accuracy": 0.43738878389064606,
+          "f1_macro": 0.3787854221880147,
+          "log_loss": 0.9970635353140922,
+          "brier": 0.5955727030860024,
+          "roc_auc_ovr": 0.6528698485973218,
           "por_clase": {
             "Local": {
-              "precision": 0.5243815413891532,
-              "recall": 0.8076570800512914,
-              "f1": 0.6358981755246268,
+              "precision": 0.5242914979757085,
+              "recall": 0.8065579776515845,
+              "f1": 0.6354910875369849,
               "soporte": 5459
             },
             "Empate": {
-              "precision": 0.27956989247311825,
-              "recall": 0.008102212527267061,
-              "f1": 0.015748031496062992,
+              "precision": 0.28735632183908044,
+              "recall": 0.007790588968526021,
+              "f1": 0.01516990291262136,
               "soporte": 3209
             },
             "Visitante": {
-              "precision": 0.47404122097573703,
-              "recall": 0.4956355701036552,
-              "f1": 0.48459794639285236,
+              "precision": 0.4741491296440634,
+              "recall": 0.4978177850518276,
+              "f1": 0.4856952761144378,
               "soporte": 3666
             }
           },
           "matriz_confusion": [
             [
-              4409,
+              4403,
               33,
-              1017
+              1023
             ],
             [
-              2184,
-              26,
-              999
+              2183,
+              25,
+              1001
             ],
             [
-              1815,
-              34,
-              1817
+              1812,
+              29,
+              1825
             ]
           ]
         },
@@ -800,7 +800,7 @@
             ]
           ]
         },
-        "segundos": 69.0
+        "segundos": 105.7
       },
       "LightGBM": {
         "validacion": {
@@ -893,54 +893,54 @@
             ]
           ]
         },
-        "segundos": 38.2,
+        "segundos": 58.7,
         "arboles": 155
       },
       "_mejor": {
         "modelo": "Regresión logística",
         "umbral_empate": 0.295,
         "prueba_con_umbral": {
-          "accuracy": 0.4852689277149709,
-          "balanced_accuracy": 0.4478465653391083,
-          "f1_macro": 0.4461981727472359,
-          "log_loss": 1.003163844160058,
-          "brier": 0.6001382950251545,
-          "roc_auc_ovr": 0.6477948370502643,
+          "accuracy": 0.4845837615621788,
+          "balanced_accuracy": 0.4471082701108931,
+          "f1_macro": 0.4454172720206538,
+          "log_loss": 1.0031653547454797,
+          "brier": 0.6001458881571196,
+          "roc_auc_ovr": 0.6477597621204297,
           "por_clase": {
             "Local": {
-              "precision": 0.545165596592715,
-              "recall": 0.6763940373846518,
-              "f1": 0.6037310806054206,
+              "precision": 0.5451134990780186,
+              "recall": 0.6761574256644846,
+              "f1": 0.6036048722100965,
               "soporte": 12679
             },
             "Empate": {
-              "precision": 0.3212169735788631,
-              "recall": 0.2605871654975318,
-              "f1": 0.2877429534533458,
+              "precision": 0.3202238209432454,
+              "recall": 0.26019745388412574,
+              "f1": 0.28710671540170574,
               "soporte": 7698
             },
             "Visitante": {
-              "precision": 0.49667313556972553,
-              "recall": 0.40655849313514125,
-              "f1": 0.4471204841829413,
+              "precision": 0.49514428412874584,
+              "recall": 0.404969930784069,
+              "f1": 0.44554022845015917,
               "soporte": 8813
             }
           },
           "matriz_confusion": [
             [
-              8576,
-              2349,
-              1754
+              8573,
+              2343,
+              1763
             ],
             [
-              3815,
-              2006,
-              1877
+              3819,
+              2003,
+              1876
             ],
             [
-              3340,
-              1890,
-              3583
+              3335,
+              1909,
+              3569
             ]
           ]
         }
@@ -952,478 +952,478 @@
       {
         "variable": "diferencia_elo",
         "etiqueta": "Diferencia de Elo (local − visitante)",
-        "importancia": 0.06637543698442865,
-        "desviacion": 0.0006479225071298887
+        "importancia": 0.06637543362796634,
+        "desviacion": 0.000647921636616563
       },
       {
         "variable": "liga_codigo",
         "etiqueta": "Liga",
-        "importancia": 0.004975634280770451,
-        "desviacion": 0.0008837799284832377
+        "importancia": 0.004975635120627375,
+        "desviacion": 0.0008837798452949297
       },
       {
         "variable": "valor_plantilla_visitante",
         "etiqueta": "Valor plantilla visitante (M€)",
-        "importancia": 0.0019059997402683198,
-        "desviacion": 0.0006601787927348883
+        "importancia": 0.0019060004260504175,
+        "desviacion": 0.0006601789301501689
       },
       {
         "variable": "log_ratio_valor",
         "etiqueta": "Ratio de valor de plantilla (log)",
-        "importancia": 0.0014607978378800752,
-        "desviacion": 0.00018427244920923936
+        "importancia": 0.0014607982189858888,
+        "desviacion": 0.00018427285565747288
       },
       {
         "variable": "valor_plantilla_local",
         "etiqueta": "Valor plantilla local (M€)",
-        "importancia": 0.0012287741404529335,
-        "desviacion": 0.0005016288871287713
+        "importancia": 0.0012287749059343156,
+        "desviacion": 0.00050162879599192
       },
       {
         "variable": "dif_ppg_temporada",
         "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.0006334505530895355,
-        "desviacion": 0.00048281970868159886
+        "importancia": 0.0006322244919496622,
+        "desviacion": 0.0004819616984512847
       },
       {
         "variable": "partidos_temporada_local",
         "etiqueta": "Jornada (partidos jugados)",
-        "importancia": 0.0006276393173272332,
-        "desviacion": 0.00013346773155023455
+        "importancia": 0.0006272475823304221,
+        "desviacion": 0.00013260000424736502
       },
       {
         "variable": "ppg_temporada_visitante",
         "etiqueta": "Puntos por partido en la temporada (visitante)",
-        "importancia": 0.0004748230626145193,
-        "desviacion": 0.00010092095257174077
+        "importancia": 0.00047491859152382077,
+        "desviacion": 0.00010116956164494121
       },
       {
         "variable": "gc_prom5_local",
         "etiqueta": "Goles en contra prom. 5 (local)",
-        "importancia": 0.00033064435995222574,
-        "desviacion": 0.00012119567120457259
+        "importancia": 0.00033064576347774377,
+        "desviacion": 0.00012119437186993554
       },
       {
         "variable": "elo_propio_local",
         "etiqueta": "Elo del local",
-        "importancia": 0.0003023497216387098,
-        "desviacion": 0.0002621352459566654
+        "importancia": 0.0003023500546539548,
+        "desviacion": 0.00026213621004873454
       },
       {
         "variable": "elo_propio_visitante",
         "etiqueta": "Elo del visitante",
-        "importancia": 0.00028839133668682554,
-        "desviacion": 0.0001914848802425637
+        "importancia": 0.000288364051132269,
+        "desviacion": 0.00019144812906504046
       },
       {
         "variable": "ppg_temporada_local",
         "etiqueta": "Puntos por partido en la temporada (local)",
-        "importancia": 0.0001598095480782232,
-        "desviacion": 0.0002378352240954563
+        "importancia": 0.00015826284296912205,
+        "desviacion": 0.00023763371440144824
       },
       {
         "variable": "record_condicion_local",
         "etiqueta": "Puntos en últimos 5 como local",
-        "importancia": 0.00012126059368526103,
-        "desviacion": 2.9453472904218427e-05
+        "importancia": 0.00012126051840451642,
+        "desviacion": 2.9453625947576795e-05
       },
       {
         "variable": "carga_min14_visitante",
         "etiqueta": "Minutos jugados últimos 14 días (visitante)",
-        "importancia": 9.047584479267752e-05,
-        "desviacion": 9.072371394374313e-05
+        "importancia": 9.055513530416744e-05,
+        "desviacion": 8.90702940610201e-05
       },
       {
         "variable": "descanso_real_local",
         "etiqueta": "Descanso real del local (todas las competiciones)",
-        "importancia": 8.59074599942981e-05,
-        "desviacion": 4.550986446398539e-05
+        "importancia": 8.590754825443803e-05,
+        "desviacion": 4.550985714372886e-05
       },
       {
         "variable": "dif_puntos_prom5",
         "etiqueta": "Diferencia de forma (5 partidos)",
-        "importancia": 7.14214614033389e-05,
-        "desviacion": 2.964456134045738e-05
+        "importancia": 7.122830762362753e-05,
+        "desviacion": 2.9598969110039637e-05
       },
       {
         "variable": "convocados_local",
         "etiqueta": "Convocados al parón (local)",
-        "importancia": 6.377549223183603e-05,
-        "desviacion": 1.8114676374288178e-05
+        "importancia": 6.35988083560098e-05,
+        "desviacion": 1.832113613821223e-05
       },
       {
         "variable": "puntos_prom5_visitante",
         "etiqueta": "Puntos prom. últimos 5 (visitante)",
-        "importancia": 3.312849155837997e-05,
-        "desviacion": 3.747331068582133e-05
+        "importancia": 3.312884625924125e-05,
+        "desviacion": 3.747321788537599e-05
       },
       {
         "variable": "dif_descanso_real",
         "etiqueta": "Diferencia de descanso real",
-        "importancia": 3.1877921375341366e-05,
-        "desviacion": 6.766904468084539e-05
+        "importancia": 3.187780926590852e-05,
+        "desviacion": 6.766921454264567e-05
       },
       {
         "variable": "dias_descanso_visitante",
         "etiqueta": "Días de descanso (visitante)",
-        "importancia": 3.054094887167125e-05,
-        "desviacion": 2.0282721506775264e-05
+        "importancia": 3.060633277070698e-05,
+        "desviacion": 2.0317326803546842e-05
       },
       {
         "variable": "carga_min14_local",
         "etiqueta": "Minutos jugados últimos 14 días (local)",
-        "importancia": 2.3301838334507014e-05,
-        "desviacion": 2.3988956339695933e-05
+        "importancia": 2.3979686666194173e-05,
+        "desviacion": 2.661518212555635e-05
       },
       {
         "variable": "nivel",
         "etiqueta": "Nivel de la liga",
-        "importancia": 2.2275048360128242e-05,
-        "desviacion": 4.48367192968782e-06
+        "importancia": 2.2275002598733568e-05,
+        "desviacion": 4.483662373409874e-06
       },
       {
         "variable": "gc_prom5_visitante",
         "etiqueta": "Goles en contra prom. 5 (visitante)",
-        "importancia": 1.857823189273707e-05,
-        "desviacion": 9.93543060753141e-05
+        "importancia": 1.82518945475163e-05,
+        "desviacion": 9.96788890707147e-05
       },
       {
         "variable": "dias_descanso_local",
         "etiqueta": "Días de descanso (local)",
-        "importancia": 1.3999612187213609e-05,
-        "desviacion": 4.31571791405692e-05
-      },
-      {
-        "variable": "dif_carga_min14",
-        "etiqueta": "Diferencia de carga de minutos",
-        "importancia": 7.131905697936129e-06,
-        "desviacion": 3.060084775795463e-05
-      },
-      {
-        "variable": "record_condicion_visitante",
-        "etiqueta": "Puntos en últimos 5 como visitante",
-        "importancia": 4.7552678048568e-06,
-        "desviacion": 2.8506797450582152e-05
-      },
-      {
-        "variable": "dif_viajeros",
-        "etiqueta": "Diferencia de viajeros",
-        "importancia": 4.614691014500257e-06,
-        "desviacion": 2.7904758826817835e-07
+        "importancia": 1.3999868632226983e-05,
+        "desviacion": 4.315724510567338e-05
       },
       {
         "variable": "descanso_real_visitante",
         "etiqueta": "Descanso real del visitante",
-        "importancia": 4.44505630081693e-06,
-        "desviacion": 5.447977799113692e-05
+        "importancia": 1.2168249016323665e-05,
+        "desviacion": 5.6974747760528614e-05
+      },
+      {
+        "variable": "dif_carga_min14",
+        "etiqueta": "Diferencia de carga de minutos",
+        "importancia": 8.090511785481999e-06,
+        "desviacion": 2.8852017720100483e-05
+      },
+      {
+        "variable": "record_condicion_visitante",
+        "etiqueta": "Puntos en últimos 5 como visitante",
+        "importancia": 4.669072458588867e-06,
+        "desviacion": 2.8584154090315516e-05
+      },
+      {
+        "variable": "dif_viajeros",
+        "etiqueta": "Diferencia de viajeros",
+        "importancia": 4.6146928012931925e-06,
+        "desviacion": 2.7904760484782264e-07
       },
       {
         "variable": "viajeros_local",
         "etiqueta": "Convocados con viaje intercontinental (local)",
-        "importancia": 1.4272755614423243e-06,
-        "desviacion": 2.6561238522456006e-07
+        "importancia": 1.427279321545664e-06,
+        "desviacion": 2.6561226643041346e-07
       },
       {
         "variable": "post_paron",
         "etiqueta": "Primer partido tras parón de selecciones",
-        "importancia": -7.976825981970137e-07,
-        "desviacion": 7.542271435757859e-06
+        "importancia": -7.976859214646007e-07,
+        "desviacion": 7.542271908216756e-06
       },
       {
         "variable": "viajeros_visitante",
         "etiqueta": "Convocados con viaje intercontinental (visitante)",
-        "importancia": -1.76521003947272e-06,
-        "desviacion": 2.671511192889496e-06
+        "importancia": -1.7652113143048116e-06,
+        "desviacion": 2.6715100488183035e-06
       },
       {
         "variable": "convocados_visitante",
         "etiqueta": "Convocados al parón (visitante)",
-        "importancia": -1.1028980113403364e-05,
-        "desviacion": 9.485486224911379e-06
+        "importancia": -1.1028972386103083e-05,
+        "desviacion": 9.485479606890775e-06
       },
       {
         "variable": "puntos_prom5_local",
         "etiqueta": "Puntos prom. últimos 5 (local)",
-        "importancia": -3.294558535293923e-05,
-        "desviacion": 2.226275471657619e-05
+        "importancia": -3.290877788801142e-05,
+        "desviacion": 2.2200403301224703e-05
       },
       {
         "variable": "mes",
         "etiqueta": "Mes del partido",
-        "importancia": -6.478967866171044e-05,
-        "desviacion": 3.874415589016013e-05
+        "importancia": -6.478936120409469e-05,
+        "desviacion": 3.8744240169704606e-05
       },
       {
         "variable": "gf_prom5_local",
         "etiqueta": "Goles a favor prom. 5 (local)",
-        "importancia": -7.314824721664041e-05,
-        "desviacion": 0.00014630830098494034
+        "importancia": -7.33361649090843e-05,
+        "desviacion": 0.00014605086174935433
       },
       {
         "variable": "gf_prom5_visitante",
         "etiqueta": "Goles a favor prom. 5 (visitante)",
-        "importancia": -9.394861877876082e-05,
-        "desviacion": 4.697462625862454e-06
+        "importancia": -9.394883661791494e-05,
+        "desviacion": 4.6973379878442654e-06
       }
     ],
     "con_cuotas": [
       {
         "variable": "logit_casa",
         "etiqueta": "Log-odds casa (local vs. visitante)",
-        "importancia": 0.1796172216371182,
-        "desviacion": 0.0012871876395320306
+        "importancia": 0.18092731467020604,
+        "desviacion": 0.0012904934254799859
       },
       {
         "variable": "viajeros_visitante",
         "etiqueta": "Convocados con viaje intercontinental (visitante)",
-        "importancia": 0.004985425390495883,
-        "desviacion": 0.00040553760256538515
-      },
-      {
-        "variable": "dif_ppg_temporada",
-        "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.003990552083477687,
-        "desviacion": 0.00016300544704229064
+        "importancia": 0.005284864490598802,
+        "desviacion": 0.00042458470541315767
       },
       {
         "variable": "viajeros_local",
         "etiqueta": "Convocados con viaje intercontinental (local)",
-        "importancia": 0.0038529435842249438,
-        "desviacion": 0.00042227387278795896
+        "importancia": 0.004169707343313937,
+        "desviacion": 0.00044539324064428833
+      },
+      {
+        "variable": "dif_ppg_temporada",
+        "etiqueta": "Diferencia de puntos por partido en la temporada",
+        "importancia": 0.0036605630456616467,
+        "desviacion": 0.00014992165513699713
       },
       {
         "variable": "dif_carga_min14",
         "etiqueta": "Diferencia de carga de minutos",
-        "importancia": 0.003227568764142689,
-        "desviacion": 0.0007279545749753355
+        "importancia": 0.0029936880264225993,
+        "desviacion": 0.00069791501376077
       },
       {
         "variable": "prob_casa_empate",
         "etiqueta": "Prob. implícita casa: empate",
-        "importancia": 0.0029298329998862136,
-        "desviacion": 0.00022761923813934302
+        "importancia": 0.002902747376449947,
+        "desviacion": 0.00022504168953962108
       },
       {
         "variable": "dif_viajeros",
         "etiqueta": "Diferencia de viajeros",
-        "importancia": 0.0019511000370258842,
-        "desviacion": 0.0003309187937150131
+        "importancia": 0.002086391664371856,
+        "desviacion": 0.00035310985363859975
       },
       {
         "variable": "dif_descanso_real",
         "etiqueta": "Diferencia de descanso real",
-        "importancia": 0.0016763298331836651,
-        "desviacion": 0.0003602980127567968
+        "importancia": 0.0017078337157590735,
+        "desviacion": 0.000367464226568188
       },
       {
         "variable": "ppg_temporada_visitante",
         "etiqueta": "Puntos por partido en la temporada (visitante)",
-        "importancia": 0.0016697724751918812,
-        "desviacion": 0.0003931602414094588
+        "importancia": 0.001569028004934599,
+        "desviacion": 0.0003812017104826956
       },
       {
         "variable": "descanso_real_visitante",
         "etiqueta": "Descanso real del visitante",
-        "importancia": 0.0014103579582538384,
-        "desviacion": 0.00026893816701144556
+        "importancia": 0.0014908651489936957,
+        "desviacion": 0.00027413181751151307
       },
       {
         "variable": "convocados_local",
         "etiqueta": "Convocados al parón (local)",
-        "importancia": 0.0013470926883517957,
-        "desviacion": 0.00047657256006722847
+        "importancia": 0.00138356601536264,
+        "desviacion": 0.0004835014204060576
       },
       {
         "variable": "carga_min14_visitante",
         "etiqueta": "Minutos jugados últimos 14 días (visitante)",
-        "importancia": 0.0013054314041452593,
-        "desviacion": 0.0007003295592956215
+        "importancia": 0.001249781932261958,
+        "desviacion": 0.0006947091908623028
       },
       {
         "variable": "valor_plantilla_visitante",
         "etiqueta": "Valor plantilla visitante (M€)",
-        "importancia": 0.0012033637442929734,
-        "desviacion": 0.0003081644318542694
+        "importancia": 0.0012004438914290372,
+        "desviacion": 0.0003162444446594359
       },
       {
         "variable": "ppg_temporada_local",
         "etiqueta": "Puntos por partido en la temporada (local)",
-        "importancia": 0.0011792256452199574,
-        "desviacion": 0.0004798405764456221
-      },
-      {
-        "variable": "valor_plantilla_local",
-        "etiqueta": "Valor plantilla local (M€)",
-        "importancia": 0.0009147496578147211,
-        "desviacion": 0.00017145700788073905
+        "importancia": 0.001077014721098483,
+        "desviacion": 0.00046614529649909974
       },
       {
         "variable": "carga_min14_local",
         "etiqueta": "Minutos jugados últimos 14 días (local)",
-        "importancia": 0.0008713601965155693,
-        "desviacion": 0.00014154958056358032
+        "importancia": 0.0009687415835289611,
+        "desviacion": 0.00017091155166327853
       },
       {
-        "variable": "log_ratio_valor",
-        "etiqueta": "Ratio de valor de plantilla (log)",
-        "importancia": 0.0007606234221861167,
-        "desviacion": 0.0001759492763934137
+        "variable": "valor_plantilla_local",
+        "etiqueta": "Valor plantilla local (M€)",
+        "importancia": 0.0008697451970530364,
+        "desviacion": 0.00016999626043986738
       },
       {
         "variable": "dif_puntos_prom5",
         "etiqueta": "Diferencia de forma (5 partidos)",
-        "importancia": 0.0007349589393467563,
-        "desviacion": 0.00018263298392929113
+        "importancia": 0.0007646479704373673,
+        "desviacion": 0.00018374678490747627
+      },
+      {
+        "variable": "log_ratio_valor",
+        "etiqueta": "Ratio de valor de plantilla (log)",
+        "importancia": 0.0007051147229362176,
+        "desviacion": 0.00017204355225140583
       },
       {
         "variable": "descanso_real_local",
         "etiqueta": "Descanso real del local (todas las competiciones)",
-        "importancia": 0.000610867595442007,
-        "desviacion": 0.00019358965371727807
+        "importancia": 0.0006396671334648977,
+        "desviacion": 0.00019562966000264767
       },
       {
         "variable": "gc_prom5_local",
         "etiqueta": "Goles en contra prom. 5 (local)",
-        "importancia": 0.0005736110265778619,
-        "desviacion": 0.00012715144684676243
+        "importancia": 0.0005647726476074588,
+        "desviacion": 0.00012592161525223615
       },
       {
         "variable": "liga_codigo",
         "etiqueta": "Liga",
-        "importancia": 0.0005413086644419085,
-        "desviacion": 0.00012866256834320096
+        "importancia": 0.0005364854614220427,
+        "desviacion": 0.00013257830720132794
       },
       {
         "variable": "prob_casa_mas25",
         "etiqueta": "Prob. implícita casa: más de 2,5 goles",
-        "importancia": 0.0005285818403249672,
-        "desviacion": 0.0001477042111280677
+        "importancia": 0.0005157363846360526,
+        "desviacion": 0.00015074955429802167
       },
       {
         "variable": "nivel",
         "etiqueta": "Nivel de la liga",
-        "importancia": 0.0003950377456088579,
-        "desviacion": 0.00010867601313760671
+        "importancia": 0.0004179988375249503,
+        "desviacion": 0.00011310678023264788
       },
       {
         "variable": "puntos_prom5_local",
         "etiqueta": "Puntos prom. últimos 5 (local)",
-        "importancia": 0.00035376264161398235,
-        "desviacion": 0.0002448112808788602
-      },
-      {
-        "variable": "prob_casa_visitante",
-        "etiqueta": "Prob. implícita casa: visitante",
-        "importancia": 0.00028800292896965135,
-        "desviacion": 0.00015186802324109014
+        "importancia": 0.0003625849776754582,
+        "desviacion": 0.00024710276795763945
       },
       {
         "variable": "puntos_prom5_visitante",
         "etiqueta": "Puntos prom. últimos 5 (visitante)",
-        "importancia": 0.0002753312830701127,
-        "desviacion": 0.00013054950534731495
+        "importancia": 0.00030754036379806077,
+        "desviacion": 0.0001343918387251167
+      },
+      {
+        "variable": "prob_casa_visitante",
+        "etiqueta": "Prob. implícita casa: visitante",
+        "importancia": 0.0002849622271468751,
+        "desviacion": 0.00014720801723434336
       },
       {
         "variable": "gf_prom5_local",
         "etiqueta": "Goles a favor prom. 5 (local)",
-        "importancia": 0.00016110335647330962,
-        "desviacion": 0.00016200503511522448
+        "importancia": 0.0001582648095307023,
+        "desviacion": 0.0001614262287983155
       },
       {
         "variable": "gc_prom5_visitante",
         "etiqueta": "Goles en contra prom. 5 (visitante)",
-        "importancia": 0.00010248648045766788,
-        "desviacion": 0.00015143970108510166
+        "importancia": 0.00010313714594922807,
+        "desviacion": 0.0001514731231813725
       },
       {
         "variable": "partidos_temporada_local",
         "etiqueta": "Jornada (partidos jugados)",
-        "importancia": 9.067337292090194e-05,
-        "desviacion": 7.129905544192205e-05
+        "importancia": 9.50145084087269e-05,
+        "desviacion": 7.320097777799613e-05
       },
       {
         "variable": "elo_propio_local",
         "etiqueta": "Elo del local",
-        "importancia": 7.885755214213457e-05,
-        "desviacion": 0.0001730607961944923
+        "importancia": 8.316728392513777e-05,
+        "desviacion": 0.00017630261599279923
       },
       {
         "variable": "gf_prom5_visitante",
         "etiqueta": "Goles a favor prom. 5 (visitante)",
-        "importancia": 3.849178849183824e-05,
-        "desviacion": 3.479404566869782e-05
+        "importancia": 3.7498456748238006e-05,
+        "desviacion": 3.2997720738602985e-05
       },
       {
         "variable": "record_condicion_local",
         "etiqueta": "Puntos en últimos 5 como local",
-        "importancia": 3.2379980445732905e-05,
-        "desviacion": 7.785172980672513e-05
+        "importancia": 3.4552715317159866e-05,
+        "desviacion": 7.913949335861931e-05
       },
       {
         "variable": "dias_descanso_local",
         "etiqueta": "Días de descanso (local)",
-        "importancia": 3.1040895910328103e-05,
-        "desviacion": 1.700382623677236e-05
-      },
-      {
-        "variable": "margen_casa",
-        "etiqueta": "Margen de la casa",
-        "importancia": 2.412650778553053e-05,
-        "desviacion": 1.9885373928954688e-05
+        "importancia": 3.407753460956305e-05,
+        "desviacion": 1.800252463511322e-05
       },
       {
         "variable": "elo_propio_visitante",
         "etiqueta": "Elo del visitante",
-        "importancia": 1.8324808430595734e-05,
-        "desviacion": 0.00024267472440434308
+        "importancia": 2.779311331502221e-05,
+        "desviacion": 0.00024639646922499823
       },
       {
-        "variable": "dias_descanso_visitante",
-        "etiqueta": "Días de descanso (visitante)",
-        "importancia": -1.8411247285558357e-05,
-        "desviacion": 3.90879115896784e-05
-      },
-      {
-        "variable": "record_condicion_visitante",
-        "etiqueta": "Puntos en últimos 5 como visitante",
-        "importancia": -2.1713564408128622e-05,
-        "desviacion": 4.2267172835272204e-05
-      },
-      {
-        "variable": "mes",
-        "etiqueta": "Mes del partido",
-        "importancia": -2.6846258010119566e-05,
-        "desviacion": 3.4095402056944376e-05
-      },
-      {
-        "variable": "convocados_visitante",
-        "etiqueta": "Convocados al parón (visitante)",
-        "importancia": -2.7512299406969493e-05,
-        "desviacion": 5.567729879451669e-05
-      },
-      {
-        "variable": "prob_casa_local",
-        "etiqueta": "Prob. implícita casa: local",
-        "importancia": -3.207173761499149e-05,
-        "desviacion": 8.110730548634212e-05
-      },
-      {
-        "variable": "diferencia_elo",
-        "etiqueta": "Diferencia de Elo (local − visitante)",
-        "importancia": -3.2202746097720336e-05,
-        "desviacion": 3.6647428857082025e-05
-      },
-      {
-        "variable": "handicap",
-        "etiqueta": "Hándicap asiático",
-        "importancia": -3.2508489676619234e-05,
-        "desviacion": 4.4646108949690096e-05
+        "variable": "margen_casa",
+        "etiqueta": "Margen de la casa",
+        "importancia": 2.4684706474061475e-05,
+        "desviacion": 2.007992706943705e-05
       },
       {
         "variable": "post_paron",
         "etiqueta": "Primer partido tras parón de selecciones",
-        "importancia": -6.30901281021649e-05,
-        "desviacion": 5.487753452294115e-05
+        "importancia": 2.1275881710488185e-06,
+        "desviacion": 8.015750379896389e-05
+      },
+      {
+        "variable": "prob_casa_local",
+        "etiqueta": "Prob. implícita casa: local",
+        "importancia": -1.1014124360775313e-05,
+        "desviacion": 8.171547669167513e-05
+      },
+      {
+        "variable": "dias_descanso_visitante",
+        "etiqueta": "Días de descanso (visitante)",
+        "importancia": -1.653772464771386e-05,
+        "desviacion": 4.057378187125496e-05
+      },
+      {
+        "variable": "record_condicion_visitante",
+        "etiqueta": "Puntos en últimos 5 como visitante",
+        "importancia": -2.1951660296023096e-05,
+        "desviacion": 4.03801162959551e-05
+      },
+      {
+        "variable": "mes",
+        "etiqueta": "Mes del partido",
+        "importancia": -2.70611214609288e-05,
+        "desviacion": 3.575405864709336e-05
+      },
+      {
+        "variable": "diferencia_elo",
+        "etiqueta": "Diferencia de Elo (local − visitante)",
+        "importancia": -2.9566695715595632e-05,
+        "desviacion": 3.678878270146292e-05
+      },
+      {
+        "variable": "convocados_visitante",
+        "etiqueta": "Convocados al parón (visitante)",
+        "importancia": -3.537341937757491e-05,
+        "desviacion": 5.2231647456756125e-05
+      },
+      {
+        "variable": "handicap",
+        "etiqueta": "Hándicap asiático",
+        "importancia": -4.575572876156878e-05,
+        "desviacion": 5.193727228973175e-05
       }
     ]
   },
@@ -1511,60 +1511,60 @@
     "con_cuotas": {
       "Local": {
         "prob_media": [
-          0.1814,
-          0.2744,
+          0.181,
+          0.2743,
           0.3263,
           0.3681,
-          0.4073,
+          0.4074,
           0.4456,
-          0.4892,
-          0.5404,
-          0.6068,
-          0.7467
+          0.4893,
+          0.5405,
+          0.6069,
+          0.7468
         ],
         "frecuencia_real": [
-          0.1576,
-          0.2816,
-          0.3165,
-          0.3522,
-          0.4162,
-          0.4563,
-          0.4776,
-          0.5289,
-          0.6026,
-          0.754
+          0.1572,
+          0.2843,
+          0.3152,
+          0.3511,
+          0.4173,
+          0.4546,
+          0.4786,
+          0.5279,
+          0.6029,
+          0.7544
         ]
       },
       "Empate": {
         "prob_media": [
-          0.1434,
+          0.1433,
           0.2061,
-          0.2321,
+          0.232,
           0.2477,
           0.2596,
           0.2699,
-          0.2799,
+          0.2798,
           0.2906,
           0.3053,
-          0.3338
+          0.3337
         ],
         "frecuencia_real": [
-          0.1607,
-          0.2199,
-          0.2487,
-          0.2539,
+          0.1614,
+          0.2193,
+          0.2497,
+          0.2525,
           0.2761,
-          0.272,
-          0.2789,
-          0.2826,
-          0.3141,
-          0.3303
+          0.2727,
+          0.2795,
+          0.2813,
+          0.3135,
+          0.3313
         ]
       },
       "Visitante": {
         "prob_media": [
           0.0949,
-          0.1613,
+          0.1614,
           0.2009,
           0.2348,
           0.2677,
@@ -1572,19 +1572,19 @@
           0.3385,
           0.3849,
           0.4525,
-          0.6087
+          0.6089
         ],
         "frecuencia_real": [
-          0.0771,
-          0.172,
-          0.1918,
-          0.2258,
+          0.0778,
+          0.1727,
+          0.1898,
+          0.2268,
           0.2775,
-          0.3015,
-          0.3436,
-          0.3854,
-          0.4385,
-          0.606
+          0.3004,
+          0.3429,
+          0.3868,
+          0.4382,
+          0.6064
         ]
       }
     },
@@ -1865,190 +1865,190 @@
       "umbral_5pct": {
         "umbral_valor": 0.05,
         "partidos_evaluados": 29190,
-        "apuestas": 9141,
-        "aciertos": 2841,
-        "tasa_acierto": 0.31079750574335413,
-        "cuota_media": 3.688699265940551,
-        "beneficio_unidades": 24.39999485015869,
-        "roi": 0.0026692916365997914,
-        "max_caida": 143.13999819755554
+        "apuestas": 9116,
+        "aciertos": 2854,
+        "tasa_acierto": 0.31307591048705574,
+        "cuota_media": 3.675092144394821,
+        "beneficio_unidades": 66.71999514102936,
+        "roi": 0.00731899902819541,
+        "max_caida": 150.50999808311462
       },
       "curva": [
         {
           "umbral_valor": 0.0,
           "partidos_evaluados": 29190,
-          "apuestas": 24448,
-          "aciertos": 9165,
-          "tasa_acierto": 0.37487729057591623,
-          "cuota_media": 3.2258229704563997,
-          "beneficio_unidades": 200.8499835729599,
-          "roi": 0.008215395270490833,
-          "max_caida": 169.4500012397766
+          "apuestas": 24435,
+          "aciertos": 9188,
+          "tasa_acierto": 0.3760180069572335,
+          "cuota_media": 3.2158706766270604,
+          "beneficio_unidades": 215.00998544692993,
+          "roi": 0.008799262756166562,
+          "max_caida": 169.16000151634216
         },
         {
           "umbral_valor": 0.02,
           "partidos_evaluados": 29190,
-          "apuestas": 17860,
-          "aciertos": 6313,
-          "tasa_acierto": 0.353471444568869,
-          "cuota_media": 3.3758924965361867,
-          "beneficio_unidades": 138.9799883365631,
-          "roi": 0.0077816342853618764,
-          "max_caida": 114.91000199317932
+          "apuestas": 17851,
+          "aciertos": 6336,
+          "tasa_acierto": 0.35493809870595483,
+          "cuota_media": 3.365934680793193,
+          "beneficio_unidades": 158.0899885892868,
+          "roi": 0.008856085854534021,
+          "max_caida": 124.08999681472778
         },
         {
           "umbral_valor": 0.04,
           "partidos_evaluados": 29190,
-          "apuestas": 11547,
+          "apuestas": 11476,
           "aciertos": 3744,
-          "tasa_acierto": 0.32424006235385816,
-          "cuota_media": 3.5918160551521616,
-          "beneficio_unidades": 62.24999284744263,
-          "roi": 0.005391010032687505,
-          "max_caida": 158.75000071525574
+          "tasa_acierto": 0.3262460787730917,
+          "cuota_media": 3.5703590091989197,
+          "beneficio_unidades": 73.41999173164368,
+          "roi": 0.006397698826389306,
+          "max_caida": 141.71000051498413
         },
         {
           "umbral_valor": 0.06,
           "partidos_evaluados": 29190,
-          "apuestas": 7133,
-          "aciertos": 2159,
-          "tasa_acierto": 0.3026776952194028,
-          "cuota_media": 3.7757367148533723,
-          "beneficio_unidades": 59.469992876052856,
-          "roi": 0.00833730448283371,
-          "max_caida": 112.65999841690063
+          "apuestas": 7129,
+          "aciertos": 2144,
+          "tasa_acierto": 0.30074344227801936,
+          "cuota_media": 3.7658156804340153,
+          "beneficio_unidades": -2.110006809234619,
+          "roi": -0.0002959751450742908,
+          "max_caida": 154.26999843120575
         },
         {
           "umbral_valor": 0.08,
           "partidos_evaluados": 29190,
-          "apuestas": 4399,
-          "aciertos": 1303,
-          "tasa_acierto": 0.2962036826551489,
-          "cuota_media": 3.9491770840634213,
-          "beneficio_unidades": 107.51999485492706,
-          "roi": 0.024441917448267122,
-          "max_caida": 59.860000133514404
+          "apuestas": 4388,
+          "aciertos": 1305,
+          "tasa_acierto": 0.29740200546946216,
+          "cuota_media": 3.921679578538145,
+          "beneficio_unidades": 126.03999376296997,
+          "roi": 0.028723790739054234,
+          "max_caida": 56.860000133514404
         },
         {
           "umbral_valor": 0.1,
           "partidos_evaluados": 29190,
-          "apuestas": 2657,
-          "aciertos": 768,
-          "tasa_acierto": 0.2890477982687241,
-          "cuota_media": 4.110259689959898,
-          "beneficio_unidades": 79.75999438762665,
-          "roi": 0.030018816103736037,
-          "max_caida": 68.48000109195709
+          "apuestas": 2626,
+          "aciertos": 769,
+          "tasa_acierto": 0.29284082254379284,
+          "cuota_media": 4.086675550587198,
+          "beneficio_unidades": 99.56999480724335,
+          "roi": 0.037916982028653214,
+          "max_caida": 60.20000112056732
         },
         {
           "umbral_valor": 0.12,
           "partidos_evaluados": 29190,
           "apuestas": 1622,
-          "aciertos": 468,
-          "tasa_acierto": 0.2885326757090012,
-          "cuota_media": 4.262620221230899,
-          "beneficio_unidades": 85.05999863147736,
-          "roi": 0.05244142948919689,
-          "max_caida": 66.75
+          "aciertos": 475,
+          "tasa_acierto": 0.2928483353884094,
+          "cuota_media": 4.2101417993793655,
+          "beneficio_unidades": 90.88999807834625,
+          "roi": 0.05603575713831458,
+          "max_caida": 61.799999713897705
         },
         {
           "umbral_valor": 0.14,
           "partidos_evaluados": 29190,
           "apuestas": 995,
-          "aciertos": 275,
-          "tasa_acierto": 0.27638190954773867,
-          "cuota_media": 4.374412058226428,
-          "beneficio_unidades": 33.24999952316284,
-          "roi": 0.033417084947902354,
-          "max_caida": 61.97000014781952
+          "aciertos": 270,
+          "tasa_acierto": 0.271356783919598,
+          "cuota_media": 4.333005023721475,
+          "beneficio_unidades": 1.6299996376037598,
+          "roi": 0.0016381905905565426,
+          "max_caida": 87.75999987125397
         },
         {
           "umbral_valor": 0.16,
           "partidos_evaluados": 29190,
-          "apuestas": 638,
-          "aciertos": 171,
-          "tasa_acierto": 0.26802507836990597,
-          "cuota_media": 4.4595924729837515,
-          "beneficio_unidades": 1.7700004577636719,
-          "roi": 0.0027742953883443133,
-          "max_caida": 63.16999959945679
+          "apuestas": 656,
+          "aciertos": 174,
+          "tasa_acierto": 0.2652439024390244,
+          "cuota_media": 4.430807923580089,
+          "beneficio_unidades": -5.989999771118164,
+          "roi": -0.009131097212070373,
+          "max_caida": 62.65999960899353
         },
         {
           "umbral_valor": 0.18,
           "partidos_evaluados": 29190,
-          "apuestas": 440,
-          "aciertos": 114,
-          "tasa_acierto": 0.2590909090909091,
-          "cuota_media": 4.584840905124491,
-          "beneficio_unidades": -8.200000286102295,
-          "roi": -0.018636364286596124,
-          "max_caida": 45.72999978065491
+          "apuestas": 454,
+          "aciertos": 118,
+          "tasa_acierto": 0.2599118942731278,
+          "cuota_media": 4.545550656213634,
+          "beneficio_unidades": -5.940000534057617,
+          "roi": -0.013083701616866998,
+          "max_caida": 44.16999959945679
         },
         {
           "umbral_valor": 0.2,
           "partidos_evaluados": 29190,
-          "apuestas": 289,
-          "aciertos": 67,
-          "tasa_acierto": 0.23183391003460208,
-          "cuota_media": 4.753529406748841,
-          "beneficio_unidades": -23.84000062942505,
-          "roi": -0.08249135165891021,
-          "max_caida": 50.71000027656555
+          "apuestas": 291,
+          "aciertos": 68,
+          "tasa_acierto": 0.23367697594501718,
+          "cuota_media": 4.675841921383572,
+          "beneficio_unidades": -31.330000400543213,
+          "roi": -0.10766323161698699,
+          "max_caida": 62.81000018119812
         },
         {
           "umbral_valor": 0.22,
           "partidos_evaluados": 29190,
-          "apuestas": 197,
-          "aciertos": 49,
-          "tasa_acierto": 0.24873096446700507,
-          "cuota_media": 4.678832486196217,
-          "beneficio_unidades": -11.950000286102295,
-          "roi": -0.060659899929453275,
-          "max_caida": 36.69999980926514
+          "apuestas": 198,
+          "aciertos": 48,
+          "tasa_acierto": 0.24242424242424243,
+          "cuota_media": 4.6367676763823535,
+          "beneficio_unidades": -19.140000343322754,
+          "roi": -0.09666666840061997,
+          "max_caida": 44.329999923706055
         },
         {
           "umbral_valor": 0.24,
           "partidos_evaluados": 29190,
-          "apuestas": 130,
-          "aciertos": 34,
-          "tasa_acierto": 0.26153846153846155,
-          "cuota_media": 4.731076920949496,
-          "beneficio_unidades": -2.880000114440918,
-          "roi": -0.022153847034160908,
-          "max_caida": 28.43999981880188
+          "apuestas": 137,
+          "aciertos": 35,
+          "tasa_acierto": 0.25547445255474455,
+          "cuota_media": 4.685839414596558,
+          "beneficio_unidades": -3.6000003814697266,
+          "roi": -0.026277375047224282,
+          "max_caida": 25.859999656677246
         },
         {
           "umbral_valor": 0.26,
           "partidos_evaluados": 29190,
-          "apuestas": 91,
+          "apuestas": 96,
           "aciertos": 26,
-          "tasa_acierto": 0.2857142857142857,
-          "cuota_media": 4.746593404602218,
-          "beneficio_unidades": 10.869999647140503,
-          "roi": 0.11945054557297256,
-          "max_caida": 19.869999885559082
+          "tasa_acierto": 0.2708333333333333,
+          "cuota_media": 4.658020831644535,
+          "beneficio_unidades": 5.869999647140503,
+          "roi": 0.06114582965771357,
+          "max_caida": 21.869999885559082
         },
         {
           "umbral_valor": 0.28,
           "partidos_evaluados": 29190,
-          "apuestas": 74,
-          "aciertos": 21,
-          "tasa_acierto": 0.28378378378378377,
-          "cuota_media": 4.7890540522498055,
-          "beneficio_unidades": 8.069999933242798,
-          "roi": 0.1090540531519297,
-          "max_caida": 19.109999895095825
+          "apuestas": 78,
+          "aciertos": 24,
+          "tasa_acierto": 0.3076923076923077,
+          "cuota_media": 4.639487174841074,
+          "beneficio_unidades": 17.009999752044678,
+          "roi": 0.21807691989800868,
+          "max_caida": 20.15999984741211
         },
         {
           "umbral_valor": 0.3,
           "partidos_evaluados": 29190,
-          "apuestas": 53,
-          "aciertos": 14,
-          "tasa_acierto": 0.2641509433962264,
-          "cuota_media": 4.766226422111943,
-          "beneficio_unidades": 2.929999828338623,
-          "roi": 0.055283015629030624,
-          "max_caida": 17.549999952316284
+          "apuestas": 57,
+          "aciertos": 17,
+          "tasa_acierto": 0.2982456140350877,
+          "cuota_media": 4.580526326832018,
+          "beneficio_unidades": 10.170000076293945,
+          "roi": 0.17842105397006922,
+          "max_caida": 14.569999933242798
         }
       ]
     },
@@ -2245,7 +2245,7 @@
     }
   },
   "criterios_exito": {
-    "f1_macro_vs_ingenua_pct": 121.0,
+    "f1_macro_vs_ingenua_pct": 120.6,
     "cumple_f1_10pct": true,
     "logloss_modelo_vs_casa": 0.00024,
     "cumple_logloss_casa": false,
@@ -2283,5 +2283,5 @@
     },
     "partidos_post_paron_prueba": 1645
   },
-  "segundos_totales": 402.2
+  "segundos_totales": 579.3
 }

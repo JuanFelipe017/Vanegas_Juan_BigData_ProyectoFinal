@@ -3,12 +3,14 @@
 **Proyecto final — Gerencia y almacenamiento en Big Data · Fundación Universitaria Los Libertadores**
 **Autor:** Juan Felipe Vanegas Silva
 **Video de sustentación:** _PEGAR AQUÍ EL ENLACE NO LISTADO_
+**Dashboard en línea:** <https://juanfelipe017-vanegas-juan-bigdata-proyectofinal-appapp-jlbtk7.streamlit.app> (Streamlit Community Cloud; sin MongoDB, lee la copia JSON del documento)
 
-Pipeline integral de Big Data con Machine Learning sobre **1.258.950 registros** de tres fuentes públicas:
+Pipeline integral de Big Data con Machine Learning sobre **3.253.548 registros** de cuatro fuentes públicas:
 **238.858 partidos de 38 ligas (2000–2026)** con resultados, estadísticas y cuotas de casas de apuestas
-(Football-Data.co.uk), **273.972 ratings Elo** (ClubElo) y **656.301 valoraciones de jugadores** más partidos y clubes de
-Transfermarkt. Incluye ETL con CRISP-DM, cubos OLAP, un modelo que compite contra las casas de apuestas, insights en
-MongoDB, un reporte PDF automático y un dashboard Streamlit, todo en Docker.
+(Football-Data.co.uk), **273.972 ratings Elo** (ClubElo), **656.301 valoraciones** y **1.894.350 minutos de jugadores**
+(Transfermarkt) y **50.099 partidos de selecciones** (martj42) para medir fatiga y parones. Incluye ETL con CRISP-DM,
+cubos OLAP, un modelo que compite contra las casas de apuestas, insights en MongoDB, un reporte PDF automático y un
+dashboard Streamlit, todo en Docker.
 
 > **Pregunta de negocio:** ¿se puede predecir el resultado de un partido con datos públicos tan bien como las casas de
 > apuestas, y alcanza eso para obtener beneficio apostando?
@@ -17,10 +19,11 @@ MongoDB, un reporte PDF automático y un dashboard Streamlit, todo en Docker.
 |---|---|
 | Línea base "siempre gana el local": accuracy / log-loss | 43,4 % / 1,0759 |
 | Casa de apuestas (Bet365, favorito): accuracy / log-loss | 50,2 % / 1,0029 |
-| Mejor modelo **con cuotas** (Regresión logística): accuracy / log-loss | **50,3 % / 1,0028** |
+| Mejor modelo **con cuotas** (Regresión logística): accuracy / log-loss | **50,2 % / 1,0032** (empate técnico: +0,0002 vs. la casa) |
 | Mejor modelo **sin cuotas** (LightGBM, solo datos públicos): accuracy | 49,0 % |
-| F1 macro con umbral de empate vs. línea base ingenua | **+120 %** |
-| ROI apostando con valor esperado ≥ 5 % (mejor cuota del mercado) | **+1,4 %** (control con probabilidades de la casa: −3,5 %) |
+| F1 macro con umbral de empate vs. línea base ingenua | **+121 %** |
+| ROI apostando con valor esperado ≥ 5 % (mejor cuota del mercado) | **+0,73 %** (control con probabilidades de la casa: -3,46 %) |
+| Fatiga y parones (ablación): mejora de log-loss en todos / tras un parón | sin cuotas +0,0001 / **+0,0016** · con cuotas +0,0001 / **+0,0014** |
 
 ---
 
@@ -94,7 +97,7 @@ Kernel and Run All Cells*, o por consola:
 docker compose exec procesamiento jupyter nbconvert --to notebook --execute --inplace notebooks/Vanegas_Juan_BigData_ProyectoFinal.ipynb --ExecutePreprocessor.timeout=1800
 ```
 
-El notebook vuelve a ejecutar el ETL y el entrenamiento (~7 min) y escribe en MongoDB, así que la entrega queda
+El notebook vuelve a ejecutar el ETL y el entrenamiento (~12 min) y escribe en MongoDB, así que la entrega queda
 reproducible de principio a fin.
 
 ### Benchmark pandas vs. Spark (opcional, fuera de Docker)
@@ -133,6 +136,7 @@ Vanegas_Juan_BigData_ProyectoFinal/
 │   ├── reporte_pdf.py          # PDF automático (ReportLab) leído desde MongoDB
 │   ├── benchmark_spark.py      # pandas vs. Spark sobre los mismos datos
 │   └── pipeline.py             # orquestador idempotente (lo ejecuta Docker)
+├── tests/                      # test de la lógica de dinero (python tests/test_apuestas.py)
 ├── models/                     # modelo_con_cuotas.joblib, modelo_sin_cuotas.joblib, metricas_modelos.json
 ├── reports/                    # reporte_futbol_apuestas.pdf, figuras/, analisis_mongodb.json
 ├── procesamiento/              # Dockerfile + requirements del servicio de procesamiento
@@ -147,16 +151,21 @@ Vanegas_Juan_BigData_ProyectoFinal/
 
 ## 5. El dashboard
 
-Tema oscuro tipo *sportsbook/estadio* (césped con franjas, reflectores animados, tipografía de marcador). El botón verde
-**Opciones** (abajo a la derecha) abre una **ventana flotante** con los filtros globales: rango de temporadas, continente,
-países, ligas, nivel y un interruptor de animaciones. Todas las pestañas responden a esos filtros (*slice & dice*).
+Tema oscuro tipo *sportsbook/estadio* (césped con franjas, tipografía de marcador). El hero es el hallazgo central: el
+marcador **Modelo : Casa** sobre una cancha animada. El botón verde **Opciones** (abajo a la **izquierda**, para no chocar con
+los controles de Streamlit Cloud) abre una **ventana flotante** con los filtros globales y muestra cuántos están activos.
+
+**Sistema de color** (revisado con la skill de diseño Impeccable): cada color tiene un único significado. Local `#199e70`,
+Empate `#d95926` y Visitante `#3987e5` solo para resultados (seguros para daltonismo); verde de marca = modelo/positivo; oro =
+goles; neutros = casa y líneas base; violeta/magenta/ocre = entidades (continentes, equipos). Escalas visibles sobre fondo
+oscuro, divergente centrada en la media para % de victorias locales, coma decimal en todos los gráficos.
 
 | Pestaña | Contenido |
 |---|---|
 | **Resumen** | Cancha animada con contadores, ticker de insights, KPIs del dataset filtrado, marcador Modelo vs. Casa, KPIs del modelo |
 | **Datos** | Tabla filtrable (búsqueda de equipo, resultado), **explorador OLAP** (pivote con drill-down/roll-up y *sunburst*), cubos precalculados descargables y evidencia de calidad |
-| **Visualizaciones** | Tendencias, ligas y países (sunburst, mapa de calor), mercado de apuestas (calibración, margen, sorpresas), comparador de equipos (Elo, radar, tabla), animaciones (carrera de ligas, burbujas valor vs. puntos) |
-| **Modelo** | Comparación de modelos, matriz de confusión, importancia y calibración, **simulador de partido** (predicción nueva con el modelo guardado) y **simulador de apuestas** con umbral ajustable |
+| **Visualizaciones** | Tendencias, ligas y países (sunburst, mapa de calor), mercado de apuestas (calibración, margen, sorpresas), **fatiga y parones** (real − esperado según viajeros y descanso real), comparador de equipos (Elo, radar, tabla), animaciones (carrera de ligas, burbujas valor vs. puntos) |
+| **Modelo** | Comparación de modelos, matriz de confusión, importancia, calibración y **ablación de fatiga**; **simulador de partido** (predicción nueva con el modelo guardado, con opción de parón: convocados y viajeros) y **simulador de apuestas** con umbral ajustable |
 | **Insights y reporte** | Insights y recomendaciones leídos de MongoDB, filtro por tema, consultas en vivo, documento completo y **descarga/vista previa del PDF** |
 
 ## 6. Fuentes de datos
@@ -166,6 +175,8 @@ países, ligas, nivel y un interruptor de animaciones. Todas las pestañas respo
 | `Matches.csv` | [Football-Data.co.uk](https://www.football-data.co.uk/data.php) vía [xgabora/Club-Football-Match-Data](https://github.com/xgabora/Club-Football-Match-Data) | 238.858 |
 | `EloRatings.csv` | [ClubElo](http://clubelo.com/) vía el mismo repositorio | 273.972 |
 | `games.csv.gz`, `clubs.csv.gz`, `competitions.csv.gz`, `player_valuations.csv.gz` | Transfermarkt vía [dcaribou/transfermarkt-datasets](https://github.com/dcaribou/transfermarkt-datasets) | 88.958 · 796 · 65 · 656.301 |
+| `appearances.csv.gz`, `players.csv.gz` | Transfermarkt (minutos por jugador y partido en todas las competiciones; nacionalidad e internacionalidades) | 1.894.350 · 50.149 |
+| `selecciones_results.csv` | [martj42/international_results](https://github.com/martj42/international_results) (partidos de selecciones hasta nov-2026) | 50.099 |
 
 El registro exacto (URL, fecha de descarga, filas, columnas, MB en disco y en memoria) queda en
 `data/raw/registro_descarga.json` y se muestra en el notebook.
