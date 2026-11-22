@@ -25,7 +25,7 @@ COLOR_FATIGA = SECUNDARIOS[0]          # variables de fatiga y parón en los gr�
 RAMPA_VERDE = ["#245c46", "#2a7a58", "#199e70", "#3cc28c", "#7ddbb0", "#d8f7e7"]
 RAMPA_ORO = ["#6b5a1e", "#8a7322", "#b08f27", "#d4a72c", "#f4c542", "#fbe7a6"]
 # divergentes: punto medio gris oscuro = "nada"
-DIV_LOCAL_VISITANTE = [[0, "#8fbaf3"], [0.25, "#3987e5"], [0.5, "#26302b"], [0.75, "#199e70"], [1, "#7ddbb0"]]
+DIV_LOCAL_VISITANTE = [[0, "#8fbaf3"], [0.25, "#3987e5"], [0.5, "#4a5a52"], [0.75, "#199e70"], [1, "#7ddbb0"]]
 DIV_NEUTRA = [[0, "#d55181"], [0.5, "#3a4a42"], [1, "#22e08a"]]
 FONDO_SIN_DATOS = "#07110c"
 
@@ -108,8 +108,8 @@ def titulo(texto: str, resaltado: str = "", descripcion: str = "", chips: list[t
     </div>""")
 
 
-def kpis(items: list[dict]) -> None:
-    """items: {lbl, val, unidad?, sub?, acento?}. La rejilla usa tantas columnas como tarjetas (máx. 6)."""
+def kpis(items: list[dict], columnas: int | None = None) -> None:
+    """items: {lbl, val, unidad?, sub?, acento?}. La rejilla usa tantas columnas como tarjetas (máx. 6) o `columnas`."""
     tarjetas = []
     for it in items:
         acento = f"--acento:{it['acento']};" if it.get("acento") else ""
@@ -120,7 +120,8 @@ def kpis(items: list[dict]) -> None:
           <div class="val">{esc(it['val'])}{unidad}</div>
           <div class="sub">{it.get('sub', '')}</div>
         </div>""")
-    st.html(f'<div class="sb-kpis" style="--n:{min(len(items), 6)}">{"".join(tarjetas)}</div>')
+    clase = " fija" if columnas else ""
+    st.html(f'<div class="sb-kpis{clase}" style="--n:{columnas or min(len(items), 6)}">{"".join(tarjetas)}</div>')
 
 
 def ticker(items: list[tuple[str, str]]) -> None:
@@ -174,7 +175,7 @@ def hero_marcador(d: dict, animaciones: bool) -> None:
   .tablero{{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(10px,3vw,28px);margin-top:6px}}
   .eq{{font:700 13px/1.25 'Barlow Condensed';letter-spacing:.14em;text-transform:uppercase;color:#a9c0b4}}
   .eq b{{display:block;font-size:clamp(20px,2.4vw,28px);letter-spacing:.04em;color:#e7f2ec}}
-  .eq.izq{{text-align:right}} .eq.izq b{{color:#22e08a}} .eq.der{{text-align:left}}
+  .eq.izq{{text-align:right}} .eq.izq b{{color:{d['color_modelo']}}} .eq.der{{text-align:left}}
   .score{{font:700 clamp(40px,7vw,76px)/1 'JetBrains Mono',monospace;padding:.12em .35em;border-radius:14px;background:#020604;
     border:1px solid rgba(244,197,66,.28);color:#f4c542;white-space:nowrap;font-variant-numeric:tabular-nums;box-shadow:0 10px 30px rgba(0,0,0,.45)}}
   .nota{{margin:6px 0 0;color:#a9c0b4;font-size:14px;max-width:62ch}} .nota b{{color:#e7f2ec}} .nota .pos{{color:#22e08a}}
@@ -189,7 +190,7 @@ def hero_marcador(d: dict, animaciones: bool) -> None:
  <canvas id="c" aria-hidden="true"></canvas>
  <div class="fuente">DATOS PROCESADOS · PARQUET</div>
  <div class="capa">
-   <h1>¿Se le gana <span>a la casa?</span></h1>
+   <h1>{d['veredicto']}</h1>
    <div class="tablero" role="group" aria-label="Accuracy en prueba: modelo {d['modelo_txt']} por ciento, casa {d['casa_txt']} por ciento">
      <div class="eq izq">{esc(d['modelo_sub'])}<b>Modelo</b></div>
      <div class="score"><span class="n" data-n="{d['modelo']}">{d['modelo_txt']}</span> : <span class="n" data-n="{d['casa']}">{d['casa_txt']}</span></div>

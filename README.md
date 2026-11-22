@@ -152,7 +152,7 @@ Vanegas_Juan_BigData_ProyectoFinal/
 ## 5. El dashboard
 
 Tema oscuro tipo *sportsbook/estadio* (césped con franjas, tipografía de marcador). El hero es el hallazgo central: el
-marcador **Modelo : Casa** sobre una cancha animada. El botón verde **Opciones** (abajo a la **izquierda**, para no chocar con
+marcador **Modelo : Casa** sobre una cancha animada. El botón verde **Filtros** (abajo a la **izquierda**, para no chocar con
 los controles de Streamlit Cloud) abre una **ventana flotante** con los filtros globales y muestra cuántos están activos.
 
 **Sistema de color** (revisado con la skill de diseño Impeccable): cada color tiene un único significado. Local `#199e70`,
@@ -165,7 +165,7 @@ oscuro, divergente centrada en la media para % de victorias locales, coma decima
 | **Resumen** | Cancha animada con contadores, ticker de insights, KPIs del dataset filtrado, marcador Modelo vs. Casa, KPIs del modelo |
 | **Datos** | Tabla filtrable (búsqueda de equipo, resultado), **explorador OLAP** (pivote con drill-down/roll-up y *sunburst*), cubos precalculados descargables y evidencia de calidad |
 | **Visualizaciones** | Tendencias, ligas y países (sunburst, mapa de calor), mercado de apuestas (calibración, margen, sorpresas), **fatiga y parones** (real − esperado según viajeros y descanso real), comparador de equipos (Elo, radar, tabla), animaciones (carrera de ligas, burbujas valor vs. puntos) |
-| **Modelo** | Comparación de modelos, matriz de confusión, importancia, calibración y **ablación de fatiga**; **simulador de partido** (predicción nueva con el modelo guardado, con opción de parón: convocados y viajeros) y **simulador de apuestas** con umbral ajustable |
+| **Modelo** | Comparación de modelos, matriz de confusión, importancia, calibración y **ablación de fatiga**; **simulador de partido** (predicción nueva con el modelo guardado, con opción de parón: convocados y viajeros, y **calculadora de ganancias**: monto en COP, USD, EUR u otra divisa → cuánto recibes, ganancia neta y ganancia esperada) y **simulador de apuestas** con umbral ajustable y beneficio en la divisa elegida |
 | **Insights y reporte** | Insights y recomendaciones leídos de MongoDB, filtro por tema, consultas en vivo, documento completo y **descarga/vista previa del PDF** |
 
 ## 6. Fuentes de datos

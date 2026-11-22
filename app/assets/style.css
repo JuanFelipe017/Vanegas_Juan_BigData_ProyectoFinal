@@ -55,7 +55,8 @@ td, th, [data-testid="stDataFrame"] { font-variant-numeric: tabular-nums; }
 .sb-titulo { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin: .2rem 0 1.1rem; flex-wrap: wrap; }
 .sb-titulo h1 { margin: 0; font-size: clamp(1.9rem, 3.4vw, 3rem); line-height: 1; }
 .sb-titulo h1 span { color: var(--green); }
-.sb-titulo p { margin: .5rem 0 0; color: var(--muted); max-width: 70ch; }
+.sb-titulo p { margin: .5rem 0 0; color: var(--muted); max-width: 62ch; text-wrap: pretty; }
+h2 { font-size: 1.45rem !important; font-weight: 700 !important; }
 .sb-chips { display: flex; gap: .5rem; flex-wrap: wrap; }
 .sb-chip { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--border-strong);
   background: rgb(34 224 138 / .07); color: var(--green); font: 600 .78rem/1 var(--display); letter-spacing: .08em; text-transform: uppercase; }
@@ -78,7 +79,7 @@ td, th, [data-testid="stDataFrame"] { font-variant-numeric: tabular-nums; }
 /* ---------- tarjetas de contenido ---------- */
 div[class*="st-key-tarjeta"] { border: 1px solid var(--border); border-radius: 16px; background: var(--card);
   padding: 1rem 1.1rem .6rem; box-shadow: 0 8px 24px rgb(0 0 0 / .26); }
-div[class*="st-key-tarjeta"] h3 { margin: 0 0 .25rem; font-size: 1.2rem; font-weight: 700; letter-spacing: .01em; }
+div[class*="st-key-tarjeta"] h2, div[class*="st-key-tarjeta"] h3 { margin: 0 0 .25rem; font-size: 1.2rem !important; font-weight: 700; letter-spacing: .01em; }
 
 /* ---------- ticker de insights ---------- */
 .sb-ticker { position: relative; overflow: hidden; border-block: 1px solid var(--border); background: rgb(2 8 5 / .7); padding: .55rem 0; margin: .9rem 0 1.2rem;
@@ -100,6 +101,8 @@ div[class*="st-key-tarjeta"] h3 { margin: 0 0 .25rem; font-size: 1.2rem; font-we
 .sb-cuota .v { font: 800 1.45rem/1.2 var(--mono); color: var(--text); }
 .sb-cuota.valor { border-color: var(--green); background: rgb(34 224 138 / .08); }
 .sb-cuota.valor .v { color: var(--green); }
+.sb-cuota.marginal { border-color: rgb(244 197 66 / .55); background: rgb(244 197 66 / .06); }
+.sb-cuota.marginal .v { color: var(--gold); }
 
 /* ---------- insights ---------- */
 .sb-insight { position: relative; border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.15rem 1rem 4rem; background: var(--card); margin-bottom: .8rem; }
@@ -112,7 +115,7 @@ div[class*="st-key-tarjeta"] h3 { margin: 0 0 .25rem; font-size: 1.2rem; font-we
 /* ---------- panel flotante de opciones (abajo a la IZQUIERDA: la derecha la ocupa Streamlit Cloud) ---------- */
 div.st-key-panel_flotante { position: fixed !important; left: 22px; bottom: 22px; z-index: 1000; width: auto !important; }
 div.st-key-panel_flotante button {
-  border-radius: 999px !important; padding: .7rem 1.15rem !important; min-height: 0 !important;
+  border-radius: 999px !important; padding: 0 .9rem !important; min-height: 48px !important; height: 48px; min-width: 48px;
   background: var(--green) !important; color: #03140b !important; border: 0 !important;
   font: 800 .95rem/1 var(--display) !important; letter-spacing: .08em; text-transform: uppercase;
   box-shadow: 0 8px 22px rgb(0 0 0 / .45) !important; transition: transform .25s var(--ease);
@@ -143,7 +146,7 @@ body:has(.sb-motion-on) .sb-prob .barra i { animation: llenar 1s var(--ease) bot
 @media (prefers-reduced-motion: reduce) { body:has(.sb-motion-on) * { animation: none !important; transition: none !important; } }
 
 /* ---------- responsive ---------- */
-@media (max-width: 1199px) { .sb-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1199px) { .sb-kpis:not(.fija) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 760px) {
   .block-container { padding-left: 1rem !important; padding-right: 1rem !important; }
   .sb-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -25,9 +25,9 @@ def pagina() -> None:
     m = D.filtrar(D.partidos())
     ui.titulo("Lo que dicen", "los datos",
               "Cada gráfica responde una pregunta de negocio. Pase el cursor para ver el detalle, arrastre para hacer zoom y use "
-              "<b>Opciones</b> (abajo a la izquierda) para filtrar temporadas, países y ligas.", [(D.descripcion_filtros(), "oro")])
+              "<b>Filtros</b> (abajo a la izquierda) para filtrar temporadas, países y ligas.", [(D.descripcion_filtros(), "oro")])
     if m.empty:
-        st.info("Los filtros no dejan partidos. Abra **Opciones** y amplíe temporadas, países o ligas.")
+        st.info("Los filtros no dejan partidos. Abra **Filtros** y amplíe temporadas, países o ligas.")
         return
     t1, t2, t3, t4, t5, t6 = st.tabs([":material/trending_up: Tendencias", ":material/public: Ligas y países",
                                       ":material/casino: Mercado de apuestas", ":material/battery_alert: Fatiga y parones",
@@ -137,7 +137,7 @@ def pagina() -> None:
             fig.update_layout(title=f"El favorito gana más en {g.index[-1]}", xaxis_title="% de aciertos del favorito")
             ui.grafico(fig, 540, key="v_fav")
         with c2, st.container(key="tarjeta_v10"):
-            st.markdown("### Las mayores sorpresas")
+            st.markdown("## Las mayores sorpresas")
             d2 = d.assign(cuota_ganador=np.select([d["resultado"] == "Local", d["resultado"] == "Empate"],
                                                   [d["cuota_local"], d["cuota_empate"]], d["cuota_visitante"]))
             top = d2.nlargest(15, "cuota_ganador")[["fecha", "liga", "local", "goles_local", "goles_visitante", "visitante", "resultado", "cuota_ganador"]]
@@ -178,7 +178,7 @@ def pagina() -> None:
                                 labels=["Visitante +4 días", "Visitante +2-3", "Igual", "Local +2-3", "Local +4 días"])
                 r = c.assign(res=(c["resultado"] == "Local").astype(float) - c["prob_casa_local"]).groupby(cortes, observed=True)
                 t = pd.DataFrame({"pp": r["res"].mean() * 100, "n": r.size(), "ee": r["res"].std() / np.sqrt(r.size()) * 100})
-                fig = go.Figure(go.Scatter(x=t.index.astype(str), y=t["pp"], mode="markers", marker=dict(size=13, color=ui.SECUNDARIOS[0]),
+                fig = go.Figure(go.Scatter(x=t.index.astype(str), y=t["pp"], mode="markers", marker=dict(size=13, color=ui.COLORES["Local"]),
                                            error_y=dict(type="data", array=1.96 * t["ee"], color=ui.MUTED, thickness=1.5),
                                            customdata=t["n"], hovertemplate="%{x}: %{y:+.1f} pp (%{customdata:,} partidos)<extra></extra>"))
                 fig.add_hline(y=0, line_color=ui.MUTED, line_dash="dash")

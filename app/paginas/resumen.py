@@ -26,7 +26,11 @@ def pagina() -> None:
               "partidos de selecciones (martj42).",
               [("Pipeline listo", ""), (f"Insights: {fuente.split(' (')[0]}", "" if fuente == "MongoDB" else "neutro")])
 
+    dif = r_con["log_loss"] - casa["log_loss"]
+    veredicto = ("Empate técnico: <span>el modelo iguala a la casa</span>" if abs(dif) < 0.001 else
+                 ("<span>El modelo le gana</span> a la casa" if dif < 0 else "La casa <span>le gana al modelo</span>"))
     ui.hero_marcador({
+        "veredicto": veredicto, "color_modelo": ui.VERDE if dif <= -0.001 else ui.TEXTO,
         "modelo": round(r_con["accuracy"] * 100, 1), "casa": round(casa["accuracy"] * 100, 1),
         "modelo_txt": ui.num(r_con["accuracy"] * 100, 1), "casa_txt": ui.num(casa["accuracy"] * 100, 1),
         "modelo_sub": f"{mejor['modelo']} · con cuotas", "casa_sub": "Bet365 · favorito",
@@ -41,7 +45,7 @@ def pagina() -> None:
     # ---------------- KPIs del dataset (responden a los filtros del panel) ----------------
     st.caption(f"Filtros activos: {D.descripcion_filtros()}")
     if m.empty:
-        st.info("Los filtros no dejan partidos. Abra **Opciones** (abajo a la izquierda) y amplíe temporadas, países o ligas.")
+        st.info("Los filtros no dejan partidos. Abra **Filtros** (abajo a la izquierda) y amplíe temporadas, países o ligas.")
         return
     pct = m["resultado"].value_counts(normalize=True) * 100
     pct_total = m_total["resultado"].value_counts(normalize=True) * 100
@@ -50,6 +54,8 @@ def pagina() -> None:
 
     def delta(actual, ref, sufijo=" pp"):
         d = actual - ref
+        if abs(d) < 0.05:                                   # sin filtros (o sin diferencia) no hay delta que mostrar
+            return "igual al total"
         return f'<b class="{"neg" if d < 0 else ""}">{ui.num(d, 1, signo=True)}{sufijo}</b> vs. total'
 
     ui.kpis([
@@ -67,7 +73,7 @@ def pagina() -> None:
 
     c1, c2 = st.columns([1, 1.6], gap="medium")
     with c1, st.container(key="tarjeta_donut"):
-        st.markdown("### Resultado de los partidos")
+        st.markdown("## Resultado de los partidos")
         orden = [r for r in ui.COLORES if r in pct.index]
         fig = go.Figure(go.Pie(labels=orden, values=[pct[r] for r in orden], hole=0.62, sort=False,
                                marker=dict(colors=[ui.COLORES[r] for r in orden], line=dict(color="#050d09", width=3)),
@@ -79,7 +85,7 @@ def pagina() -> None:
                                             font=dict(size=18, family="Barlow Condensed", color=ui.TEXTO))])
         ui.grafico(fig, 330, key="donut")
     with c2, st.container(key="tarjeta_temporadas"):
-        st.markdown("### Partidos por temporada y continente")
+        st.markdown("## Partidos por temporada y continente")
         t = m.groupby(["temporada_inicio", "continente"], observed=True).size().reset_index(name="partidos")
         fig = go.Figure()
         for cont, color in ui.CONTINENTES.items():
@@ -92,7 +98,7 @@ def pagina() -> None:
         ui.grafico(fig, 330, key="temporadas")
 
     # ---------------- KPIs del modelo ----------------
-    st.markdown("### Indicadores del modelo")
+    st.markdown("## Indicadores del modelo")
     sin = met["resultados"]["sin_cuotas"]["_mejor"]
     r_sin = met["resultados"]["sin_cuotas"][sin["modelo"]]["prueba"]
     ingenua = met["lineas_base"]["Siempre local"]["prueba"]

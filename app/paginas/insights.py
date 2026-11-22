@@ -18,7 +18,7 @@ def pagina() -> None:
         st.error("No hay documento de análisis. Revise que el servicio de procesamiento haya terminado.")
         return
     if fuente != "MongoDB":
-        st.caption("Esta versión en la nube no tiene MongoDB: se muestra la copia JSON del mismo documento "
+        st.caption("MongoDB no está disponible en este entorno: se muestra la copia JSON del mismo documento "
                    "(reports/analisis_mongodb.json). Con Docker, los insights se leen en vivo desde MongoDB.")
 
     t1, t2, t3 = st.tabs([":material/lightbulb: Insights y recomendaciones", ":material/picture_as_pdf: Reporte PDF", ":material/database: Documento MongoDB"])
@@ -29,7 +29,7 @@ def pagina() -> None:
         c1, c2 = st.columns(2, gap="medium")
         for k, ins in enumerate(lista):
             (c1 if k % 2 == 0 else c2).html(ui.insight(ins["id"], ins["tema"], ins["titulo"], ins["texto"]))
-        st.markdown("### 🧭 Recomendaciones")
+        st.markdown("## Recomendaciones")
         for r in doc["recomendaciones"]:
             st.html(f'<div class="sb-insight"><div class="n">R{r["id"]}</div><div class="tema">{ui.esc(r["dirigida_a"])}</div>'
                     f'<p style="margin-top:.1rem">{ui.esc(r["texto"])}</p></div>')

@@ -16,6 +16,7 @@ ORDEN = ["Local", "Empate", "Visitante"]
 NOMBRES = {"con_cuotas": "Con cuotas", "sin_cuotas": "Sin cuotas (fútbol puro)"}
 COLOR_TIPO = {"Línea base": ui.NEUTRO_OSCURO, "Con cuotas": ui.VERDE, "Sin cuotas (fútbol puro)": ui.SECUNDARIOS[0]}
 METRICAS = {"log_loss": "Log-loss", "accuracy": "Accuracy", "f1_macro": "F1 macro", "brier": "Brier"}
+UMBRAL_VALOR = 0.05          # una sola regla de "apuesta con valor" en toda la página
 
 
 def pagina() -> None:
@@ -24,6 +25,14 @@ def pagina() -> None:
               f"Clasificación Local / Empate / Visitante con partición temporal: se entrena hasta junio de 2023 y se evalúa en "
               f"{ui.num(met['particion']['prueba'], 0)} partidos de 2023/24 en adelante que el modelo nunca vio.",
               [("Modelo cargado desde models/ (sin re-entrenar)", "")])
+    with st.expander("¿Cómo leer esta página? (log-loss, Brier, F1, IC 95 %, pp, valor esperado)"):
+        st.markdown(
+            "- **Log-loss** y **Brier**: miden qué tan buenas son las *probabilidades* (menor es mejor). Son las métricas que importan para apostar.\n"
+            "- **F1 macro**: promedio del F1 de Local, Empate y Visitante; obliga a acertar también los empates.\n"
+            "- **pp** = puntos porcentuales (de 44 % a 46 % son +2 pp). **IC 95 %**: rango donde estaría el valor real 95 de cada 100 veces; "
+            "si cruza el 0, la diferencia puede ser azar.\n"
+            "- **Valor esperado (VE)** = probabilidad × cuota − 1: lo que ganarías en promedio por cada peso apostado. "
+            "Se considera apuesta con valor si supera el 5 %.")
     t1, t2, t3, t4 = st.tabs([":material/leaderboard: Rendimiento", ":material/psychology: Interpretación",
                               ":material/sports_soccer: Simulador de partido", ":material/payments: Simulador de apuestas"])
     with t1:
@@ -51,22 +60,27 @@ def rendimiento(met: dict) -> None:
     with c1, st.container(key="tarjeta_m1"):
         metrica = st.segmented_control("Métrica", list(METRICAS), default="log_loss", key="m_metrica", format_func=METRICAS.get) or "log_loss"
         menor_mejor = metrica in ("log_loss", "brier")
-        t = tabla.sort_values(metrica, ascending=not menor_mejor)
         dec = 4 if metrica in ("log_loss", "brier") else 3
+        casa = met["lineas_base"]["Favorito de la casa"]["prueba"][metrica]
+        elegidos = {f"{res['_mejor']['modelo']} · {NOMBRES[conj].lower()}" for conj, res in met["resultados"].items()}
+        # diferencia contra la casa (lo que importa); "Siempre local" queda fuera del eje porque aplastaría la comparación
+        t = tabla[tabla["Modelo"] != "Siempre local"].assign(dif=lambda d: d[metrica] - casa).sort_values("dif", ascending=menor_mejor)
         fig = go.Figure()
         for tipo, grupo in t.groupby("Tipo", sort=False):
-            fig.add_scatter(x=grupo[metrica], y=grupo["Modelo"], mode="markers+text", name=tipo,
-                            marker=dict(size=13, color=COLOR_TIPO[tipo], symbol="diamond" if tipo == "Línea base" else "circle"),
-                            text=[ui.num(v, dec) for v in grupo[metrica]], textposition="middle right", textfont=dict(color=ui.MUTED, size=11),
-                            hovertemplate="%{y}: %{x:." + str(dec) + "f}<extra>" + tipo + "</extra>")
-        casa = met["lineas_base"]["Favorito de la casa"]["prueba"][metrica]
-        fig.add_vline(x=casa, line_dash="dash", line_color=ui.MUTED)
-        fig.update_layout(title=f"{METRICAS[metrica]} en prueba ({'menor' if menor_mejor else 'mayor'} es mejor) · línea = casa",
+            fig.add_scatter(x=grupo["dif"], y=grupo["Modelo"], mode="markers+text", name=tipo,
+                            marker=dict(size=[17 if mo in elegidos else 12 for mo in grupo["Modelo"]], color=COLOR_TIPO[tipo],
+                                        symbol=["star" if mo in elegidos else ("diamond" if tipo == "Línea base" else "circle") for mo in grupo["Modelo"]]),
+                            text=[ui.num(v, dec, signo=True) for v in grupo["dif"]], textposition="middle right", textfont=dict(color=ui.MUTED, size=11),
+                            customdata=grupo[metrica], hovertemplate="%{y}: %{customdata:." + str(dec) + "f} (%{x:+." + str(dec) + "f} vs. casa)<extra>" + tipo + "</extra>")
+        fig.add_vline(x=0, line_dash="dash", line_color=ui.MUTED)
+        rango = max(abs(t["dif"].min()), abs(t["dif"].max())) * 1.35
+        fig.update_layout(title=f"{METRICAS[metrica]}: diferencia contra la casa",
                           yaxis=dict(categoryorder="array", categoryarray=list(t["Modelo"])[::-1]),
-                          xaxis=dict(title=f"{METRICAS[metrica]} (el eje no parte de 0: son diferencias de milésimas)",
-                                     range=[t[metrica].min() - 0.04 * (t[metrica].max() - t[metrica].min()),
-                                            t[metrica].max() + 0.18 * (t[metrica].max() - t[metrica].min())]))
-        ui.grafico(fig, 450, key="m_comp")
+                          xaxis=dict(title=f"{'Negativo' if menor_mejor else 'Positivo'} = mejor que la casa ({ui.num(casa, dec)})", range=[-rango, rango]))
+        ui.grafico(fig, 430, key="m_comp")
+        ingenua = met["lineas_base"]["Siempre local"]["prueba"][metrica]
+        st.caption(f"★ = modelo elegido (por log-loss en **validación**, nunca en prueba; por eso puede no ser el mejor de este gráfico). "
+                   f"«Siempre local» queda fuera de escala: {ui.num(ingenua, dec)} ({ui.num(ingenua - casa, dec, signo=True)} vs. la casa).")
     with c2, st.container(key="tarjeta_m2"):
         conj = st.segmented_control("Conjunto", list(NOMBRES), default="con_cuotas", key="m_conj_cm",
                                     format_func={"con_cuotas": "Con cuotas", "sin_cuotas": "Sin cuotas"}.get) or "con_cuotas"
@@ -203,7 +217,7 @@ def simulador_partido(met: dict) -> None:
 
     c1, c2 = st.columns([1.15, 1], gap="medium")
     with c1, st.container(key="tarjeta_m5"):
-        st.markdown(f"### {local} <span style='color:var(--muted)'>vs.</span> {visitante}", unsafe_allow_html=True)
+        st.markdown(f"## {local} <span style='color:var(--muted)'>vs.</span> {visitante}", unsafe_allow_html=True)
         st.caption(f"Modelo: {paquete['nombre']} · {NOMBRES[paquete['conjunto']]} · entrenado hasta {paquete['entrenado_hasta']}")
         st.html(ui.barras_probabilidad(final))
         if probs_paron:
@@ -213,19 +227,24 @@ def simulador_partido(met: dict) -> None:
         justas = {k: 1 / v for k, v in final.items()}
         celdas = []
         for i, k in enumerate(ORDEN):
-            valor = cuotas is not None and final[k] * cuotas[i] > 1.0
-            extra = (f"<div class='k' style='margin-top:.3rem'>casa {ui.num(cuotas[i], 2)} · VE {ui.num((final[k] * cuotas[i] - 1) * 100, 1, signo=True)} %</div>"
+            ve = final[k] * cuotas[i] - 1 if cuotas else 0.0
+            estado = "valor" if ve > UMBRAL_VALOR else ("marginal" if ve > 0 else "")
+            etiqueta = {"valor": " · con valor", "marginal": " · marginal", "": ""}[estado]
+            extra = (f"<div class='k' style='margin-top:.3rem'>casa {ui.num(cuotas[i], 2)} · VE {ui.num(ve * 100, 1, signo=True)} %{etiqueta}</div>"
                      if cuotas else "")
-            celdas.append(f"<div class='sb-cuota {'valor' if valor else ''}'><div class='k'>Cuota justa · {k}</div>"
+            celdas.append(f"<div class='sb-cuota {estado}'><div class='k'>Cuota justa · {k}</div>"
                           f"<div class='v'>{ui.num(justas[k], 2)}</div>{extra}</div>")
         st.html(f"<div class='sb-cuotas'>{''.join(celdas)}</div>")
         if cuotas:
-            mejores = [k for i, k in enumerate(ORDEN) if final[k] * cuotas[i] > 1.05]
+            mejores = [k for i, k in enumerate(ORDEN) if final[k] * cuotas[i] - 1 > UMBRAL_VALOR]
+            marginales = [k for i, k in enumerate(ORDEN) if 0 < final[k] * cuotas[i] - 1 <= UMBRAL_VALOR]
             if mejores:
                 st.success(f"Apuesta con valor según el modelo: **{', '.join(mejores)}** (valor esperado > 5 %).", icon=":material/check_circle:")
             else:
-                st.info("Ninguna cuota tiene valor esperado > 5 % según el modelo: mejor no apostar.", icon=":material/block:")
-    with st.container(key="tarjeta_m10"):
+                st.info("Ninguna cuota tiene valor esperado > 5 %: mejor no apostar."
+                        + (f" {', '.join(marginales)} queda en zona marginal (0–5 %), dentro del error del modelo." if marginales else ""),
+                        icon=":material/block:")
+    with c1, st.container(key="tarjeta_m10"):
         calculadora(final, cuotas)
     with c2, st.container(key="tarjeta_m6"):
         comp = pd.DataFrame({
@@ -236,13 +255,17 @@ def simulador_partido(met: dict) -> None:
             visitante: [fila_v["elo_propio"], fila_v["elo_clubelo"], fila_v["puntos_prom5"], fila_v["gf_prom5"], fila_v["gc_prom5"],
                         fila_v["ppg_temporada"], fila_v["record_visitante"], fila_v["valor_plantilla"]],
         })
-        st.markdown("### Cara a cara")
-        st.dataframe(comp, hide_index=True, column_config={local: st.column_config.NumberColumn(format="%.2f"),
-                                                          visitante: st.column_config.NumberColumn(format="%.2f")})
+        st.markdown("## Cara a cara")
+        menor_es_mejor = [False, False, False, False, True, False, False, False]
+        comp["Ventaja"] = [("—" if pd.isna(a) or pd.isna(b) or a == b else (local if (a < b) == m else visitante))
+                           for a, b, m in zip(comp[local], comp[visitante], menor_es_mejor)]
+        for eq in (local, visitante):
+            comp[eq] = [("—" if pd.isna(v) else ui.num(v, 0 if v >= 100 else 2)) for v in comp[eq]]
+        st.dataframe(comp, hide_index=True)
         ep = D.equipos_partido()
         h2h = ep[(ep["equipo"] == local) & (ep["rival"] == visitante)].sort_values("fecha", ascending=False).head(8)
         if len(h2h):
-            st.caption(f"Últimos enfrentamientos (marcador desde el punto de vista de {local})")
+          with st.expander(f"Últimos {len(h2h)} enfrentamientos (marcador desde el punto de vista de {local})"):
             st.dataframe(h2h.assign(marcador=h2h["gf"].astype(int).astype(str) + " – " + h2h["gc"].astype(int).astype(str),
                                     condicion=np.where(h2h["es_local"], "Local", "Visitante"))[["fecha", "condicion", "marcador"]],
                          hide_index=True, column_config={"fecha": st.column_config.DateColumn("Fecha", format="DD/MM/YYYY"),
@@ -252,13 +275,13 @@ def simulador_partido(met: dict) -> None:
 
 def calculadora(probs: dict[str, float], cuotas: tuple[float, float, float] | None) -> None:
     """¿Cuánto gano si apuesto X? Retorno, ganancia neta y ganancia esperada según el modelo, en la divisa elegida."""
-    st.markdown("### ¿Cuánto gano si apuesto?")
-    c1, c2, c3 = st.columns([1, 1, 1.4])
+    st.markdown("## ¿Cuánto gano si apuesto?")
+    c1, c2 = st.columns(2)
     divisa = c2.selectbox("Divisa", list(ui.DIVISAS), index=0, key="calc_divisa")
     simbolo, dec, ejemplo = ui.DIVISAS[divisa]
     monto = c1.number_input(f"Monto apostado ({simbolo})", min_value=0.0, value=ejemplo, step=10.0 ** max(0, len(str(int(ejemplo))) - 2),
                             format=f"%.{dec}f", key=f"calc_monto_{divisa}")
-    apuesta = c3.segmented_control("Apuesto a", ORDEN, default="Local", key="calc_apuesta") or "Local"
+    apuesta = st.segmented_control("Apuesto a", ORDEN, default="Local", key="calc_apuesta") or "Local"
     cuota = cuotas[ORDEN.index(apuesta)] if cuotas else 1 / probs[apuesta]
     p = probs[apuesta]
     ganancia = monto * (cuota - 1)
@@ -269,16 +292,17 @@ def calculadora(probs: dict[str, float], cuotas: tuple[float, float, float] | No
         {"lbl": "Ganancia neta si aciertas", "val": ui.dinero(ganancia, divisa, signo=True), "acento": ui.VERDE,
          "sub": f"probabilidad según el modelo: {ui.num(p * 100, 1)} %"},
         {"lbl": "Si falla pierdes", "val": ui.dinero(-monto, divisa), "acento": ui.ROJO, "sub": f"probabilidad: {ui.num((1 - p) * 100, 1)} %"},
-        {"lbl": "Ganancia esperada", "val": ui.dinero(esperado, divisa, signo=True), "acento": ui.VERDE if esperado > 0 else ui.ROJO,
-         "sub": "promedio si repitieras esta apuesta muchas veces"},
-    ])
-    tabla = pd.DataFrame({"Resultado": ORDEN,
-                          "Cuota": [cuotas[i] if cuotas else 1 / probs[k] for i, k in enumerate(ORDEN)],
-                          "Prob. modelo": [probs[k] for k in ORDEN]})
-    tabla["Recibes si gana"] = [ui.dinero(monto * q, divisa) for q in tabla["Cuota"]]
-    tabla["Ganancia esperada"] = [ui.dinero(pp * monto * (q - 1) - (1 - pp) * monto, divisa, signo=True) for q, pp in zip(tabla["Cuota"], tabla["Prob. modelo"])]
-    st.dataframe(tabla, hide_index=True, column_config={"Cuota": st.column_config.NumberColumn(format="%.2f"),
-                                                       "Prob. modelo": st.column_config.ProgressColumn(min_value=0, max_value=1, format="percent")})
+        {"lbl": "Ganancia esperada", "val": ui.dinero(0 if abs(esperado) < 1e-6 * max(monto, 1) else esperado, divisa, signo=True),
+         "acento": None if abs(esperado) < 1e-6 * max(monto, 1) else (ui.VERDE if esperado > 0 else ui.ROJO),
+         "sub": "promedio si repitieras esta apuesta muchas veces" + ("" if cuotas else " (0 con cuotas justas)")},
+    ], columnas=2)
+    q = [cuotas[i] if cuotas else 1 / probs[k] for i, k in enumerate(ORDEN)]
+    tabla = pd.DataFrame({"Resultado": ORDEN, "Cuota": [ui.num(x, 2) for x in q],
+                          "Prob. modelo": [f"{ui.num(probs[k] * 100, 1)} %" for k in ORDEN],
+                          "Recibes si gana": [ui.dinero(monto * x, divisa) for x in q],
+                          "Ganancia esperada": [ui.dinero(round(probs[k] * monto * (x - 1) - (1 - probs[k]) * monto, 6), divisa, signo=True)
+                                                for k, x in zip(ORDEN, q)]})
+    st.dataframe(tabla, hide_index=True)
     st.caption(("Con las cuotas de tu casa, la ganancia esperada es positiva solo si la probabilidad del modelo supera a la que implica la cuota. "
                 if cuotas else "Sin cuotas de una casa se usan las cuotas justas del modelo: la ganancia esperada es 0. Activa «Tengo las cuotas» "
                 "para ver si una apuesta real conviene. ") + "Cálculo informativo, no es una recomendación de apuesta.")
@@ -326,11 +350,11 @@ def simulador_apuestas(met: dict) -> None:
         fig = go.Figure(go.Scatter(x=apuestas["fecha"], y=apuestas["acumulado"] * unidad, mode="lines", line=dict(color=ui.VERDE if gana else ui.ROJO, width=2.5),
                                    hovertemplate="%{x|%d %b %Y}: %{y:+,." + str(dec) + "f} " + divisa + "<extra></extra>", name="Banca"))
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)
-        fig.update_layout(title="Evolución de la banca", yaxis_title=f"Ganancia acumulada ({divisa})", showlegend=False)
+        fig.update_layout(title="Evolución de la banca", yaxis=dict(title=f"Ganancia acumulada ({divisa})", tickformat=",." + str(dec) + "f"), showlegend=False)
         ui.grafico(fig, 400, key="ap_banca")
     with c2, st.container(key="tarjeta_m8"):
         por = apuestas.groupby("apuesta").agg(n=("ganancia", "size"), roi=("ganancia", "mean")).reindex(ORDEN).dropna()
-        fig = go.Figure(go.Bar(x=por.index, y=por["roi"] * 100, marker_color=[ui.COLORES[k] for k in por.index],
+        fig = go.Figure(go.Bar(x=por.index, y=por["roi"] * 100, marker_color=[ui.VERDE if v > 0 else ui.ROJO for v in por["roi"]],
                                text=[f"{ui.num(v * 100, 1, signo=True)} %<br>{ui.num(n, 0)} ap." for v, n in zip(por["roi"], por["n"])],
                                textposition="outside", textfont=dict(color=ui.MUTED), hovertemplate="%{x}: ROI %{y:.2f} %<extra></extra>"))
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)

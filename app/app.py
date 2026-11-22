@@ -54,7 +54,7 @@ partidos = D.partidos()
 s = st.session_state
 activos = (s["f_temporadas"] != D.FILTROS_DEFECTO["f_temporadas"]) + sum(bool(s[k]) for k in ("f_continentes", "f_paises", "f_ligas", "f_niveles"))
 with st.container(key="panel_flotante"):
-    with st.popover(f"Opciones · {activos}" if activos else "Opciones", icon=":material/tune:"):
+    with st.popover(f"Filtros · {activos}" if activos else "Filtros", icon=":material/tune:", help="Filtros globales (aplican a todas las pestañas)"):
         ui.panel_titulo("Filtros", "globales")
         c1, c2 = st.columns([1.3, 1], vertical_alignment="center")
         c1.html(f'<div class="sb-panel-conteo"><b>{ui.num(len(D.filtrar(partidos)), 0)}</b><span>partidos con estos filtros</span></div>')
