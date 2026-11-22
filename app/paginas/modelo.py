@@ -225,6 +225,8 @@ def simulador_partido(met: dict) -> None:
                 st.success(f"Apuesta con valor según el modelo: **{', '.join(mejores)}** (valor esperado > 5 %).", icon=":material/check_circle:")
             else:
                 st.info("Ninguna cuota tiene valor esperado > 5 % según el modelo: mejor no apostar.", icon=":material/block:")
+    with st.container(key="tarjeta_m10"):
+        calculadora(final, cuotas)
     with c2, st.container(key="tarjeta_m6"):
         comp = pd.DataFrame({
             "Variable": ["Elo propio", "Elo ClubElo", "Puntos prom. (5)", "Goles a favor (5)", "Goles en contra (5)", "Pts/partido temporada",
@@ -248,6 +250,40 @@ def simulador_partido(met: dict) -> None:
         st.caption(f"Último partido registrado: {local} {fila_l['ultima_fecha']:%d/%m/%Y} · {visitante} {fila_v['ultima_fecha']:%d/%m/%Y}")
 
 
+def calculadora(probs: dict[str, float], cuotas: tuple[float, float, float] | None) -> None:
+    """¿Cuánto gano si apuesto X? Retorno, ganancia neta y ganancia esperada según el modelo, en la divisa elegida."""
+    st.markdown("### ¿Cuánto gano si apuesto?")
+    c1, c2, c3 = st.columns([1, 1, 1.4])
+    divisa = c2.selectbox("Divisa", list(ui.DIVISAS), index=0, key="calc_divisa")
+    simbolo, dec, ejemplo = ui.DIVISAS[divisa]
+    monto = c1.number_input(f"Monto apostado ({simbolo})", min_value=0.0, value=ejemplo, step=10.0 ** max(0, len(str(int(ejemplo))) - 2),
+                            format=f"%.{dec}f", key=f"calc_monto_{divisa}")
+    apuesta = c3.segmented_control("Apuesto a", ORDEN, default="Local", key="calc_apuesta") or "Local"
+    cuota = cuotas[ORDEN.index(apuesta)] if cuotas else 1 / probs[apuesta]
+    p = probs[apuesta]
+    ganancia = monto * (cuota - 1)
+    esperado = p * ganancia - (1 - p) * monto
+    ui.kpis([
+        {"lbl": f"Si gana {apuesta.lower()} recibes", "val": ui.dinero(monto * cuota, divisa), "acento": ui.COLORES[apuesta],
+         "sub": f"cuota {ui.num(cuota, 2)} · {'de tu casa' if cuotas else 'justa del modelo'}"},
+        {"lbl": "Ganancia neta si aciertas", "val": ui.dinero(ganancia, divisa, signo=True), "acento": ui.VERDE,
+         "sub": f"probabilidad según el modelo: {ui.num(p * 100, 1)} %"},
+        {"lbl": "Si falla pierdes", "val": ui.dinero(-monto, divisa), "acento": ui.ROJO, "sub": f"probabilidad: {ui.num((1 - p) * 100, 1)} %"},
+        {"lbl": "Ganancia esperada", "val": ui.dinero(esperado, divisa, signo=True), "acento": ui.VERDE if esperado > 0 else ui.ROJO,
+         "sub": "promedio si repitieras esta apuesta muchas veces"},
+    ])
+    tabla = pd.DataFrame({"Resultado": ORDEN,
+                          "Cuota": [cuotas[i] if cuotas else 1 / probs[k] for i, k in enumerate(ORDEN)],
+                          "Prob. modelo": [probs[k] for k in ORDEN]})
+    tabla["Recibes si gana"] = [ui.dinero(monto * q, divisa) for q in tabla["Cuota"]]
+    tabla["Ganancia esperada"] = [ui.dinero(pp * monto * (q - 1) - (1 - pp) * monto, divisa, signo=True) for q, pp in zip(tabla["Cuota"], tabla["Prob. modelo"])]
+    st.dataframe(tabla, hide_index=True, column_config={"Cuota": st.column_config.NumberColumn(format="%.2f"),
+                                                       "Prob. modelo": st.column_config.ProgressColumn(min_value=0, max_value=1, format="percent")})
+    st.caption(("Con las cuotas de tu casa, la ganancia esperada es positiva solo si la probabilidad del modelo supera a la que implica la cuota. "
+                if cuotas else "Sin cuotas de una casa se usan las cuotas justas del modelo: la ganancia esperada es 0. Activa «Tengo las cuotas» "
+                "para ver si una apuesta real conviene. ") + "Cálculo informativo, no es una recomendación de apuesta.")
+
+
 # ==================================================================================================
 def simulador_apuestas(met: dict) -> None:
     pred = D.predicciones()
@@ -262,9 +298,12 @@ def simulador_apuestas(met: dict) -> None:
     estrategia = c1.segmented_control("Probabilidades", ["con_cuotas", "sin_cuotas", "casa"], default="con_cuotas", key="ap_estr",
                                       format_func={"con_cuotas": "Modelo con cuotas", "sin_cuotas": "Modelo sin cuotas", "casa": "Control: casa"}.get) or "con_cuotas"
     maximas = c2.toggle("Usar la mejor cuota del mercado", value=True, help="Si se apaga, se usan solo las cuotas de Bet365")
-    c3, c4 = st.columns(2)
+    c3, c4, c5, c6 = st.columns([1.2, 1.2, 0.8, 0.8])
     umbral = c3.slider("Umbral de valor esperado", 0.0, 0.30, 0.05, 0.01, format="%.2f")
     cuota_max = c4.slider("Cuota máxima", 2.0, 15.0, 10.0, 0.5)
+    divisa = c6.selectbox("Divisa", list(ui.DIVISAS), index=0, key="ap_divisa")
+    simbolo, dec, ejemplo = ui.DIVISAS[divisa]
+    unidad = c5.number_input(f"Monto por apuesta ({simbolo})", min_value=0.0, value=ejemplo, format=f"%.{dec}f", key=f"ap_monto_{divisa}")
     cols = ([f"p_{estrategia}_{c.lower()}" for c in ORDEN] if estrategia != "casa" else ["prob_casa_local", "prob_casa_empate", "prob_casa_visitante"])
     apuestas, res = simular_apuestas(pred, cols, umbral, maximas, cuota_max)
     if res["apuestas"] == 0:
@@ -274,18 +313,20 @@ def simulador_apuestas(met: dict) -> None:
     ui.kpis([
         {"lbl": "Apuestas", "val": ui.num(res["apuestas"], 0), "sub": f"de {ui.num(res['partidos_evaluados'], 0)} partidos"},
         {"lbl": "Aciertos", "val": ui.num(res["tasa_acierto"] * 100, 1), "unidad": "%", "sub": f"cuota media {ui.num(res['cuota_media'], 2)}"},
-        {"lbl": "Beneficio", "val": ui.num(res["beneficio_unidades"], 1, signo=True), "unidad": "u", "acento": ui.VERDE if gana else ui.ROJO,
-         "sub": "1 unidad por apuesta"},
+        {"lbl": "Beneficio", "val": ui.dinero(res["beneficio_unidades"] * unidad, divisa, signo=True), "acento": ui.VERDE if gana else ui.ROJO,
+         "sub": f"{ui.num(res['beneficio_unidades'], 1, signo=True)} u · apostando {ui.dinero(unidad, divisa)} cada vez "
+                f"(total apostado {ui.dinero(res['apuestas'] * unidad, divisa)})"},
         {"lbl": "ROI", "val": ui.num(res["roi"] * 100, 2, signo=True), "unidad": "%", "acento": ui.VERDE if gana else ui.ROJO,
          "sub": "beneficio / unidades apostadas"},
-        {"lbl": "Peor racha", "val": ui.num(res["max_caida"], 1), "unidad": "u", "acento": ui.ROJO, "sub": "mayor caída desde el mejor momento"},
+        {"lbl": "Peor racha", "val": ui.dinero(-res["max_caida"] * unidad, divisa), "acento": ui.ROJO,
+         "sub": f"{ui.num(res['max_caida'], 1)} u · mayor caída desde el mejor momento"},
     ])
     c1, c2 = st.columns([1.6, 1], gap="medium")
     with c1, st.container(key="tarjeta_m7"):
-        fig = go.Figure(go.Scatter(x=apuestas["fecha"], y=apuestas["acumulado"], mode="lines", line=dict(color=ui.VERDE if gana else ui.ROJO, width=2.5),
-                                   hovertemplate="%{x|%d %b %Y}: %{y:+.1f} u<extra></extra>", name="Banca"))
+        fig = go.Figure(go.Scatter(x=apuestas["fecha"], y=apuestas["acumulado"] * unidad, mode="lines", line=dict(color=ui.VERDE if gana else ui.ROJO, width=2.5),
+                                   hovertemplate="%{x|%d %b %Y}: %{y:+,." + str(dec) + "f} " + divisa + "<extra></extra>", name="Banca"))
         fig.add_hline(y=0, line_color=ui.MUTED, line_width=1)
-        fig.update_layout(title="Evolución de la banca", yaxis_title="Unidades ganadas (acumulado)", showlegend=False)
+        fig.update_layout(title="Evolución de la banca", yaxis_title=f"Ganancia acumulada ({divisa})", showlegend=False)
         ui.grafico(fig, 400, key="ap_banca")
     with c2, st.container(key="tarjeta_m8"):
         por = apuestas.groupby("apuesta").agg(n=("ganancia", "size"), roi=("ganancia", "mean")).reindex(ORDEN).dropna()

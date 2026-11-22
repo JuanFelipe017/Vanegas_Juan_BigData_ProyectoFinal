@@ -147,6 +147,17 @@ def num(x: float, dec: int = 1, signo: bool = False) -> str:
     return texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
+# código → (símbolo, decimales, monto de ejemplo). Solo cambia el formato: no hay conversión entre divisas.
+DIVISAS = {"COP": ("$", 0, 5000.0), "USD": ("US$", 2, 2.0), "EUR": ("€", 2, 2.0), "MXN": ("MX$", 2, 50.0),
+           "ARS": ("AR$", 0, 2000.0), "BRL": ("R$", 2, 10.0), "CLP": ("CLP$", 0, 2000.0), "PEN": ("S/", 2, 10.0), "GBP": ("£", 2, 2.0)}
+
+
+def dinero(x: float, divisa: str, signo: bool = False) -> str:
+    simbolo, dec, _ = DIVISAS[divisa]
+    prefijo = "−" if x < 0 else ("+" if signo and x > 0 else "")
+    return f"{prefijo}{simbolo} {num(abs(x), dec)} {divisa}"
+
+
 def hero_marcador(d: dict, animaciones: bool) -> None:
     """Hero = el hallazgo central (Modelo vs. Casa) sobre la cancha animada. Iframe aislado: su JS no toca la app."""
     st.iframe(f"""
@@ -157,7 +168,7 @@ def hero_marcador(d: dict, animaciones: bool) -> None:
   .wrap{{position:relative;height:316px;border-radius:20px;overflow:hidden;border:1px solid rgba(64,224,150,.22);background:#071a11}}
   canvas{{position:absolute;inset:0;width:100%;height:100%}}
   .capa{{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;padding:0 24px;text-align:center;
-    background:radial-gradient(ellipse at center,rgba(5,13,9,.86) 0%,rgba(5,13,9,.62) 55%,rgba(5,13,9,.25) 100%)}}
+    background:radial-gradient(ellipse 46% 52% at center,rgba(5,13,9,.82) 0%,rgba(5,13,9,.55) 70%,rgba(5,13,9,0) 100%)}}
   h1{{font:800 clamp(26px,3.6vw,44px)/1 'Barlow Condensed';text-transform:uppercase;margin:0;letter-spacing:.01em}}
   h1 span{{color:#22e08a}}
   .tablero{{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:clamp(10px,3vw,28px);margin-top:6px}}
@@ -188,7 +199,8 @@ def hero_marcador(d: dict, animaciones: bool) -> None:
  </div>
 </div>
 <script>
-const anim = {str(animaciones).lower()} && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+// el interruptor "Animaciones" del panel decide (como el botón "Efectos"): permite verlas aunque el sistema las reduzca
+const anim = {str(animaciones).lower()};
 const c = document.getElementById('c'), x = c.getContext('2d');
 function tam(){{ c.width = c.clientWidth * devicePixelRatio; c.height = c.clientHeight * devicePixelRatio; }}
 tam(); addEventListener('resize', tam);
@@ -203,12 +215,15 @@ function cancha(W,H){{
 }}
 function cuadro(){{
   const W=c.width,H=c.height; x.clearRect(0,0,W,H); cancha(W,H);
-  const bx = W*(.5 + .38*Math.sin(t*.7)), by = H*(.5 + .34*Math.sin(t*1.3+1));
-  trail.push([bx,by]); if(trail.length>36) trail.shift();
-  for(let i=0;i<trail.length;i++){{ const a=i/trail.length; x.fillStyle=`rgba(244,197,66,${{a*.28}})`;
-    x.beginPath(); x.arc(trail[i][0],trail[i][1],(2+a*4)*devicePixelRatio,0,Math.PI*2); x.fill(); }}
-  x.fillStyle='#fff'; x.beginPath(); x.arc(bx,by,6*devicePixelRatio,0,Math.PI*2); x.fill();
-  t += .01; if(anim) requestAnimationFrame(cuadro);
+  // el balón da vueltas alrededor del marcador: órbita elíptica por el borde de la cancha, con un leve vaivén
+  const bx = W*(.5 + .42*Math.cos(t) + .03*Math.sin(t*3.1)), by = H*(.5 + .36*Math.sin(t) + .04*Math.cos(t*2.3));
+  trail.push([bx,by]); if(trail.length>44) trail.shift();
+  for(let i=0;i<trail.length;i++){{ const a=i/trail.length; x.fillStyle=`rgba(244,197,66,${{a*.38}})`;
+    x.beginPath(); x.arc(trail[i][0],trail[i][1],(3+a*5)*devicePixelRatio,0,Math.PI*2); x.fill(); }}
+  const g=x.createRadialGradient(bx,by,0,bx,by,38*devicePixelRatio); g.addColorStop(0,'rgba(34,224,138,.38)'); g.addColorStop(1,'rgba(34,224,138,0)');
+  x.fillStyle=g; x.beginPath(); x.arc(bx,by,38*devicePixelRatio,0,Math.PI*2); x.fill();
+  x.fillStyle='#fff'; x.beginPath(); x.arc(bx,by,8*devicePixelRatio,0,Math.PI*2); x.fill();
+  t += .013; if(anim) requestAnimationFrame(cuadro);
 }}
 cuadro();
 if(anim){{
