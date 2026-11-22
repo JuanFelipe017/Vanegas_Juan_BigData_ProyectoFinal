@@ -41,7 +41,15 @@ BANDERA_OK = REPORTS / ".pipeline_ok"
 # --------------------------------------------------------------------------------------------------
 # MongoDB (credenciales desde variables de entorno / archivo .env)
 # --------------------------------------------------------------------------------------------------
-MONGO_USER = os.environ.get("MONGO_USER", "admin")
+# Fuera de Docker (kernel local) nadie carga el .env: se lee aquí sin pisar variables ya definidas
+_ENV = RAIZ / ".env"
+if _ENV.exists():
+    for _linea in _ENV.read_text(encoding="utf-8").splitlines():
+        _clave, _sep, _valor = _linea.partition("=")
+        if _sep and not _linea.lstrip().startswith("#"):
+            os.environ.setdefault(_clave.strip(), _valor.strip().strip('"').strip("'"))
+
+MONGO_USER =os.environ.get("MONGO_USER", "admin")
 MONGO_PASSWORD = os.environ.get("MONGO_PASSWORD", "cambie_esta_clave")
 MONGO_HOST = os.environ.get("MONGO_HOST", "localhost")
 MONGO_PORT = int(os.environ.get("MONGO_PORT", "27018"))
@@ -52,7 +60,7 @@ MONGO_URI = os.environ.get(
 )
 
 AUTOR = "Juan Felipe Vanegas Silva"
-VIDEO_URL = os.environ.get("VIDEO_URL", "PEGAR AQUÍ EL ENLACE NO LISTADO DEL VIDEO")
+VIDEO_URL = os.environ.get("VIDEO_URL", "https://youtu.be/0VBYjifZxCE")
 
 # --------------------------------------------------------------------------------------------------
 # Fuentes de datos (todas públicas y verificables)

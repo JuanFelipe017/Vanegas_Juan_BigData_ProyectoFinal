@@ -2,7 +2,7 @@
 
 **Proyecto final — Gerencia y almacenamiento en Big Data · Fundación Universitaria Los Libertadores**
 **Autor:** Juan Felipe Vanegas Silva
-**Video de sustentación:** _PEGAR AQUÍ EL ENLACE NO LISTADO_
+**Video de sustentación:** https://youtu.be/0VBYjifZxCE
 **Dashboard en línea:** <https://juanfelipe017-vanegas-juan-bigdata-proyectofinal-appapp-jlbtk7.streamlit.app> (Streamlit Community Cloud; sin MongoDB, lee la copia JSON del documento)
 
 Pipeline integral de Big Data con Machine Learning sobre **3.253.548 registros** de cuatro fuentes públicas:

@@ -8,7 +8,7 @@ x-mongo-env: &mongo-env
   MONGO_USER: ${MONGO_USER:-admin}
   MONGO_PASSWORD: ${MONGO_PASSWORD:-cambie_esta_clave}
   MONGO_DB: ${MONGO_DB:-futbol_apuestas}
-  VIDEO_URL: ${VIDEO_URL:-PEGAR AQUI EL ENLACE NO LISTADO DEL VIDEO}
+  VIDEO_URL: ${VIDEO_URL:-https://youtu.be/0VBYjifZxCE}
 
 services:
   mongo:

@@ -1,13 +1,13 @@
 {
   "_id": "analisis_futbol_apuestas",
   "metadata": {
-    "fecha_analisis": "2026-11-22T01:53:27+00:00",
+    "fecha_analisis": "2026-11-22T22:22:19+00:00",
     "autores": [
       "Juan Felipe Vanegas Silva"
     ],
     "curso": "Gerencia y almacenamiento en Big Data — Fundación Universitaria Los Libertadores",
     "proyecto": "Fútbol y apuestas: ¿se le puede ganar a la casa? (38 ligas, 2000–2026)",
-    "video": "PEGAR AQUI EL ENLACE NO LISTADO DEL VIDEO",
+    "video": "https://youtu.be/0VBYjifZxCE",
     "dataset": {
       "fuente": "Football-Data.co.uk + ClubElo + Transfermarkt",
       "url": [
@@ -975,20 +975,20 @@
       }
     },
     "metricas": {
-      "accuracy": 0.501781,
-      "balanced_accuracy": 0.435963,
-      "f1_macro": 0.379018,
-      "log_loss": 1.003165,
-      "brier": 0.600146,
-      "roc_auc_ovr": 0.64776
+      "accuracy": 0.502227,
+      "balanced_accuracy": 0.43642,
+      "f1_macro": 0.379518,
+      "log_loss": 1.003164,
+      "brier": 0.600138,
+      "roc_auc_ovr": 0.647795
     },
     "metricas_con_umbral_empate": {
-      "accuracy": 0.484584,
-      "balanced_accuracy": 0.447108,
-      "f1_macro": 0.445417,
-      "log_loss": 1.003165,
-      "brier": 0.600146,
-      "roc_auc_ovr": 0.64776,
+      "accuracy": 0.485269,
+      "balanced_accuracy": 0.447847,
+      "f1_macro": 0.446198,
+      "log_loss": 1.003164,
+      "brier": 0.600138,
+      "roc_auc_ovr": 0.647795,
       "umbral_empate": 0.295
     },
     "metricas_sin_cuotas": {
@@ -1020,12 +1020,12 @@
     "comparacion": {
       "sin_cuotas": {
         "Regresión logística": {
-          "accuracy": 0.488386,
-          "balanced_accuracy": 0.420268,
-          "f1_macro": 0.360007,
-          "log_loss": 1.020627,
-          "brier": 0.611852,
-          "roc_auc_ovr": 0.626928
+          "accuracy": 0.488284,
+          "balanced_accuracy": 0.420188,
+          "f1_macro": 0.360034,
+          "log_loss": 1.020626,
+          "brier": 0.611849,
+          "roc_auc_ovr": 0.626944
         },
         "Random Forest": {
           "accuracy": 0.489003,
@@ -1046,12 +1046,12 @@
       },
       "con_cuotas": {
         "Regresión logística": {
-          "accuracy": 0.501781,
-          "balanced_accuracy": 0.435963,
-          "f1_macro": 0.379018,
-          "log_loss": 1.003165,
-          "brier": 0.600146,
-          "roc_auc_ovr": 0.64776
+          "accuracy": 0.502227,
+          "balanced_accuracy": 0.43642,
+          "f1_macro": 0.379518,
+          "log_loss": 1.003164,
+          "brier": 0.600138,
+          "roc_auc_ovr": 0.647795
         },
         "Random Forest": {
           "accuracy": 0.502535,
@@ -1075,62 +1075,62 @@
       {
         "variable": "logit_casa",
         "etiqueta": "Log-odds casa (local vs. visitante)",
-        "importancia": 0.180927,
-        "desviacion": 0.00129
+        "importancia": 0.179617,
+        "desviacion": 0.001287
       },
       {
         "variable": "viajeros_visitante",
         "etiqueta": "Convocados con viaje intercontinental (visitante)",
-        "importancia": 0.005285,
-        "desviacion": 0.000425
-      },
-      {
-        "variable": "viajeros_local",
-        "etiqueta": "Convocados con viaje intercontinental (local)",
-        "importancia": 0.00417,
-        "desviacion": 0.000445
+        "importancia": 0.004985,
+        "desviacion": 0.000406
       },
       {
         "variable": "dif_ppg_temporada",
         "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.003661,
-        "desviacion": 0.00015
+        "importancia": 0.003991,
+        "desviacion": 0.000163
+      },
+      {
+        "variable": "viajeros_local",
+        "etiqueta": "Convocados con viaje intercontinental (local)",
+        "importancia": 0.003853,
+        "desviacion": 0.000422
       },
       {
         "variable": "dif_carga_min14",
         "etiqueta": "Diferencia de carga de minutos",
-        "importancia": 0.002994,
-        "desviacion": 0.000698
+        "importancia": 0.003228,
+        "desviacion": 0.000728
       },
       {
         "variable": "prob_casa_empate",
         "etiqueta": "Prob. implícita casa: empate",
-        "importancia": 0.002903,
-        "desviacion": 0.000225
+        "importancia": 0.00293,
+        "desviacion": 0.000228
       },
       {
         "variable": "dif_viajeros",
         "etiqueta": "Diferencia de viajeros",
-        "importancia": 0.002086,
-        "desviacion": 0.000353
+        "importancia": 0.001951,
+        "desviacion": 0.000331
       },
       {
         "variable": "dif_descanso_real",
         "etiqueta": "Diferencia de descanso real",
-        "importancia": 0.001708,
-        "desviacion": 0.000367
+        "importancia": 0.001676,
+        "desviacion": 0.00036
       },
       {
         "variable": "ppg_temporada_visitante",
         "etiqueta": "Puntos por partido en la temporada (visitante)",
-        "importancia": 0.001569,
-        "desviacion": 0.000381
+        "importancia": 0.00167,
+        "desviacion": 0.000393
       },
       {
         "variable": "descanso_real_visitante",
         "etiqueta": "Descanso real del visitante",
-        "importancia": 0.001491,
-        "desviacion": 0.000274
+        "importancia": 0.00141,
+        "desviacion": 0.000269
       }
     ],
     "variables_importantes_sin_cuotas": [
@@ -1167,13 +1167,13 @@
       {
         "variable": "dif_ppg_temporada",
         "etiqueta": "Diferencia de puntos por partido en la temporada",
-        "importancia": 0.000632,
-        "desviacion": 0.000482
+        "importancia": 0.000633,
+        "desviacion": 0.000483
       },
       {
         "variable": "partidos_temporada_local",
         "etiqueta": "Jornada (partidos jugados)",
-        "importancia": 0.000627,
+        "importancia": 0.000628,
         "desviacion": 0.000133
       },
       {
@@ -1210,13 +1210,13 @@
       "con_cuotas": {
         "umbral_valor": 0.05,
         "partidos_evaluados": 29190,
-        "apuestas": 9116,
-        "aciertos": 2854,
-        "tasa_acierto": 0.313076,
-        "cuota_media": 3.675092,
-        "beneficio_unidades": 66.719995,
-        "roi": 0.007319,
-        "max_caida": 150.509998
+        "apuestas": 9141,
+        "aciertos": 2841,
+        "tasa_acierto": 0.310798,
+        "cuota_media": 3.688699,
+        "beneficio_unidades": 24.399995,
+        "roi": 0.002669,
+        "max_caida": 143.139998
       },
       "casa": {
         "umbral_valor": 0.05,
@@ -1231,7 +1231,7 @@
       }
     },
     "criterios_exito": {
-      "f1_macro_vs_ingenua_pct": 120.6,
+      "f1_macro_vs_ingenua_pct": 121.0,
       "cumple_f1_10pct": true,
       "logloss_modelo_vs_casa": 0.00024,
       "cumple_logloss_casa": false,
@@ -1284,16 +1284,16 @@
       "id": 6,
       "tema": "Empates",
       "titulo": "El empate es el resultado más difícil de predecir",
-      "texto": "El 26,5 % de los partidos termina empatado, pero casi nunca es el resultado más probable. Con el umbral de decisión ajustado (predecir empate si p ≥ 0,295) el recall de empates sube a 26,0 % y el F1 macro pasa de 0,379 a 0,445.",
-      "valor": 0.4454,
+      "texto": "El 26,5 % de los partidos termina empatado, pero casi nunca es el resultado más probable. Con el umbral de decisión ajustado (predecir empate si p ≥ 0,295) el recall de empates sube a 26,1 % y el F1 macro pasa de 0,380 a 0,446.",
+      "valor": 0.4462,
       "unidad": "F1 macro"
     },
     {
       "id": 7,
       "tema": "Apuestas",
       "titulo": "Ganarle a la casa es posible solo en el margen y con la mejor cuota",
-      "texto": "Apostando solo cuando el valor esperado supera 5 % y con la mejor cuota del mercado, el modelo con cuotas hizo 9.116 apuestas con ROI 0,73 %. La estrategia de control (probabilidades de la propia casa) obtuvo ROI -3,46 % y el modelo sin cuotas -3,29 %. Como el control pierde y el modelo gana, el modelo aporta información más allá de buscar la mejor cuota, aunque el margen es pequeño y volátil.",
-      "valor": 0.00732,
+      "texto": "Apostando solo cuando el valor esperado supera 5 % y con la mejor cuota del mercado, el modelo con cuotas hizo 9.141 apuestas con ROI 0,27 %. La estrategia de control (probabilidades de la propia casa) obtuvo ROI -3,46 % y el modelo sin cuotas -3,29 %. Como el control pierde y el modelo gana, el modelo aporta información más allá de buscar la mejor cuota, aunque el margen es pequeño y volátil.",
+      "valor": 0.00267,
       "unidad": "ROI"
     },
     {
@@ -1393,7 +1393,7 @@
     },
     {
       "archivo": "reports/figuras/11_curva_roi.png",
-      "titulo": "Apostando con valor ≥ 5 %, el modelo con cuotas rinde 0,7 % en 9.116 apuestas",
+      "titulo": "Apostando con valor ≥ 5 %, el modelo con cuotas rinde 0,3 % en 9.141 apuestas",
       "objetivo": "Resultados del modelo",
       "tipo": "Líneas",
       "descripcion": "ROI de la estrategia de apuestas por umbral"
